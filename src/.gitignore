@@ -1,1 +1,9 @@
 .deps/
+.libs/
+*.o
+*.lo
+libsacc.la
+css.tab.c
+css.tab.h
+css.yy.c
+css.yy.h
