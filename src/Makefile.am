@@ -17,7 +17,10 @@ css.tab.c: css.y
 	bison -p css --defines=css.tab.h -o css.tab.c css.y
 
 
+pkgconfigdir = $(libdir)/pkgconfig
 
+pkgconfig_DATA = sacc.pc
+ 
 clean-local:
 	rm -rf css.yy.c css.yy.h
 	rm -rf css.tab.c css.tab.h
