@@ -36,8 +36,8 @@ void* SAC_GetUserData(SAC_Parser parser) {
 
 
 SAC_Parser SAC_CreateParser() {
-  SAC_Parser ret = malloc(sizeof(SAC_ParserImpl));
-  memset(ret, 0, sizeof(SAC_ParserImpl));
+  SAC_Parser ret = malloc(sizeof(struct SAC_ParserImpl));
+  memset(ret, 0, sizeof(struct SAC_ParserImpl));
   return ret;
 }
 
