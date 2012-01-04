@@ -3,6 +3,7 @@
 #include "parser.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 
 
@@ -10,26 +11,28 @@ void SAC_SetDocumentHandler(SAC_Parser parser,
   SAC_StartDocumentHandler start,
   SAC_EndDocumentHandler end)
 {
-  ((SAC_ParserImpl*)parser)->startDocumentHandler = start;
-  ((SAC_ParserImpl*)parser)->endDocumentHandler = end;
+  PARSER(parser)->startDocumentHandler = start;
+  PARSER(parser)->endDocumentHandler = end;
 }
 
 
 
 void SAC_SetUserData(SAC_Parser parser, void *userData) {
-  ((SAC_ParserImpl*)parser)->userData = userData;
+  PARSER(parser)->userData = userData;
 }
 
 
 
 void* SAC_GetUserData(SAC_Parser parser) {
-  return ((SAC_ParserImpl*)parser)->userData;
+  return PARSER(parser)->userData;
 }
 
 
 
 SAC_Parser SAC_CreateParser() {
-  return malloc(sizeof(SAC_ParserImpl));
+  SAC_Parser ret = malloc(sizeof(SAC_ParserImpl));
+  memset(ret, 0, sizeof(SAC_ParserImpl));
+  return ret;
 }
 
 
@@ -44,8 +47,9 @@ int SAC_ParseStyleSheet(SAC_Parser parser,
   const char *buffer __attribute__((unused)),
   int len __attribute__((unused)))
 {
-  void *userData = ((SAC_ParserImpl*)parser)->userData;
-  ((SAC_ParserImpl*)parser)->startDocumentHandler(userData);
-  ((SAC_ParserImpl*)parser)->endDocumentHandler(userData);
+  if (PARSER(parser)->startDocumentHandler != NULL)
+    PARSER(parser)->startDocumentHandler(PARSER(parser)->userData);
+  if (PARSER(parser)->endDocumentHandler != NULL)
+    PARSER(parser)->endDocumentHandler(PARSER(parser)->userData);
   return 0;
 }
