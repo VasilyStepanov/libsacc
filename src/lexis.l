@@ -6,6 +6,7 @@
 %option bison-bridge bison-locations
 %option noyywrap
 %option noinput nounput
+%option reentrant
 %{
 #include "grammar.h"
 %}

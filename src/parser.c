@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+extern int yylex_init();
 extern int yy_scan_bytes();
 extern void yylex_destroy();
 
@@ -50,15 +51,19 @@ void SAC_DisposeParser(SAC_Parser parser) {
 
 
 int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
+  void *scanner;
+
+  yylex_init(&scanner);
+
   if (PARSER(parser)->start_document_handler != NULL)
     PARSER(parser)->start_document_handler(PARSER(parser)->user_data);
 
-  yy_scan_bytes(buffer, len);
-  yyparse();
+  yy_scan_bytes(buffer, len, scanner);
+  yyparse(scanner);
 
   if (PARSER(parser)->end_document_handler != NULL)
     PARSER(parser)->end_document_handler(PARSER(parser)->user_data);
 
-  yylex_destroy();
+  yylex_destroy(scanner);
   return 0;
 }

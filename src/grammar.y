@@ -3,7 +3,8 @@
  * TODO: Replace this with something more relevant.
  */
 %{
-/* #define YYPARSE_PARAM scanner */
+#define YYLEX_PARAM scanner
+#define YYPARSE_PARAM scanner
 
 void yyerror() {}
 extern int yylex();
