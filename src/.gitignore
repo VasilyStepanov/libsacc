@@ -3,9 +3,8 @@
 *.o
 *.lo
 libsacc.la
-css.tab.c
-css.tab.h
-css.yy.c
-css.yy.h
+grammar.c
+grammar.h
+lexis.c
 sacc.pc
 test_suite

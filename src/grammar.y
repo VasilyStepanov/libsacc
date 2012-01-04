@@ -3,12 +3,10 @@
  * TODO: Replace this with something more relevant.
  */
 %{
-#include "css.tab.h"
-#include "css.yy.h"
-
 /* #define YYPARSE_PARAM scanner */
 
-void csserror() {}
+void yyerror() {}
+int yylex();
 %}
 
 %union {

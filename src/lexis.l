@@ -7,7 +7,7 @@
 %option noyywrap
 %option noinput nounput
 %{
-#include "css.tab.h"
+#include "grammar.h"
 %}
 
 h         [0-9a-f]
