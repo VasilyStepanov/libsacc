@@ -1,12 +1,14 @@
 #ifndef SACC_PARSER_H
 #define SACC_PARSER_H
 
-#define PARSER(parser) ((struct SAC_ParserImpl*)(parser))
+#include <sacc.h>
 
-struct SAC_ParserImpl {
-  SAC_StartDocumentHandler startDocumentHandler;
-  SAC_EndDocumentHandler endDocumentHandler;
-  void *userData;
+#define PARSER(parser) ((struct parser*)(parser))
+
+struct parser {
+  SAC_StartDocumentHandler start_document_handler;
+  SAC_EndDocumentHandler end_document_handler;
+  void *user_data;
 };
 
 #endif
