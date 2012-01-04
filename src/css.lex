@@ -3,10 +3,11 @@
  * TODO: Replace this with something more relevant.
  */
 %option case-insensitive
-%option noyywrap
 %option bison-bridge bison-locations
+%option noyywrap
+%option noinput nounput
 %{
-#include "stylesheet.tab.h"
+#include "css.tab.h"
 %}
 
 h         [0-9a-f]

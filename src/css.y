@@ -3,9 +3,12 @@
  * TODO: Replace this with something more relevant.
  */
 %{
-#include "stylesheet.tab.h"
+#include "css.tab.h"
+#include "css.yy.h"
 
-#define YYPARSE_PARAM scanner
+/* #define YYPARSE_PARAM scanner */
+
+void csserror() {}
 %}
 
 %union {
