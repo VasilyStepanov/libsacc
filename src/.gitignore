@@ -2,6 +2,7 @@
 .libs/
 *.o
 *.lo
+libgrammar.la
 libsacc.la
 grammar.c
 grammar.h
