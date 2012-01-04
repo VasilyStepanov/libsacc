@@ -1,9 +1,15 @@
 #include <sacc.h>
 
 #include "parser.h"
+#include "grammar.h"
 
 #include <stdlib.h>
 #include <string.h>
+
+extern int yy_scan_bytes();
+extern void yylex_destroy();
+
+extern void yyparse();
 
 
 
@@ -43,13 +49,16 @@ void SAC_DisposeParser(SAC_Parser parser) {
 
 
 
-int SAC_ParseStyleSheet(SAC_Parser parser,
-  const char *buffer __attribute__((unused)),
-  int len __attribute__((unused)))
-{
+int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
   if (PARSER(parser)->startDocumentHandler != NULL)
     PARSER(parser)->startDocumentHandler(PARSER(parser)->userData);
+
+  yy_scan_bytes(buffer, len);
+  yyparse();
+
   if (PARSER(parser)->endDocumentHandler != NULL)
     PARSER(parser)->endDocumentHandler(PARSER(parser)->userData);
+
+  yylex_destroy();
   return 0;
 }

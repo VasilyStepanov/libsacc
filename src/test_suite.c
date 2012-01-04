@@ -52,12 +52,22 @@ void assertEquals(const char *lhs, const char *rhs) {
 
 
 
+void parseStyleSheet(SAC_Parser parser, const char *buffer) {
+  SAC_ParseStyleSheet(parser, buffer, strlen(buffer));
+}
+
+
+
 void test_basics() {
   char *data;
   size_t size;
   SAC_Parser parser = createParser(&data, &size);
 
-  SAC_ParseStyleSheet(parser, "", 0);
+  parseStyleSheet(parser,
+"selector {\n"
+"  property : value;\n"
+"}\n"
+  );
 
   disposeParser(parser);
 

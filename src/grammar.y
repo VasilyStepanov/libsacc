@@ -6,7 +6,7 @@
 /* #define YYPARSE_PARAM scanner */
 
 void yyerror() {}
-int yylex();
+extern int yylex();
 %}
 
 %union {
