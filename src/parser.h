@@ -4,6 +4,7 @@
 typedef struct {
   SAC_StartDocumentHandler startDocumentHandler;
   SAC_EndDocumentHandler endDocumentHandler;
+  void *userData;
 } SAC_ParserImpl;
 
 #endif
