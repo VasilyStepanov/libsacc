@@ -32,7 +32,9 @@ libgrammar_la_CFLAGS = $(GENERIC_CFLAGS) -Wno-unused-parameter
 
 
 
-test_suite_SOURCES = test_suite.c
+test_suite_SOURCES = test_utils.c \
+                     test_parser.c \
+                     test_suite.c
 
 test_suite_LDADD = libsacc.la
 
