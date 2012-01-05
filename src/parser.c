@@ -1,8 +1,7 @@
-#include "parser.h"
+#include <sacc.h>
 
 #include "grammar.h"
 
-#include <sacc.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -11,6 +10,17 @@ extern int yy_scan_bytes();
 extern void yylex_destroy();
 
 extern void yyparse();
+
+
+
+#define PARSER(parser) ((struct parser_s*)(parser))
+
+struct parser_s {
+  SAC_StartDocumentHandler start_document_handler;
+  SAC_EndDocumentHandler end_document_handler;
+  void *user_data;
+};
+
 
 
 
@@ -37,8 +47,8 @@ void* SAC_GetUserData(SAC_Parser parser) {
 
 
 SAC_Parser SAC_CreateParser() {
-  SAC_Parser ret = malloc(sizeof(struct parser_t));
-  memset(ret, 0, sizeof(struct parser_t));
+  struct parser_s *ret = (struct parser_s*)malloc(sizeof(struct parser_s));
+  memset(ret, 0, sizeof(struct parser_s));
   return ret;
 }
 
