@@ -2,7 +2,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
 #define MALLIGN(size) (((size) + sizeof(size_t) - 1) & ~(sizeof(size_t) - 1))
 
@@ -149,17 +148,21 @@ void mpool_free(mpool_t mpool, void *ptr) {
   page = MOBJ_UNWRAP_MPAGE(ptr);
   page->used -= MOBJ_UNWRAP_SIZE(ptr) + MOBJ_DATASIZE;
 
-  if (page->used == 0) {
+  if (page->used == 0 && !(page->prev == NULL && MPOOL(mpool)->page == page)) {
     struct mpage_s *cur;
     struct mpage_s *next;
 
     cur = MPOOL(mpool)->page;
-    next = cur; /* for performance only */
+    next = NULL;
     for (; cur != NULL; next = cur, cur = cur->prev) {
       if (cur != page) continue;
-      
-      next->prev = cur->prev;
-      mpage_close(page);
+     
+      if (next != NULL) {
+        next->prev = cur->prev;
+      } else {
+        MPOOL(mpool)->page = cur->prev;
+      }
+      mpage_close(cur);
       break;
     }
   }

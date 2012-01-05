@@ -28,24 +28,33 @@ void test_mpool_basics() {
 void test_mpool_freepage() {
   size_t pages;
   mpool_t mpool;
-  void *p3, *p4;
+  void *p1, *p2, *p3, *p4, *p5, *p6;
   
   mpool = mpool_open(100);
-  mpool_alloc(mpool, 40);
-  mpool_alloc(mpool, 40);
+  p1 = mpool_alloc(mpool, 40);
+  p2 = mpool_alloc(mpool, 40);
   p3 = mpool_alloc(mpool, 40);
   p4 = mpool_alloc(mpool, 40);
-  mpool_alloc(mpool, 40);
-  mpool_alloc(mpool, 40);
+  p5 = mpool_alloc(mpool, 40);
+  p6 = mpool_alloc(mpool, 40);
 
   mpool_free(mpool, p3);
   mpool_free(mpool, p4);
 
   mpool_stats(mpool, &pages);
 
-  mpool_close(mpool);
-
   assert(pages == 2);
+
+  mpool_free(mpool, p1);
+  mpool_free(mpool, p2);
+  mpool_free(mpool, p5);
+  mpool_free(mpool, p6);
+
+  mpool_stats(mpool, &pages);
+
+  assert(pages == 1);
+
+  mpool_close(mpool);
 }
 
 
