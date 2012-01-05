@@ -7,6 +7,7 @@
 %option noyywrap
 %option noinput nounput
 %option reentrant
+%option noyyalloc noyyrealloc noyyfree
 %{
 #include "grammar.h"
 %}

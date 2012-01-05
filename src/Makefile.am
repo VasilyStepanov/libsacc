@@ -18,15 +18,17 @@ libsacc_ladir = $(includedir)
 
 libsacc_la_HEADERS = ../include/sacc.h
 
-libsacc_la_SOURCES = parser.c
+libsacc_la_SOURCES = parser.c \
+                     mlex.c
 
 libsacc_la_LIBADD = libgrammar.la
+
 
 
 libgrammar_la_SOURCES = lexis.l \
                         grammar.y
 
-libgrammar_la_CFLAGS = $(GENERIC_CFLAGS) 
+libgrammar_la_CFLAGS = $(GENERIC_CFLAGS) -Wno-unused-parameter
 
 
 
