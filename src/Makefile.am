@@ -19,7 +19,8 @@ libsacc_ladir = $(includedir)
 libsacc_la_HEADERS = ../include/sacc.h
 
 libsacc_la_SOURCES = parser.c \
-                     mlex.c
+                     mlex.c \
+                     mpool.c
 
 libsacc_la_LIBADD = libgrammar.la
 
@@ -33,6 +34,7 @@ libgrammar_la_CFLAGS = $(GENERIC_CFLAGS) -Wno-unused-parameter
 
 
 test_suite_SOURCES = test_utils.c \
+                     test_mpool.c \
                      test_parser.c \
                      test_suite.c
 
