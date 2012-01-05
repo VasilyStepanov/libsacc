@@ -1,11 +1,12 @@
 #include <sacc.h>
 
 #include "grammar.h"
+#include "mpool.h"
 
 #include <stdlib.h>
 #include <string.h>
 
-extern int yylex_init();
+extern int yylex_init_extra();
 extern int yy_scan_bytes();
 extern void yylex_destroy();
 
@@ -63,7 +64,8 @@ void SAC_DisposeParser(SAC_Parser parser) {
 int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
   void *scanner;
 
-  yylex_init(&scanner);
+  mpool_t mpool = mpool_open(16384);
+  yylex_init_extra(mpool, &scanner);
 
   if (PARSER(parser)->start_document_handler != NULL)
     PARSER(parser)->start_document_handler(PARSER(parser)->user_data);
@@ -75,5 +77,6 @@ int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
     PARSER(parser)->end_document_handler(PARSER(parser)->user_data);
 
   yylex_destroy(scanner);
+  mpool_close(mpool);
   return 0;
 }
