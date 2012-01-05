@@ -50,9 +50,31 @@ void test_mpool_freepage() {
 
 
 
+void test_mpool_realloc() {
+  mpool_t mpool;
+  void *p1, *p2, *p3, *p4, *p5;
+
+  mpool = mpool_open(10);
+  p1 = mpool_realloc(mpool, NULL, 1);
+  *(char*)p1 = 'x';
+  p2 = mpool_realloc(mpool, p1, 2);
+  p3 = mpool_realloc(mpool, p2, 3);
+  p4 = mpool_realloc(mpool, p3, 4);
+  p5 = mpool_realloc(mpool, p4, 5);
+
+  assert(p1 == p2);
+  assert(p2 == p3);
+  assert(p3 == p4);
+  assert(p4 != p5);
+  assert(*(char*)p5 == 'x');
+
+  mpool_close(mpool);
+}
+
+
+
 void test_mpool() {
-/*
   test_mpool_basics();
-*/
   test_mpool_freepage();
+  test_mpool_realloc();
 }
