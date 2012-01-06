@@ -54,6 +54,7 @@ SAC_LexicalUnit *lunit;
 
 %type <str> property;
 %type <lunit> expr;
+%type <lunit> term;
 
 %%
 
@@ -219,14 +220,18 @@ prio
   : IMPORTANT_SYM _spaces0
   ;
 expr
-  : term               { $$ = NULL; }
-  | expr operator term { $$ = NULL; }
+  : term                { $$ = $1; }
+  | expr operator term  { $$ = NULL; }
   ;
 term
   : _unary_term
   | unary_operator _unary_term
   | STRING _spaces0
-  | IDENT _spaces0
+  | IDENT _spaces0              {
+                                  $$ = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit));
+                                  $$->lexicalUnitType = SAC_IDENT;
+                                  $$->desc.ident = $1;
+                                }
   | URI _spaces0
   | UNICODERANGE _spaces0
   | hexcolor

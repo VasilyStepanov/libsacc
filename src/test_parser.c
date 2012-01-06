@@ -92,17 +92,73 @@ void end_document(void *userData) {
 
 
 
+void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
+  if (value == NULL) {
+    fprintf(out, "NULL");
+  } else {
+    switch (value->lexicalUnitType) {
+      case SAC_IDENT:
+        fprintf(out, "'%s'", value->desc.ident);
+        break;
+      case SAC_OPERATOR_COMMA:
+      case SAC_OPERATOR_PLUS:
+      case SAC_OPERATOR_MINUS:
+      case SAC_OPERATOR_MULTIPLY:
+      case SAC_OPERATOR_SLASH:
+      case SAC_OPERATOR_MOD:
+      case SAC_OPERATOR_EXP:
+      case SAC_OPERATOR_LT:
+      case SAC_OPERATOR_GT:
+      case SAC_OPERATOR_LE:
+      case SAC_OPERATOR_GE:
+      case SAC_OPERATOR_TILDE:
+      case SAC_INHERIT:
+      case SAC_INTEGER:
+      case SAC_REAL:
+      case SAC_LENGTH_EM:
+      case SAC_LENGTH_EX:
+      case SAC_LENGTH_PIXEL:
+      case SAC_LENGTH_INCH:
+      case SAC_LENGTH_CENTIMETER:
+      case SAC_LENGTH_MILLIMETER:
+      case SAC_LENGTH_POINT:
+      case SAC_LENGTH_PICA:
+      case SAC_PERCENTAGE:
+      case SAC_URI:
+      case SAC_COUNTER_FUNCTION:
+      case SAC_COUNTERS_FUNCTION:
+      case SAC_RGBCOLOR:
+      case SAC_DEGREE:
+      case SAC_GRADIAN:
+      case SAC_RADIAN:
+      case SAC_MILLISECOND:
+      case SAC_SECOND:
+      case SAC_HERTZ:
+      case SAC_KILOHERTZ:
+      case SAC_STRING_VALUE:
+      case SAC_ATTR:
+      case SAC_RECT_FUNCTION:
+      case SAC_UNICODERANGE:
+      case SAC_SUB_EXPRESSION:
+      case SAC_FUNCTION:
+      case SAC_DIMENSION:
+        break;
+    };
+  }
+}
+
+
+
 void property(
   void *userData,
   const SAC_STRING propertyName,
-  const SAC_LexicalUnit *value __attribute__((unused)),
+  const SAC_LexicalUnit *value,
   SAC_Boolean important)
 {
-  if (important == SAC_FALSE) {
-    userdata_printf(userData, "prp '%s'\n", propertyName);
-  } else {
-    userdata_printf(userData, "prp '%s' important\n", propertyName);
-  }
+  userdata_printf(userData, "prp '%s' ", propertyName);
+  dump_lexical_unit(USERDATA_FILE(userData), value);
+  if (important == SAC_TRUE) fprintf(USERDATA_FILE(userData), " important");
+  fprintf(USERDATA_FILE(userData), "\n");
 }
 
 
@@ -143,7 +199,7 @@ void test_parser_basics() {
 
   parse_stylesheet(parser,
 "selector {\n"
-"  property : value;\n"
+"  property-ident : ident;\n"
 "}\n"
   );
 
@@ -151,7 +207,7 @@ void test_parser_basics() {
 
   assert_equals(
 "doc {\n"
-"  prp 'property'\n"
+"  prp 'property-ident' 'ident'\n"
 "doc }\n",
   data);
 
