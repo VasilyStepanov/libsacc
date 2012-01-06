@@ -1,5 +1,6 @@
 #include <sacc.h>
 
+#include "parser.h"
 #include "grammar.h"
 #include "mpool.h"
 
@@ -22,6 +23,19 @@ struct parser_s {
   void *user_data;
 };
 
+
+
+void parser_start_document(SAC_Parser parser) {
+  if (PARSER(parser)->start_document_handler != NULL)
+    PARSER(parser)->start_document_handler(PARSER(parser)->user_data);
+}
+
+
+
+void parser_end_document(SAC_Parser parser) {
+  if (PARSER(parser)->end_document_handler != NULL)
+    PARSER(parser)->end_document_handler(PARSER(parser)->user_data);
+}
 
 
 
@@ -67,14 +81,12 @@ int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
   mpool_t mpool = mpool_open(16384);
   yylex_init_extra(mpool, &scanner);
 
-  if (PARSER(parser)->start_document_handler != NULL)
-    PARSER(parser)->start_document_handler(PARSER(parser)->user_data);
+  parser_start_document(parser);
 
   yy_scan_bytes(buffer, len, scanner);
   yyparse(scanner);
 
-  if (PARSER(parser)->end_document_handler != NULL)
-    PARSER(parser)->end_document_handler(PARSER(parser)->user_data);
+  parser_end_document(parser);
 
   yylex_destroy(scanner);
   mpool_close(mpool);
