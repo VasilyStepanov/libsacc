@@ -221,7 +221,7 @@ typedef void (*SAC_EndDocumentHandler)(void *userData);
  */
 typedef void (*SAC_PropertyHandler)(void *userData,
   const SAC_STRING propertyName,
-  /* const SAC_LexicalUnit *value, */
+  const SAC_LexicalUnit *value,
   SAC_Boolean important);
 
 

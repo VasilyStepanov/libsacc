@@ -9,6 +9,7 @@
 %option reentrant
 %option noyyalloc noyyrealloc noyyfree
 %{
+#include <sacc.h>
 #include "grammar.h"
 #include "mpool.h"
 #include "mpool_extra.h"

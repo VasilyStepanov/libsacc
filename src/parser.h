@@ -27,6 +27,7 @@ void parser_end_document(SAC_Parser parser);
 
 void parser_property_handler(SAC_Parser parser,
   const SAC_STRING propertyName,
+  const SAC_LexicalUnit *value,
   SAC_Boolean important);
 
 

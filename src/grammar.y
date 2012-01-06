@@ -3,6 +3,7 @@
  * TODO: Replace this with something more relevant.
  */
 %{
+#include <sacc.h>
 #include "parser.h"
 
 #define YYLEX_PARAM scanner
@@ -15,6 +16,7 @@ extern int yylex();
 %union {
 int val;
 char *str;
+SAC_LexicalUnit *lunit;
 }
 
 %locations
@@ -51,6 +53,7 @@ char *str;
 %token <val> UNICODERANGE
 
 %type <str> property;
+%type <lunit> expr;
 
 %%
 
@@ -208,16 +211,16 @@ pseudo
   | ':' FUNCTION _spaces0 IDENT _spaces0 ')'
   ;
 declaration
-  : property ':' _spaces0 expr      { parser_property_handler(YY_SCANNER_PARSER(scanner), $1, SAC_FALSE); }
-  | property ':' _spaces0 expr prio { parser_property_handler(YY_SCANNER_PARSER(scanner), $1, SAC_TRUE); }
+  : property ':' _spaces0 expr      { parser_property_handler(YY_SCANNER_PARSER(scanner), $1, $4, SAC_FALSE); }
+  | property ':' _spaces0 expr prio { parser_property_handler(YY_SCANNER_PARSER(scanner), $1, $4, SAC_TRUE); }
   | /* empty */
   ;
 prio
   : IMPORTANT_SYM _spaces0
   ;
 expr
-  : term
-  | term operator expr
+  : term               { $$ = NULL; }
+  | expr operator term { $$ = NULL; }
   ;
 term
   : _unary_term

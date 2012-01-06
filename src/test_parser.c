@@ -95,6 +95,7 @@ void end_document(void *userData) {
 void property(
   void *userData,
   const SAC_STRING propertyName,
+  const SAC_LexicalUnit *value __attribute__((unused)),
   SAC_Boolean important)
 {
   if (important == SAC_FALSE) {
