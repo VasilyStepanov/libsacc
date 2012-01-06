@@ -4,9 +4,10 @@ noinst_PROGRAMS = test_suite
 
 noinst_LTLIBRARIES = libgrammar.la
 
-GENERIC_CFLAGS = -Wall -Wextra -ansi -pedantic -D_XOPEN_SOURCE=700
+GENERIC_CFLAGS = -Wall -Wextra -ansi -pedantic -D_XOPEN_SOURCE=700 \
+                 -I$(top_srcdir)/include
 
-AM_CFLAGS = $(GENERIC_CFLAGS) -Werror -I$(top_srcdir)/include
+AM_CFLAGS = $(GENERIC_CFLAGS) -Werror
 
 BUILT_SOURCES = grammar.h
 AM_YFLAGS = -d
