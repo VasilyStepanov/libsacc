@@ -18,7 +18,6 @@ extern void yyparse();
 #define PARSER(parser) ((struct parser_s*)(parser))
 
 struct parser_s {
-  mpool_t mpool;
   SAC_StartDocumentHandler start_document_handler;
   SAC_EndDocumentHandler end_document_handler;
   void *user_data;
@@ -38,12 +37,6 @@ void parser_end_document(SAC_Parser parser) {
     PARSER(parser)->end_document_handler(PARSER(parser)->user_data);
 }
 
-
-
-
-mpool_t parser_mpool(SAC_Parser parser) {
-  return PARSER(parser)->mpool;
-}
 
 
 
@@ -85,9 +78,12 @@ void SAC_DisposeParser(SAC_Parser parser) {
 
 int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
   void *scanner;
+  struct yy_extra_t yy_extra;
 
-  PARSER(parser)->mpool = mpool_open(16384);
-  yylex_init_extra(parser, &scanner);
+  yy_extra.mpool = mpool_open(16384);
+  yy_extra.parser = parser;
+
+  yylex_init_extra(&yy_extra, &scanner);
 
   parser_start_document(parser);
 
@@ -97,6 +93,6 @@ int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
   parser_end_document(parser);
 
   yylex_destroy(scanner);
-  mpool_close(PARSER(parser)->mpool);
+  mpool_close(yy_extra.mpool);
   return 0;
 }
