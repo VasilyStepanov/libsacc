@@ -10,6 +10,8 @@
 %option noyyalloc noyyrealloc noyyfree
 %{
 #include "grammar.h"
+#include "mpool.h"
+#include "parser.h"
 %}
 
 h         [0-9a-f]
@@ -32,54 +34,59 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
 
 %%
 
-[ \t\r\n\f]+                  {return S;}
+[ \t\r\n\f]+            {return S;}
 
 \/\*[^*]*\*+([^/][^*]*\*+)*\/ /* ignore comments */
 
-"<!--"                        {return CDO;}
-"-->"                         {return CDC;}
-"~="                          {return INCLUDES;}
-"|="                          {return DASHMATCH;}
+"<!--"                  {return CDO;}
+"-->"                   {return CDC;}
+"~="                    {return INCLUDES;}
+"|="                    {return DASHMATCH;}
 
-{string}                      {return STRING;}
+{string}                {return STRING;}
 
-{ident}                       {return IDENT;}
+{ident}                 {
+                          yylval->str = mpool_strdup(
+                            YY_SCANNER_MPOOL(yyscanner), yytext
+                          );
+                          return IDENT;
+                        }
 
-"#"{name}                     {return HASH;}
+"#"{name}               {return HASH;}
 
-"@import"                     {return IMPORT_SYM;}
-"@page"                       {return PAGE_SYM;}
-"@media"                      {return MEDIA_SYM;}
-"@font-face"                  {return FONT_FACE_SYM;}
-"@charset"                    {return CHARSET_SYM;}
-"@namespace"                  {return NAMESPACE_SYM;}
+"@import"               {return IMPORT_SYM;}
+"@page"                 {return PAGE_SYM;}
+"@media"                {return MEDIA_SYM;}
+"@font-face"            {return FONT_FACE_SYM;}
+"@charset"              {return CHARSET_SYM;}
+"@namespace"            {return NAMESPACE_SYM;}
 
-"!{w}important"               {return IMPORTANT_SYM;}
+"!{w}important"         {return IMPORTANT_SYM;}
 
-{num}em                       {return EMS;}
-{num}ex                       {return EXS;}
-{num}px                       {return LENGTH;}
-{num}cm                       {return LENGTH;}
-{num}mm                       {return LENGTH;}
-{num}in                       {return LENGTH;}
-{num}pt                       {return LENGTH;}
-{num}pc                       {return LENGTH;}
-{num}deg                      {return ANGLE;}
-{num}rad                      {return ANGLE;}
-{num}grad                     {return ANGLE;}
-{num}ms                       {return TIME;}
-{num}s                        {return TIME;}
-{num}Hz                       {return FREQ;}
-{num}kHz                      {return FREQ;}
-{num}{ident}                  {return DIMEN;}
-{num}%                        {return PERCENTAGE;}
-{num}                         {return NUMBER;}
+{num}em                 {return EMS;}
+{num}ex                 {return EXS;}
+{num}px                 {return LENGTH;}
+{num}cm                 {return LENGTH;}
+{num}mm                 {return LENGTH;}
+{num}in                 {return LENGTH;}
+{num}pt                 {return LENGTH;}
+{num}pc                 {return LENGTH;}
+{num}deg                {return ANGLE;}
+{num}rad                {return ANGLE;}
+{num}grad               {return ANGLE;}
+{num}ms                 {return TIME;}
+{num}s                  {return TIME;}
+{num}Hz                 {return FREQ;}
+{num}kHz                {return FREQ;}
+{num}{ident}            {return DIMEN;}
+{num}%                  {return PERCENTAGE;}
+{num}                   {return NUMBER;}
 
-"url("{w}{string}{w}")"       {return URI;}
-"url("{w}{url}{w}")"          {return URI;}
-{ident}"("                    {return FUNCTION;}
+"url("{w}{string}{w}")" {return URI;}
+"url("{w}{url}{w}")"    {return URI;}
+{ident}"("              {return FUNCTION;}
 
-U\+{range}                    {return UNICODERANGE;}
-U\+{h}{1,6}-{h}{1,6}          {return UNICODERANGE;}
+U\+{range}              {return UNICODERANGE;}
+U\+{h}{1,6}-{h}{1,6}    {return UNICODERANGE;}
 
-.                             {return *yytext;}
+.                       {return *yytext;}

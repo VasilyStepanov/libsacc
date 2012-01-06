@@ -3,6 +3,8 @@
  * TODO: Replace this with something more relevant.
  */
 %{
+#include "parser.h"
+
 #define YYLEX_PARAM scanner
 #define YYPARSE_PARAM scanner
 
@@ -32,7 +34,7 @@ char *str;
 %token <val> FREQ
 %token <val> FUNCTION
 %token <val> HASH
-%token <val> IDENT
+%token <str> IDENT
 %token <val> INCLUDES
 %token <val> IMPORT_SYM
 %token <val> IMPORTANT_SYM
@@ -47,6 +49,8 @@ char *str;
 %token <val> TIME
 %token <val> URI
 %token <val> UNICODERANGE
+
+%type <str> property;
 
 %%
 
@@ -160,7 +164,7 @@ unary_operator
   | '+'
   ;
 property
-  : IDENT _spaces0
+  : IDENT _spaces0 { $$ = $1; }
   ;
 ruleset
   : _selectors1 '{' _spaces0 _declarations1 '}' _spaces0
@@ -204,8 +208,8 @@ pseudo
   | ':' FUNCTION _spaces0 IDENT _spaces0 ')'
   ;
 declaration
-  : property ':' _spaces0 expr
-  | property ':' _spaces0 expr prio
+  : property ':' _spaces0 expr      { parser_property_handler(YY_SCANNER_PARSER(scanner), $1, SAC_FALSE); }
+  | property ':' _spaces0 expr prio { parser_property_handler(YY_SCANNER_PARSER(scanner), $1, SAC_TRUE); }
   | /* empty */
   ;
 prio

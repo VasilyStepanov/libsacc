@@ -5,15 +5,33 @@
 extern "C" {
 #endif
 
+/**
+ * Defines
+ */
+#define SAC_STRING         char *
+
+typedef enum SAC_Boolean {
+    SAC_FALSE = 0,
+    SAC_TRUE  = 1
+} SAC_Boolean;
+
 typedef void* SAC_Parser;
 
 typedef void (*SAC_StartDocumentHandler)(void *userData);
 
 typedef void (*SAC_EndDocumentHandler)(void *userData);
 
+typedef void (*SAC_PropertyHandler)(void *userData,
+  const SAC_STRING propertyName,
+  /* const SAC_LexicalUnit * value, */
+  SAC_Boolean important);
+
 void SAC_SetDocumentHandler(SAC_Parser parser,
   SAC_StartDocumentHandler start,
   SAC_EndDocumentHandler end);
+
+void SAC_SetPropertyHandler(SAC_Parser parser,
+  SAC_PropertyHandler handler);
 
 void SAC_SetUserData(SAC_Parser parser, void *userData);
 

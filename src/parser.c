@@ -20,6 +20,7 @@ extern void yyparse();
 struct parser_s {
   SAC_StartDocumentHandler start_document_handler;
   SAC_EndDocumentHandler end_document_handler;
+  SAC_PropertyHandler property_handler;
   void *user_data;
 };
 
@@ -39,6 +40,17 @@ void parser_end_document(SAC_Parser parser) {
 
 
 
+void parser_property_handler(
+  SAC_Parser parser,
+  const SAC_STRING propertyName,
+  SAC_Boolean important)
+{
+  if (PARSER(parser)->property_handler != NULL)
+    PARSER(parser)->property_handler(PARSER(parser)->user_data,
+      propertyName, important);
+}
+
+
 
 void SAC_SetDocumentHandler(SAC_Parser parser,
   SAC_StartDocumentHandler start,
@@ -46,6 +58,12 @@ void SAC_SetDocumentHandler(SAC_Parser parser,
 {
   PARSER(parser)->start_document_handler = start;
   PARSER(parser)->end_document_handler = end;
+}
+
+
+
+void SAC_SetPropertyHandler(SAC_Parser parser, SAC_PropertyHandler handler) {
+  PARSER(parser)->property_handler = handler;
 }
 
 

@@ -22,11 +22,26 @@ void end_document(void *userData) {
 
 
 
+void property(
+  void *userData,
+  const SAC_STRING propertyName,
+  SAC_Boolean important)
+{
+  if (important == SAC_FALSE) {
+    fprintf((FILE*)userData, "prp '%s'\n", propertyName);
+  } else {
+    fprintf((FILE*)userData, "prp '%s' important\n", propertyName);
+  }
+}
+
+
+
 SAC_Parser create_parser(char **data, size_t *size) {
   FILE *f = open_memstream(data, size);
   SAC_Parser parser = SAC_CreateParser();
   
   SAC_SetDocumentHandler(parser, start_document, end_document);
+  SAC_SetPropertyHandler(parser, property);
   SAC_SetUserData(parser, f);
   return parser;
 }
@@ -63,6 +78,7 @@ void test_parser_basics() {
 
   assert_equals(
 "doc {\n"
+"prp 'property'\n"
 "doc }\n",
   data);
 

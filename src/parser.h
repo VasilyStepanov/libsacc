@@ -10,6 +10,10 @@
 #define YY_SCANNER_MPOOL(yy_scanner) YY_EXTRA(yy_scanner)->mpool
 #define YY_SCANNER_PARSER(yy_scanner) YY_EXTRA(yy_scanner)->parser
 
+extern void* yyget_extra();
+
+
+
 struct yy_extra_t {
   mpool_t mpool;
   SAC_Parser parser;
@@ -20,6 +24,10 @@ struct yy_extra_t {
 void parser_start_document(SAC_Parser parser);
 
 void parser_end_document(SAC_Parser parser);
+
+void parser_property_handler(SAC_Parser parser,
+  const SAC_STRING propertyName,
+  SAC_Boolean important);
 
 
 

@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-extern void* yyget_extra();
-
 
 
 void* yyalloc(size_t size, void *scanner) {
