@@ -11,6 +11,7 @@
 %{
 #include "grammar.h"
 #include "mpool.h"
+#include "mpool_extra.h"
 #include "parser.h"
 %}
 

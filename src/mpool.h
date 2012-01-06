@@ -17,8 +17,6 @@ void* mpool_alloc(mpool_t mpool, size_t size);
 
 void* mpool_realloc(mpool_t mpool, void *ptr, size_t size);
 
-char* mpool_strdup(mpool_t mpool, const char *s);
-
 void mpool_free(mpool_t mpool, void *ptr);
 
 void mpool_stats(mpool_t mpool, size_t *pages);

@@ -140,15 +140,6 @@ void* mpool_realloc(mpool_t mpool, void *ptr, size_t size) {
 
 
 
-char* mpool_strdup(mpool_t mpool, const char *s) {
-  size_t len = strlen(s) + 1;
-  char *ret = (char*)mpool_alloc(mpool, len);
-  memcpy(ret, s, len);
-  return ret;
-}
-
-
-
 void mpool_free(mpool_t mpool, void *ptr) {
   struct mpage_s *page;
 

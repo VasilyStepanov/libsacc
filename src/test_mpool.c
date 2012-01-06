@@ -3,6 +3,7 @@
 #include "test_utils.h"
 
 #include "mpool.h"
+#include "mpool_extra.h"
 
 #include <assert.h>
 
