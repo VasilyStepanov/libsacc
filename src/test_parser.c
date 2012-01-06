@@ -100,6 +100,9 @@ void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_IDENT:
         fprintf(out, "'%s'", value->desc.ident);
         break;
+      case SAC_STRING_VALUE:
+        fprintf(out, "'%s'", value->desc.stringValue);
+        break;
       case SAC_OPERATOR_COMMA:
       case SAC_OPERATOR_PLUS:
       case SAC_OPERATOR_MINUS:
@@ -135,7 +138,6 @@ void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_SECOND:
       case SAC_HERTZ:
       case SAC_KILOHERTZ:
-      case SAC_STRING_VALUE:
       case SAC_ATTR:
       case SAC_RECT_FUNCTION:
       case SAC_UNICODERANGE:
@@ -200,6 +202,8 @@ void test_parser_basics() {
   parse_stylesheet(parser,
 "selector {\n"
 "  property-ident : ident;\n"
+"  property-string1 : 'string';\n"
+"  property-string2 : \"string\";\n"
 "}\n"
   );
 
@@ -208,6 +212,8 @@ void test_parser_basics() {
   assert_equals(
 "doc {\n"
 "  prp 'property-ident' 'ident'\n"
+"  prp 'property-string1' 'string'\n"
+"  prp 'property-string2' 'string'\n"
 "doc }\n",
   data);
 

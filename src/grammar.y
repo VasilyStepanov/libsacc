@@ -47,7 +47,7 @@ SAC_LexicalUnit *lunit;
 %token <val> PAGE_SYM
 %token <val> PERCENTAGE
 %token <val> S
-%token <val> STRING
+%token <str> STRING
 %token <val> TIME
 %token <val> URI
 %token <val> UNICODERANGE
@@ -226,7 +226,11 @@ expr
 term
   : _unary_term
   | unary_operator _unary_term
-  | STRING _spaces0
+  | STRING _spaces0             {
+                                  $$ = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit));
+                                  $$->lexicalUnitType = SAC_STRING_VALUE;
+                                  $$->desc.stringValue = $1;
+                                }
   | IDENT _spaces0              {
                                   $$ = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit));
                                   $$->lexicalUnitType = SAC_IDENT;

@@ -45,7 +45,14 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
 "~="                    {return INCLUDES;}
 "|="                    {return DASHMATCH;}
 
-{string}                {return STRING;}
+{string}                {
+                          yylval->str = mpool_strndup(
+                            YY_SCANNER_MPOOL(yyscanner),
+                            yytext + 1,
+                            strlen(yytext) - 2
+                          );
+                          return STRING;
+                        }
 
 {ident}                 {
                           yylval->str = mpool_strdup(
