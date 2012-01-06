@@ -3,8 +3,11 @@
  * TODO: Replace this with something more relevant.
  */
 %{
-#include <sacc.h>
 #include "parser.h"
+
+#include <sacc.h>
+
+#include <string.h>
 
 #define YYLEX_PARAM scanner
 #define YYPARSE_PARAM scanner
@@ -233,8 +236,12 @@ term
                                 }
   | IDENT _spaces0              {
                                   $$ = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit));
-                                  $$->lexicalUnitType = SAC_IDENT;
-                                  $$->desc.ident = $1;
+                                  if (strcmp($1, "inherit") != 0) {
+                                    $$->lexicalUnitType = SAC_IDENT;
+                                    $$->desc.ident = $1;
+                                  } else {
+                                    $$->lexicalUnitType = SAC_INHERIT;
+                                  }
                                 }
   | URI _spaces0
   | UNICODERANGE _spaces0

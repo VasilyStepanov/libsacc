@@ -97,6 +97,9 @@ void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
     fprintf(out, "NULL");
   } else {
     switch (value->lexicalUnitType) {
+      case SAC_INHERIT:
+        fprintf(out, "inherit");
+        break;
       case SAC_IDENT:
         fprintf(out, "'%s'", value->desc.ident);
         break;
@@ -115,7 +118,6 @@ void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_OPERATOR_LE:
       case SAC_OPERATOR_GE:
       case SAC_OPERATOR_TILDE:
-      case SAC_INHERIT:
       case SAC_INTEGER:
       case SAC_REAL:
       case SAC_LENGTH_EM:
@@ -202,6 +204,7 @@ void test_parser_basics() {
   parse_stylesheet(parser,
 "selector {\n"
 "  property-ident : ident;\n"
+"  property-inherit : inherit;\n"
 "  property-string1 : 'string';\n"
 "  property-string2 : \"string\";\n"
 "}\n"
@@ -212,6 +215,7 @@ void test_parser_basics() {
   assert_equals(
 "doc {\n"
 "  prp 'property-ident' 'ident'\n"
+"  prp 'property-inherit' inherit\n"
 "  prp 'property-string1' 'string'\n"
 "  prp 'property-string2' 'string'\n"
 "doc }\n",
