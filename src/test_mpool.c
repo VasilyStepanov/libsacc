@@ -1,5 +1,7 @@
 #include "test_mpool.h"
 
+#include "test_utils.h"
+
 #include "mpool.h"
 
 #include <assert.h>
@@ -82,8 +84,21 @@ void test_mpool_realloc() {
 
 
 
+void test_mpool_strdup() {
+  mpool_t mpool;
+  void *s;
+  mpool = mpool_open(256);
+  s = mpool_strdup(mpool, "foobar");
+  assert_equals("foobar", s);
+
+  mpool_close(mpool);
+}
+
+
+
 void test_mpool() {
   test_mpool_basics();
   test_mpool_freepage();
   test_mpool_realloc();
+  test_mpool_strdup();
 }
