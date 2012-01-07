@@ -19,7 +19,7 @@ extern int yylex();
 %union {
 int val;
 char *str;
-SAC_LexicalUnit *lunit;
+SAC_LexicalUnit *value;
 }
 
 %locations
@@ -56,8 +56,8 @@ SAC_LexicalUnit *lunit;
 %token <str> UNICODERANGE
 
 %type <str> property;
-%type <lunit> expr;
-%type <lunit> term;
+%type <value> expr;
+%type <value> term;
 
 %%
 
