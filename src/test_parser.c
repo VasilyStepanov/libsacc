@@ -176,7 +176,7 @@ void property(
   const SAC_LexicalUnit *value,
   SAC_Boolean important)
 {
-  userdata_printf(userData, "prp '%s' ", propertyName);
+  userdata_printf(userData, "prop('%s') ", propertyName);
   dump_lexical_unit(USERDATA_STREAM(userData), value);
   if (important == SAC_TRUE)
     stream_printf(USERDATA_STREAM(userData), " important");
@@ -215,34 +215,45 @@ void parse_stylesheet(SAC_Parser parser, const char *buffer) {
 
 
 void test_parser_basics() {
-  stream_t stream = stream_open();
-  SAC_Parser parser = create_parser(stream);
-
-  parse_stylesheet(parser,
-"selector {\n"
-"  property-ident : ident;\n"
-"  property-inherit : inherit;\n"
-"  property-string : 'string' \"string\";\n"
-"  property-uri1 : url( \t\r\n\f\"uri\"\f\n\r\t );\n"
-"  property-uri2 : url( \t\r\n\fhttp://example.com/\f\n\r\t );\n"
-"  property-unicode : U+A5, U+0-7F, U+590-5ff, U+4E00-9FFF, U+30??;\n"
-"}\n"
-  );
+  stream_t parser_stream = stream_open();
+  stream_t css = stream_open();
+  stream_t match_stream = stream_open();
+  SAC_Parser parser = create_parser(parser_stream);
+  
+  stream_printf(css, "selector {\n");
+  stream_printf(css, "  prop-ident : ident;\n");
+  stream_printf(css, "  prop-inherit : inherit;\n");
+  stream_printf(css, "  prop-string : 'string' \"string\";\n");
+  stream_printf(css, "  prop-uri1 : url( \t\r\n\f\"uri\"\f\n\r\t );\n");
+  stream_printf(css, "  prop-uri2 : "
+    "url( \t\r\n\fhttp://example.com/\f\n\r\t );\n");
+  stream_printf(css, "  prop-unicode : "
+    "U+A5, U+0-7F, U+590-5ff, U+4E00-9FFF, U+30??;\n");
+  stream_printf(css, "}\n");
+  parse_stylesheet(parser, stream_str(css));
+  stream_close(css);
 
   dispose_parser(parser);
 
-  assert_equals(
-"doc {\n"
-"  prp 'property-ident' ident('ident')\n"
-"  prp 'property-inherit' inherit\n"
-"  prp 'property-string' sub(str('string')) sub(str('string'))\n"
-"  prp 'property-uri1' uri('uri')\n"
-"  prp 'property-uri2' uri('http://example.com/')\n"
-"  prp 'property-unicode' sub(urange('U+A5')) sub(,) sub(urange('U+0-7F')) sub(,) sub(urange('U+590-5ff')) sub(,) sub(urange('U+4E00-9FFF')) sub(,) sub(urange('U+30\?\?'))\n"
-"doc }\n",
-  stream_str(stream));
+  stream_printf(match_stream, "doc {\n");
+  stream_printf(match_stream, "  prop('prop-ident') ident('ident')\n");
+  stream_printf(match_stream, "  prop('prop-inherit') inherit\n");
+  stream_printf(match_stream, "  prop('prop-string') "
+    "sub(str('string')) sub(str('string'))\n");
+  stream_printf(match_stream, "  prop('prop-uri1') uri('uri')\n");
+  stream_printf(match_stream, "  prop('prop-uri2') "
+    "uri('http://example.com/')\n");
+  stream_printf(match_stream, "  prop('prop-unicode') "
+    "sub(urange('U+A5')) sub(,) "
+    "sub(urange('U+0-7F')) sub(,) "
+    "sub(urange('U+590-5ff')) sub(,) "
+    "sub(urange('U+4E00-9FFF')) sub(,) "
+    "sub(urange('U+30\?\?'))\n");
+  stream_printf(match_stream, "doc }\n");
+  assert_equals(stream_str(match_stream), stream_str(parser_stream));
+  stream_close(match_stream);
 
-  stream_close(stream);
+  stream_close(parser_stream);
 }
 
 
