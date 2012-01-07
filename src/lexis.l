@@ -16,6 +16,8 @@
 #include "mpool_extra.h"
 #include "parser.h"
 #include "string_extra.h"
+
+#include <stdlib.h>
 %}
 
 h         [0-9a-f]
@@ -29,7 +31,9 @@ string2   \'([\t !#$%&(-~]|\\{nl}|\"|{nonascii}|{escape})*\'
 
 ident     [-]?{nmstart}{nmchar}*
 name      {nmchar}+
-num       [0-9]+|[0-9]*"."[0-9]+
+int       [0-9]+
+real      [0-9]*"."[0-9]+
+num       {int}|{real}
 string    {string1}|{string2}
 url       ([!#$%&*-~]|{nonascii}|{escape})*
 w         [ \t\r\n\f]*
@@ -96,11 +100,13 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
                           );
                           return PERCENTAGE;
                         }
-{num}                   {
-                          yylval->str = mpool_strndup(
-                            YY_SCANNER_MPOOL(yyscanner), yytext, yyleng
-                          );
-                          return NUMBER;
+{int}                   {
+                          yylval->integer = strtol(yytext, NULL, 10);
+                          return INT;
+                        }
+{real}                  {
+                          yylval->real = strtod(yytext, NULL);
+                          return REAL;
                         }
 
 "url("{w}{string}{w}")" {

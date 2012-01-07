@@ -20,6 +20,8 @@ extern int yylex();
 
 %union {
 int val;
+signed long integer;
+double real;
 char *str;
 SAC_LexicalUnit *value;
 }
@@ -48,7 +50,8 @@ SAC_LexicalUnit *value;
 %token <val> LENGTH
 %token <val> MEDIA_SYM
 %token <val> NAMESPACE_SYM
-%token <str> NUMBER
+%token <integer> INT
+%token <real> REAL
 %token <val> PAGE_SYM
 %token <str> PERCENTAGE
 %token <val> S
@@ -283,16 +286,13 @@ term
   | hexcolor
   ;
 _unary_term
-  : NUMBER _spaces0     {
-                          char *dot = strchr($1, '.');
-
-                          if (dot == NULL) {
-                            $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
-                            $$->desc.integer = strtol($1, NULL, 10);
-                          } else {
-                            $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_REAL);
-                            $$->desc.real = strtod($1, NULL);
-                          }
+  : INT _spaces0        {
+                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
+                          $$->desc.integer = $1;
+                        }
+  | REAL _spaces0       {
+                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_REAL);
+                          $$->desc.real = $1;
                         }
   | PERCENTAGE _spaces0 {
                           $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_PERCENTAGE);
