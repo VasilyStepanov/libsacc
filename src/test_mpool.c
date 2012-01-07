@@ -97,9 +97,22 @@ void test_mpool_strdup() {
 
 
 
+void test_mpool_strndup() {
+  mpool_t mpool;
+  void *s;
+  mpool = mpool_open(256);
+  s = mpool_strndup(mpool, "foobar", 3);
+  assert_equals("foo", s);
+
+  mpool_close(mpool);
+}
+
+
+
 void test_mpool() {
   test_mpool_basics();
   test_mpool_freepage();
   test_mpool_realloc();
   test_mpool_strdup();
+  test_mpool_strndup();
 }
