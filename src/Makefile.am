@@ -22,7 +22,8 @@ libsacc_la_HEADERS = ../include/sacc.h
 libsacc_la_SOURCES = parser.c \
                      mlex.c \
                      mpool.c \
-                     mpool_extra.c
+                     mpool_extra.c \
+                     string_extra.c
 
 libsacc_la_LIBADD = libgrammar.la
 
