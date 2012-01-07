@@ -23,7 +23,8 @@ libsacc_la_SOURCES = parser.c \
                      mlex.c \
                      mpool.c \
                      mpool_extra.c \
-                     string_extra.c
+                     string_extra.c \
+                     lexical_unit.c
 
 libsacc_la_LIBADD = libgrammar.la
 
@@ -38,6 +39,7 @@ libgrammar_la_CFLAGS = $(GENERIC_CFLAGS) -Wno-unused-parameter
 
 test_suite_SOURCES = test_utils.c \
                      test_mpool.c \
+                     test_lexical_unit.c \
                      test_parser.c \
                      test_suite.c
 

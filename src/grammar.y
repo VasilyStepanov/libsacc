@@ -4,11 +4,11 @@
  */
 %{
 #include "parser.h"
+#include "lexical_unit.h"
 
 #include <sacc.h>
 
 #include <string.h>
-#include <stdio.h>
 
 #define YYLEX_PARAM scanner
 #define YYPARSE_PARAM scanner
@@ -159,17 +159,9 @@ font_face
   : FONT_FACE_SYM _spaces0 '{' _spaces0 _declarations1 '}' _spaces0
   ;
 operator
-  : '/' _spaces0  {
-                    $$ = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit));
-                    $$->lexicalUnitType = SAC_OPERATOR_SLASH;
-                  }
-  | ',' _spaces0  {
-                    $$ = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit));
-                    $$->lexicalUnitType = SAC_OPERATOR_COMMA;
-                  }
-  |               {
-                    $$ = NULL;
-                  }
+  : '/' _spaces0  { $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_SLASH); }
+  | ',' _spaces0  { $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_COMMA); }
+  |               { $$ = NULL; }
   ;
 combinator
   : '+' _spaces0
@@ -235,64 +227,52 @@ prio
 expr
   : term                { $$ = $1; }
   | expr operator term  {
-                          size_t n = 0;
+                          size_t old_size;
+                          size_t new_size;
                           
                           if ($1->lexicalUnitType == SAC_SUB_EXPRESSION) {
-                            SAC_LexicalUnit **sub;
-
-                            for (sub = $1->desc.subValues; *sub != NULL; ++sub, ++n);
+                            old_size = lexical_unit_array_size($1->desc.subValues);
                           } else {
-                            n = 1;
+                            old_size = 1;
                           }
 
-                          if ($2 != NULL) ++n;
-                          ++n;
+                          new_size = old_size + 1;
+                          if ($2 != NULL) ++new_size;
 
-                          $$ = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit));
-                          $$->lexicalUnitType = SAC_SUB_EXPRESSION;
+                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_SUB_EXPRESSION);
                           if ($1->lexicalUnitType == SAC_SUB_EXPRESSION) {
-                            SAC_LexicalUnit **sub;
-
-                            $$->desc.subValues = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit*) * (n + 1));
-                            n = 0;
-                            for (sub = $1->desc.subValues; *sub != NULL; ++sub, ++n)
-                              $$->desc.subValues[n] = *sub;
+                            $$->desc.subValues = lexical_unit_array_alloc(YY_SCANNER_MPOOL(scanner), new_size);
+                            lexical_unit_array_cpy($$->desc.subValues, $1->desc.subValues);
                           } else {
-                            $$->desc.subValues = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit*) * (n + 1));
+                            $$->desc.subValues = lexical_unit_array_alloc(YY_SCANNER_MPOOL(scanner), new_size);
                             $$->desc.subValues[0] = $1;
-                            n = 1;
                           }
 
-                          if ($2 != NULL) $$->desc.subValues[n++] = $2;
-                          $$->desc.subValues[n++] = $3;
-                          $$->desc.subValues[n++] = NULL;
+                          if ($2 != NULL) $$->desc.subValues[old_size++] = $2;
+                          $$->desc.subValues[old_size++] = $3;
                         }
   ;
 term
   : _unary_term
   | unary_operator _unary_term
   | STRING _spaces0             {
-                                  $$ = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit));
-                                  $$->lexicalUnitType = SAC_STRING_VALUE;
+                                  $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
                                   $$->desc.stringValue = $1;
                                 }
   | IDENT _spaces0              {
-                                  $$ = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit));
                                   if (strcmp($1, "inherit") != 0) {
-                                    $$->lexicalUnitType = SAC_IDENT;
+                                    $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_IDENT);
                                     $$->desc.ident = $1;
                                   } else {
-                                    $$->lexicalUnitType = SAC_INHERIT;
+                                    $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INHERIT);
                                   }
                                 }
   | URI _spaces0                {
-                                  $$ = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit));
-                                  $$->lexicalUnitType = SAC_URI;
+                                  $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_URI);
                                   $$->desc.uri = $1;
                                 }
   | UNICODERANGE _spaces0       {
-                                  $$ = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit));
-                                  $$->lexicalUnitType = SAC_UNICODERANGE;
+                                  $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_UNICODERANGE);
                                   $$->desc.unicodeRange = $1;
                                 }
   | hexcolor
