@@ -179,7 +179,7 @@ struct _SAC_LexicalUnit {
     SAC_STRING unicodeRange; /* @@TO BE DEFINED */
 
     /* SAC_SUB_EXPRESSION */
-    SAC_LexicalUnit *subValues;
+    SAC_LexicalUnit **subValues;
   } desc;
 };
 

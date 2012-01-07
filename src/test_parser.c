@@ -97,22 +97,35 @@ void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
     fprintf(out, "NULL");
   } else {
     switch (value->lexicalUnitType) {
+      case SAC_OPERATOR_COMMA:
+        fprintf(out, ",");
+        break;
       case SAC_INHERIT:
         fprintf(out, "inherit");
         break;
       case SAC_URI:
-        fprintf(out, "u'%s'", value->desc.uri);
+        fprintf(out, "uri('%s')", value->desc.uri);
         break;
       case SAC_IDENT:
-        fprintf(out, "i'%s'", value->desc.ident);
+        fprintf(out, "ident('%s')", value->desc.ident);
         break;
       case SAC_STRING_VALUE:
-        fprintf(out, "s'%s'", value->desc.stringValue);
+        fprintf(out, "str('%s')", value->desc.stringValue);
         break;
       case SAC_UNICODERANGE:
-        fprintf(out, "r'%s'", value->desc.unicodeRange);
+        fprintf(out, "urange('%s')", value->desc.unicodeRange);
         break;
-      case SAC_OPERATOR_COMMA:
+      case SAC_SUB_EXPRESSION:
+        {
+          SAC_LexicalUnit **sub;
+          for (sub = value->desc.subValues; *sub != NULL; ++sub) {
+            if (sub != value->desc.subValues) fprintf(out, " ");
+            fprintf(out, "sub(");
+            dump_lexical_unit(out, *sub);
+            fprintf(out, ")");
+          }
+        }
+        break;
       case SAC_OPERATOR_PLUS:
       case SAC_OPERATOR_MINUS:
       case SAC_OPERATOR_MULTIPLY:
@@ -147,7 +160,6 @@ void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_KILOHERTZ:
       case SAC_ATTR:
       case SAC_RECT_FUNCTION:
-      case SAC_SUB_EXPRESSION:
       case SAC_FUNCTION:
       case SAC_DIMENSION:
         break;
@@ -209,15 +221,10 @@ void test_parser_basics() {
 "selector {\n"
 "  property-ident : ident;\n"
 "  property-inherit : inherit;\n"
-"  property-string1 : 'string';\n"
-"  property-string2 : \"string\";\n"
+"  property-string : 'string' \"string\";\n"
 "  property-uri1 : url( \t\r\n\f\"uri\"\f\n\r\t );\n"
 "  property-uri2 : url( \t\r\n\fhttp://example.com/\f\n\r\t );\n"
-"  property-unicode1 : U+A5;\n"
-"  property-unicode2 : U+0-7F;\n"
-"  property-unicode3 : U+590-5ff;\n"
-"  property-unicode4 : U+4E00-9FFF;\n"
-"  property-unicode5 : U+30??;\n"
+"  property-unicode : U+A5, U+0-7F, U+590-5ff, U+4E00-9FFF, U+30??;\n"
 "}\n"
   );
 
@@ -225,17 +232,12 @@ void test_parser_basics() {
 
   assert_equals(
 "doc {\n"
-"  prp 'property-ident' i'ident'\n"
+"  prp 'property-ident' ident('ident')\n"
 "  prp 'property-inherit' inherit\n"
-"  prp 'property-string1' s'string'\n"
-"  prp 'property-string2' s'string'\n"
-"  prp 'property-uri1' u'uri'\n"
-"  prp 'property-uri2' u'http://example.com/'\n"
-"  prp 'property-unicode1' r'U+A5'\n"
-"  prp 'property-unicode2' r'U+0-7F'\n"
-"  prp 'property-unicode3' r'U+590-5ff'\n"
-"  prp 'property-unicode4' r'U+4E00-9FFF'\n"
-"  prp 'property-unicode5' r'U+30\?\?'\n"
+"  prp 'property-string' sub(str('string')) sub(str('string'))\n"
+"  prp 'property-uri1' uri('uri')\n"
+"  prp 'property-uri2' uri('http://example.com/')\n"
+"  prp 'property-unicode' sub(urange('U+A5')) sub(,) sub(urange('U+0-7F')) sub(,) sub(urange('U+590-5ff')) sub(,) sub(urange('U+4E00-9FFF')) sub(,) sub(urange('U+30\?\?'))\n"
 "doc }\n",
   data);
 

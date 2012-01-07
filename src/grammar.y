@@ -8,6 +8,7 @@
 #include <sacc.h>
 
 #include <string.h>
+#include <stdio.h>
 
 #define YYLEX_PARAM scanner
 #define YYPARSE_PARAM scanner
@@ -58,6 +59,7 @@ SAC_LexicalUnit *value;
 %type <str> property;
 %type <value> expr;
 %type <value> term;
+%type <value> operator;
 
 %%
 
@@ -157,9 +159,17 @@ font_face
   : FONT_FACE_SYM _spaces0 '{' _spaces0 _declarations1 '}' _spaces0
   ;
 operator
-  : '/' _spaces0
-  | ',' _spaces0
-  |
+  : '/' _spaces0  {
+                    $$ = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit));
+                    $$->lexicalUnitType = SAC_OPERATOR_SLASH;
+                  }
+  | ',' _spaces0  {
+                    $$ = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit));
+                    $$->lexicalUnitType = SAC_OPERATOR_COMMA;
+                  }
+  |               {
+                    $$ = NULL;
+                  }
   ;
 combinator
   : '+' _spaces0
@@ -224,7 +234,39 @@ prio
   ;
 expr
   : term                { $$ = $1; }
-  | expr operator term  { $$ = NULL; }
+  | expr operator term  {
+                          size_t n = 0;
+                          
+                          if ($1->lexicalUnitType == SAC_SUB_EXPRESSION) {
+                            SAC_LexicalUnit **sub;
+
+                            for (sub = $1->desc.subValues; *sub != NULL; ++sub, ++n);
+                          } else {
+                            n = 1;
+                          }
+
+                          if ($2 != NULL) ++n;
+                          ++n;
+
+                          $$ = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit));
+                          $$->lexicalUnitType = SAC_SUB_EXPRESSION;
+                          if ($1->lexicalUnitType == SAC_SUB_EXPRESSION) {
+                            SAC_LexicalUnit **sub;
+
+                            $$->desc.subValues = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit*) * (n + 1));
+                            n = 0;
+                            for (sub = $1->desc.subValues; *sub != NULL; ++sub, ++n)
+                              $$->desc.subValues[n] = *sub;
+                          } else {
+                            $$->desc.subValues = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit*) * (n + 1));
+                            $$->desc.subValues[0] = $1;
+                            n = 1;
+                          }
+
+                          if ($2 != NULL) $$->desc.subValues[n++] = $2;
+                          $$->desc.subValues[n++] = $3;
+                          $$->desc.subValues[n++] = NULL;
+                        }
   ;
 term
   : _unary_term
