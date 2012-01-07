@@ -100,11 +100,14 @@ void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_INHERIT:
         fprintf(out, "inherit");
         break;
+      case SAC_URI:
+        fprintf(out, "u'%s'", value->desc.uri);
+        break;
       case SAC_IDENT:
-        fprintf(out, "'%s'", value->desc.ident);
+        fprintf(out, "i'%s'", value->desc.ident);
         break;
       case SAC_STRING_VALUE:
-        fprintf(out, "'%s'", value->desc.stringValue);
+        fprintf(out, "s'%s'", value->desc.stringValue);
         break;
       case SAC_OPERATOR_COMMA:
       case SAC_OPERATOR_PLUS:
@@ -129,7 +132,6 @@ void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_LENGTH_POINT:
       case SAC_LENGTH_PICA:
       case SAC_PERCENTAGE:
-      case SAC_URI:
       case SAC_COUNTER_FUNCTION:
       case SAC_COUNTERS_FUNCTION:
       case SAC_RGBCOLOR:
@@ -207,6 +209,8 @@ void test_parser_basics() {
 "  property-inherit : inherit;\n"
 "  property-string1 : 'string';\n"
 "  property-string2 : \"string\";\n"
+"  property-uri1 : url( \t\r\n\f\"uri\"\f\n\r\t );\n"
+"  property-uri2 : url( \t\r\n\fhttp://example.com/\f\n\r\t );\n"
 "}\n"
   );
 
@@ -214,10 +218,12 @@ void test_parser_basics() {
 
   assert_equals(
 "doc {\n"
-"  prp 'property-ident' 'ident'\n"
+"  prp 'property-ident' i'ident'\n"
 "  prp 'property-inherit' inherit\n"
-"  prp 'property-string1' 'string'\n"
-"  prp 'property-string2' 'string'\n"
+"  prp 'property-string1' s'string'\n"
+"  prp 'property-string2' s'string'\n"
+"  prp 'property-uri1' u'uri'\n"
+"  prp 'property-uri2' u'http://example.com/'\n"
 "doc }\n",
   data);
 

@@ -10,10 +10,12 @@
 %option noyyalloc noyyrealloc noyyfree
 %{
 #include <sacc.h>
+
 #include "grammar.h"
 #include "mpool.h"
 #include "mpool_extra.h"
 #include "parser.h"
+#include "string_extra.h"
 %}
 
 h         [0-9a-f]
@@ -91,8 +93,24 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
 {num}%                  {return PERCENTAGE;}
 {num}                   {return NUMBER;}
 
-"url("{w}{string}{w}")" {return URI;}
-"url("{w}{url}{w}")"    {return URI;}
+"url("{w}{string}{w}")" {
+                          const char *text;
+                          size_t len;
+                          strntrim(yytext + 4, yyleng - 5, &text, &len, " \t\r\n\f");
+                          yylval->str = mpool_strndup(
+                            YY_SCANNER_MPOOL(yyscanner), text + 1, len - 2
+                          );
+                          return URI;
+                        }
+"url("{w}{url}{w}")"    {
+                          const char *text;
+                          size_t len;
+                          strntrim(yytext + 4, yyleng - 5, &text, &len, " \t\r\n\f");
+                          yylval->str = mpool_strndup(
+                            YY_SCANNER_MPOOL(yyscanner), text, len
+                          );
+                          return URI;
+                        }
 {ident}"("              {return FUNCTION;}
 
 U\+{range}              {return UNICODERANGE;}
