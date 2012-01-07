@@ -9,6 +9,7 @@
 #include <sacc.h>
 
 #include <string.h>
+#include <stdlib.h>
 
 #define YYLEX_PARAM scanner
 #define YYPARSE_PARAM scanner
@@ -47,7 +48,7 @@ SAC_LexicalUnit *value;
 %token <val> LENGTH
 %token <val> MEDIA_SYM
 %token <val> NAMESPACE_SYM
-%token <val> NUMBER
+%token <str> NUMBER
 %token <val> PAGE_SYM
 %token <val> PERCENTAGE
 %token <val> S
@@ -60,6 +61,7 @@ SAC_LexicalUnit *value;
 %type <value> expr;
 %type <value> term;
 %type <value> operator;
+%type <value> _unary_term;
 
 %%
 
@@ -254,7 +256,10 @@ expr
   ;
 term
   : _unary_term
-  | unary_operator _unary_term
+  | unary_operator _unary_term  {
+                                  $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
+                                  $$->desc.stringValue = "bar";
+                                }
   | STRING _spaces0             {
                                   $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
                                   $$->desc.stringValue = $1;
@@ -278,7 +283,17 @@ term
   | hexcolor
   ;
 _unary_term
-  : NUMBER _spaces0
+  : NUMBER _spaces0     {
+                          char *dot = strchr($1, '.');
+
+                          if (dot == NULL) {
+                            $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
+                            $$->desc.integer = strtol($1, NULL, 10);
+                          } else {
+                            $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_REAL);
+                            $$->desc.real = strtod($1, NULL);
+                          }
+                        }
   | PERCENTAGE _spaces0
   | LENGTH _spaces0
   | EMS _spaces0
