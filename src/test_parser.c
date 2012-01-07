@@ -11,21 +11,22 @@
 
 
 
-#define USERDATA_FILE(userData) ((struct userdata_t*)(userData))->file
-#define USERDATA_INDENT(userData) ((struct userdata_t*)(userData))->indent
+#define USERDATA(userData) ((struct userdata_t*)(userData))
+#define USERDATA_STREAM(userData) USERDATA(userData)->stream
+#define USERDATA_INDENT(userData) USERDATA(userData)->indent
 
 struct userdata_t {
-  FILE *file;
+  stream_t stream;
   char *indent;
 };
 
 
 
-void* userdata_open(char **data, size_t *size) {
+void* userdata_open(stream_t stream) {
   void *ret =
     (struct userdata_t*)malloc(sizeof(struct userdata_t));
 
-  USERDATA_FILE(ret) = open_memstream(data, size);
+  USERDATA_STREAM(ret) = stream;
   USERDATA_INDENT(ret) = (char*)malloc(sizeof(char));
   *USERDATA_INDENT(ret) = '\0';
 
@@ -36,7 +37,6 @@ void* userdata_open(char **data, size_t *size) {
 
 void userdata_close(void *userdata) {
   free(USERDATA_INDENT(userdata));
-  fclose(USERDATA_FILE(userdata));
   free(userdata);
 }
 
@@ -71,9 +71,10 @@ void userdata_dec_indent(void *userdata) {
 void userdata_printf(void *userdata, const char *fmt, ...) {
   va_list args;
 
+  stream_printf(USERDATA_STREAM(userdata), "%s", USERDATA_INDENT(userdata));
   va_start(args, fmt);
-  fprintf(USERDATA_FILE(userdata), "%s", USERDATA_INDENT(userdata));
-  vfprintf(USERDATA_FILE(userdata), fmt, args);
+  stream_vprintf(USERDATA_STREAM(userdata), fmt, args);
+  va_end(args);
 }
 
 
@@ -92,37 +93,37 @@ void end_document(void *userData) {
 
 
 
-void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
+void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
   if (value == NULL) {
-    fprintf(out, "NULL");
+    stream_printf(out, "NULL");
   } else {
     switch (value->lexicalUnitType) {
       case SAC_OPERATOR_COMMA:
-        fprintf(out, ",");
+        stream_printf(out, ",");
         break;
       case SAC_INHERIT:
-        fprintf(out, "inherit");
+        stream_printf(out, "inherit");
         break;
       case SAC_URI:
-        fprintf(out, "uri('%s')", value->desc.uri);
+        stream_printf(out, "uri('%s')", value->desc.uri);
         break;
       case SAC_IDENT:
-        fprintf(out, "ident('%s')", value->desc.ident);
+        stream_printf(out, "ident('%s')", value->desc.ident);
         break;
       case SAC_STRING_VALUE:
-        fprintf(out, "str('%s')", value->desc.stringValue);
+        stream_printf(out, "str('%s')", value->desc.stringValue);
         break;
       case SAC_UNICODERANGE:
-        fprintf(out, "urange('%s')", value->desc.unicodeRange);
+        stream_printf(out, "urange('%s')", value->desc.unicodeRange);
         break;
       case SAC_SUB_EXPRESSION:
         {
           SAC_LexicalUnit **sub;
           for (sub = value->desc.subValues; *sub != NULL; ++sub) {
-            if (sub != value->desc.subValues) fprintf(out, " ");
-            fprintf(out, "sub(");
+            if (sub != value->desc.subValues) stream_printf(out, " ");
+            stream_printf(out, "sub(");
             dump_lexical_unit(out, *sub);
-            fprintf(out, ")");
+            stream_printf(out, ")");
           }
         }
         break;
@@ -176,18 +177,19 @@ void property(
   SAC_Boolean important)
 {
   userdata_printf(userData, "prp '%s' ", propertyName);
-  dump_lexical_unit(USERDATA_FILE(userData), value);
-  if (important == SAC_TRUE) fprintf(USERDATA_FILE(userData), " important");
-  fprintf(USERDATA_FILE(userData), "\n");
+  dump_lexical_unit(USERDATA_STREAM(userData), value);
+  if (important == SAC_TRUE)
+    stream_printf(USERDATA_STREAM(userData), " important");
+  stream_printf(USERDATA_STREAM(userData), "\n");
 }
 
 
 
-SAC_Parser create_parser(char **data, size_t *size) {
+SAC_Parser create_parser(stream_t stream) {
   struct userdata_t *userData;
   SAC_Parser parser;
   
-  userData = userdata_open(data, size);
+  userData = userdata_open(stream);
 
   parser = SAC_CreateParser();
   
@@ -213,9 +215,8 @@ void parse_stylesheet(SAC_Parser parser, const char *buffer) {
 
 
 void test_parser_basics() {
-  char *data;
-  size_t size;
-  SAC_Parser parser = create_parser(&data, &size);
+  stream_t stream = stream_open();
+  SAC_Parser parser = create_parser(stream);
 
   parse_stylesheet(parser,
 "selector {\n"
@@ -239,9 +240,9 @@ void test_parser_basics() {
 "  prp 'property-uri2' uri('http://example.com/')\n"
 "  prp 'property-unicode' sub(urange('U+A5')) sub(,) sub(urange('U+0-7F')) sub(,) sub(urange('U+590-5ff')) sub(,) sub(urange('U+4E00-9FFF')) sub(,) sub(urange('U+30\?\?'))\n"
 "doc }\n",
-  data);
+  stream_str(stream));
 
-  free(data);
+  stream_close(stream);
 }
 
 

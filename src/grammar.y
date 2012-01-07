@@ -248,8 +248,8 @@ expr
                             $$->desc.subValues[0] = $1;
                           }
 
-                          if ($2 != NULL) $$->desc.subValues[old_size++] = $2;
-                          $$->desc.subValues[old_size++] = $3;
+                          if ($2 != NULL) $$->desc.subValues[new_size - 2] = $2;
+                          $$->desc.subValues[new_size - 1] = $3;
                         }
   ;
 term
