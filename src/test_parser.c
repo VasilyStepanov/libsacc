@@ -110,6 +110,10 @@ void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
       case SAC_REAL:
         stream_printf(out, "real(%g)", value->desc.real);
         break;
+      case SAC_PERCENTAGE:
+        stream_printf(out, "percentage(%g%s)",
+          value->desc.dimension.value.sreal, value->desc.dimension.unit);
+        break;
       case SAC_URI:
         stream_printf(out, "uri('%s')", value->desc.uri);
         break;
@@ -152,7 +156,6 @@ void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
       case SAC_LENGTH_MILLIMETER:
       case SAC_LENGTH_POINT:
       case SAC_LENGTH_PICA:
-      case SAC_PERCENTAGE:
       case SAC_COUNTER_FUNCTION:
       case SAC_COUNTERS_FUNCTION:
       case SAC_RGBCOLOR:
@@ -234,6 +237,7 @@ void test_parser_basics() {
   stream_printf(css, "  prop-unicode : "
     "U+A5, U+0-7F, U+590-5ff, U+4E00-9FFF, U+30??;\n");
   stream_printf(css, "  prop-number : 149 3.14;\n");
+  stream_printf(css, "  prop-percentage : 149%;\n");
   stream_printf(css, "}\n");
   parse_stylesheet(parser, stream_str(css));
   stream_close(css);
@@ -256,6 +260,7 @@ void test_parser_basics() {
     "sub(urange('U+30\?\?'))\n");
   stream_printf(match_stream, "  prop('prop-number') "
     "sub(int(149)) sub(real(3.14))\n");
+  stream_printf(match_stream, "  prop('prop-percentage') percentage(149%)\n");
   stream_printf(match_stream, "doc }\n");
   assert_equals(stream_str(match_stream), stream_str(parser_stream));
   stream_close(match_stream);

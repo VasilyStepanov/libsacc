@@ -90,7 +90,12 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
 {num}Hz                 {return FREQ;}
 {num}kHz                {return FREQ;}
 {num}{ident}            {return DIMEN;}
-{num}%                  {return PERCENTAGE;}
+{num}%                  {
+                          yylval->str = mpool_strndup(
+                            YY_SCANNER_MPOOL(yyscanner), yytext, yyleng
+                          );
+                          return PERCENTAGE;
+                        }
 {num}                   {
                           yylval->str = mpool_strndup(
                             YY_SCANNER_MPOOL(yyscanner), yytext, yyleng
