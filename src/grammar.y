@@ -53,7 +53,7 @@ SAC_LexicalUnit *lunit;
 %token <str> STRING
 %token <val> TIME
 %token <str> URI
-%token <val> UNICODERANGE
+%token <str> UNICODERANGE
 
 %type <str> property;
 %type <lunit> expr;
@@ -248,7 +248,11 @@ term
                                   $$->lexicalUnitType = SAC_URI;
                                   $$->desc.uri = $1;
                                 }
-  | UNICODERANGE _spaces0
+  | UNICODERANGE _spaces0       {
+                                  $$ = mpool_alloc(YY_SCANNER_MPOOL(scanner), sizeof(SAC_LexicalUnit));
+                                  $$->lexicalUnitType = SAC_UNICODERANGE;
+                                  $$->desc.unicodeRange = $1;
+                                }
   | hexcolor
   ;
 _unary_term

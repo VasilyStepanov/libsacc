@@ -113,7 +113,17 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
                         }
 {ident}"("              {return FUNCTION;}
 
-U\+{range}              {return UNICODERANGE;}
-U\+{h}{1,6}-{h}{1,6}    {return UNICODERANGE;}
+U\+{range}              {
+                          yylval->str = mpool_strndup(
+                            YY_SCANNER_MPOOL(yyscanner), yytext, yyleng
+                          );
+                          return UNICODERANGE;
+                        }
+U\+{h}{1,6}-{h}{1,6}    {
+                          yylval->str = mpool_strndup(
+                            YY_SCANNER_MPOOL(yyscanner), yytext, yyleng
+                          );
+                          return UNICODERANGE;
+                        }
 
 .                       {return *yytext;}

@@ -109,6 +109,9 @@ void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_STRING_VALUE:
         fprintf(out, "s'%s'", value->desc.stringValue);
         break;
+      case SAC_UNICODERANGE:
+        fprintf(out, "r'%s'", value->desc.unicodeRange);
+        break;
       case SAC_OPERATOR_COMMA:
       case SAC_OPERATOR_PLUS:
       case SAC_OPERATOR_MINUS:
@@ -144,7 +147,6 @@ void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_KILOHERTZ:
       case SAC_ATTR:
       case SAC_RECT_FUNCTION:
-      case SAC_UNICODERANGE:
       case SAC_SUB_EXPRESSION:
       case SAC_FUNCTION:
       case SAC_DIMENSION:
@@ -211,6 +213,11 @@ void test_parser_basics() {
 "  property-string2 : \"string\";\n"
 "  property-uri1 : url( \t\r\n\f\"uri\"\f\n\r\t );\n"
 "  property-uri2 : url( \t\r\n\fhttp://example.com/\f\n\r\t );\n"
+"  property-unicode1 : U+A5;\n"
+"  property-unicode2 : U+0-7F;\n"
+"  property-unicode3 : U+590-5ff;\n"
+"  property-unicode4 : U+4E00-9FFF;\n"
+"  property-unicode5 : U+30??;\n"
 "}\n"
   );
 
@@ -224,6 +231,11 @@ void test_parser_basics() {
 "  prp 'property-string2' s'string'\n"
 "  prp 'property-uri1' u'uri'\n"
 "  prp 'property-uri2' u'http://example.com/'\n"
+"  prp 'property-unicode1' r'U+A5'\n"
+"  prp 'property-unicode2' r'U+0-7F'\n"
+"  prp 'property-unicode3' r'U+590-5ff'\n"
+"  prp 'property-unicode4' r'U+4E00-9FFF'\n"
+"  prp 'property-unicode5' r'U+30\?\?'\n"
 "doc }\n",
   data);
 
