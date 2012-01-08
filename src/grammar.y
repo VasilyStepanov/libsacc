@@ -54,7 +54,7 @@ SAC_LexicalUnit *value;
 %token <integer> INT
 %token <real> REAL
 %token <val> PAGE_SYM
-%token <str> PERCENTAGE
+%token <real> PERCENTAGE
 %token <val> S
 %token <str> STRING
 %token <val> TIME
@@ -298,7 +298,7 @@ _unary_term
   | PERCENTAGE _spaces0 {
                           $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_PERCENTAGE);
                           $$->desc.dimension.unit = "%";
-                          $$->desc.dimension.value.sreal = strtod($1, NULL);
+                          $$->desc.dimension.value.sreal = $1;
                         }
   | LENGTH _spaces0
   | EMS _spaces0
