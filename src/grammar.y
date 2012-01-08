@@ -22,6 +22,7 @@ extern int yylex();
 int val;
 signed long integer;
 double real;
+char ch;
 char *str;
 SAC_LexicalUnit *value;
 }
@@ -66,6 +67,7 @@ SAC_LexicalUnit *value;
 %type <value> term;
 %type <value> operator;
 %type <value> _unary_term;
+%type <ch> unary_operator;
 
 %%
 
@@ -175,8 +177,8 @@ combinator
   | /* empty */
   ;
 unary_operator
-  : '-'
-  | '+'
+  : '-' { $$ = '-'; }
+  | '+' { $$ = '+'; }
   ;
 property
   : IDENT _spaces0 { $$ = $1; }
@@ -260,52 +262,59 @@ expr
   ;
 term
   : _unary_term
-  | unary_operator _unary_term  {
-                                  $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
-                                  $$->desc.stringValue = "bar";
-                                }
-  | STRING _spaces0             {
-                                  $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
-                                  $$->desc.stringValue = $1;
-                                }
-  | IDENT _spaces0              {
-                                  if (strcmp($1, "inherit") != 0) {
-                                    $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_IDENT);
-                                    $$->desc.ident = $1;
-                                  } else {
-                                    $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INHERIT);
+  | unary_operator _unary_term
+  | STRING _spaces0               {
+                                    $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
+                                    $$->desc.stringValue = $1;
                                   }
-                                }
-  | URI _spaces0                {
-                                  $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_URI);
-                                  $$->desc.uri = $1;
-                                }
-  | UNICODERANGE _spaces0       {
-                                  $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_UNICODERANGE);
-                                  $$->desc.unicodeRange = $1;
-                                }
+  | IDENT _spaces0                {
+                                    if (strcmp($1, "inherit") != 0) {
+                                      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_IDENT);
+                                      $$->desc.ident = $1;
+                                    } else {
+                                      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INHERIT);
+                                    }
+                                  }
+  | URI _spaces0                  {
+                                    $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_URI);
+                                    $$->desc.uri = $1;
+                                  }
+  | UNICODERANGE _spaces0         {
+                                    $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_UNICODERANGE);
+                                    $$->desc.unicodeRange = $1;
+                                  }
   | hexcolor
-  | FREQ_HZ _spaces0            {
-                                  $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_HERTZ);
-                                  $$->desc.dimension.unit = "Hz";
-                                  $$->desc.dimension.value.ureal = $1;
-                                }
-  | FREQ_KHZ _spaces0           {
-                                  $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_KILOHERTZ);
-                                  $$->desc.stringValue = "kHz";
-                                  $$->desc.dimension.value.ureal = $1;
-                                }
+  | FREQ_HZ _spaces0              {
+                                    $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_HERTZ);
+                                    $$->desc.dimension.unit = "Hz";
+                                    $$->desc.dimension.value.ureal = $1;
+                                  }
+  | FREQ_KHZ _spaces0             {
+                                    $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_KILOHERTZ);
+                                    $$->desc.stringValue = "kHz";
+                                    $$->desc.dimension.value.ureal = $1;
+                                  }
+  | INT _spaces0                  {
+                                    $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
+                                    $$->desc.integer = $1;
+                                  }
+  | unary_operator INT _spaces0   {
+                                    if ($1 == '-') $2 = -$2;
+                                    $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
+                                    $$->desc.integer = $2;
+                                  }
+  | REAL _spaces0                 {
+                                    $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_REAL);
+                                    $$->desc.real = $1;
+                                  }
+  | unary_operator REAL _spaces0  {
+                                    if ($1 == '-') $2 = -$2;
+                                    $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_REAL);
+                                    $$->desc.real = $2;
+                                  }
   ;
 _unary_term
-  : INT _spaces0        {
-                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
-                          $$->desc.integer = $1;
-                        }
-  | REAL _spaces0       {
-                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_REAL);
-                          $$->desc.real = $1;
-                        }
-  | PERCENTAGE _spaces0 {
+  : PERCENTAGE _spaces0 {
                           $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_PERCENTAGE);
                           $$->desc.dimension.unit = "%";
                           $$->desc.dimension.value.sreal = $1;

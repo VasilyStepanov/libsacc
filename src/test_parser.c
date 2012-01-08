@@ -242,7 +242,8 @@ void test_parser_basics() {
     "url( \t\r\n\fhttp://example.com/\f\n\r\t );\n");
   stream_printf(css, "  prop-unicode : "
     "U+A5, U+0-7F, U+590-5ff, U+4E00-9FFF, U+30??;\n");
-  stream_printf(css, "  prop-number : 149 3.14;\n");
+  stream_printf(css, "  prop-int : 149 -148;\n");
+  stream_printf(css, "  prop-real : 3.14 -2.71;\n");
   stream_printf(css, "  prop-percentage : 149%;\n");
   stream_printf(css, "  prop-freq : 50.1hz 5.1khz;\n");
   stream_printf(css, "}\n");
@@ -265,8 +266,10 @@ void test_parser_basics() {
     "sub(urange('U+590-5ff')) sub(,) "
     "sub(urange('U+4E00-9FFF')) sub(,) "
     "sub(urange('U+30\?\?'))\n");
-  stream_printf(match_stream, "  prop('prop-number') "
-    "sub(int(149)) sub(real(3.14))\n");
+  stream_printf(match_stream, "  prop('prop-int') "
+    "sub(int(149)) sub(int(-148))\n");
+  stream_printf(match_stream, "  prop('prop-real') "
+    "sub(real(3.14)) sub(real(-2.71))\n");
   stream_printf(match_stream, "  prop('prop-percentage') percentage(149%)\n");
   stream_printf(match_stream, "  prop('prop-freq') "
     "sub(hertz(50.1Hz)) sub(khertz(5.1kHz))\n");
