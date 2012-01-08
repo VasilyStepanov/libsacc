@@ -40,7 +40,8 @@ SAC_LexicalUnit *value;
 %token <val> EMS
 %token <val> EXS
 %token <val> FONT_FACE_SYM
-%token <val> FREQ
+%token <real> FREQ_HZ
+%token <real> FREQ_KHZ
 %token <val> FUNCTION
 %token <val> HASH
 %token <str> IDENT
@@ -304,7 +305,16 @@ _unary_term
   | EXS _spaces0
   | ANGLE _spaces0
   | TIME _spaces0
-  | FREQ _spaces0
+  | FREQ_HZ _spaces0    {
+                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_HERTZ);
+                          $$->desc.dimension.unit = "Hz";
+                          $$->desc.dimension.value.ureal = $1;
+                        }
+  | FREQ_KHZ _spaces0   {
+                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_KILOHERTZ);
+                          $$->desc.stringValue = "kHz";
+                          $$->desc.dimension.value.ureal = $1;
+                        }
   | function
   ;
 function
