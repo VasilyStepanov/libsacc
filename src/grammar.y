@@ -285,6 +285,16 @@ term
                                   $$->desc.unicodeRange = $1;
                                 }
   | hexcolor
+  | FREQ_HZ _spaces0            {
+                                  $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_HERTZ);
+                                  $$->desc.dimension.unit = "Hz";
+                                  $$->desc.dimension.value.ureal = $1;
+                                }
+  | FREQ_KHZ _spaces0           {
+                                  $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_KILOHERTZ);
+                                  $$->desc.stringValue = "kHz";
+                                  $$->desc.dimension.value.ureal = $1;
+                                }
   ;
 _unary_term
   : INT _spaces0        {
@@ -305,16 +315,6 @@ _unary_term
   | EXS _spaces0
   | ANGLE _spaces0
   | TIME _spaces0
-  | FREQ_HZ _spaces0    {
-                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_HERTZ);
-                          $$->desc.dimension.unit = "Hz";
-                          $$->desc.dimension.value.ureal = $1;
-                        }
-  | FREQ_KHZ _spaces0   {
-                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_KILOHERTZ);
-                          $$->desc.stringValue = "kHz";
-                          $$->desc.dimension.value.ureal = $1;
-                        }
   | function
   ;
 function
