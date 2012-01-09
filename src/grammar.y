@@ -40,8 +40,8 @@ SAC_LexicalUnit *value;
 %token <val> CHARSET_SYM
 %token <val> DASHMATCH
 %token <val> DIMEN
-%token <val> EMS
-%token <val> EXS
+%token <real> LENGTH_EM
+%token <real> LENGTH_EX
 %token <val> FONT_FACE_SYM
 %token <real> FREQ_HZ
 %token <real> FREQ_KHZ
@@ -338,11 +338,21 @@ term
                                           $$->desc.dimension.unit = "grad";
                                           $$->desc.dimension.value.ureal = $1;
                                         }
+  | unary_operator LENGTH_EM _spaces0   {
+                                          if ($1 == '-') $2 = -$2;
+                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_EM);
+                                          $$->desc.dimension.unit = "em";
+                                          $$->desc.dimension.value.sreal = $2;
+                                        }
+  | unary_operator LENGTH_EX _spaces0   {
+                                          if ($1 == '-') $2 = -$2;
+                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_EX);
+                                          $$->desc.dimension.unit = "ex";
+                                          $$->desc.dimension.value.sreal = $2;
+                                        }
   ;
 _unary_term
   : LENGTH _spaces0
-  | EMS _spaces0
-  | EXS _spaces0
   | function
   ;
 function

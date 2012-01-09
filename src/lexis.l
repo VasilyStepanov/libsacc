@@ -78,8 +78,14 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
 
 "!{w}important"         {return IMPORTANT_SYM;}
 
-{num}em                 {return EMS;}
-{num}ex                 {return EXS;}
+{num}em                 {
+                          yylval->real = strtod(yytext, NULL);
+                          return LENGTH_EM;
+                        }
+{num}ex                 {
+                          yylval->real = strtod(yytext, NULL);
+                          return LENGTH_EX;
+                        }
 {num}px                 {return LENGTH;}
 {num}cm                 {return LENGTH;}
 {num}mm                 {return LENGTH;}
