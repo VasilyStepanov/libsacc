@@ -58,7 +58,8 @@ SAC_LexicalUnit *value;
 %token <real> PERCENTAGE
 %token <val> S
 %token <str> STRING
-%token <val> TIME
+%token <real> TIME_MS
+%token <real> TIME_S
 %token <str> URI
 %token <str> UNICODERANGE
 
@@ -310,13 +311,22 @@ term
                                           $$->desc.dimension.unit = "%";
                                           $$->desc.dimension.value.sreal = $2;
                                         }
+  | TIME_MS _spaces0                    {
+                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_MILLISECOND);
+                                          $$->desc.dimension.unit = "ms";
+                                          $$->desc.dimension.value.ureal = $1;
+                                        }
+  | TIME_S _spaces0                     {
+                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_SECOND);
+                                          $$->desc.dimension.unit = "s";
+                                          $$->desc.dimension.value.ureal = $1;
+                                        }
   ;
 _unary_term
   : LENGTH _spaces0
   | EMS _spaces0
   | EXS _spaces0
   | ANGLE _spaces0
-  | TIME _spaces0
   | function
   ;
 function

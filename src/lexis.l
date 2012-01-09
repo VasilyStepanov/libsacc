@@ -89,8 +89,14 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
 {num}deg                {return ANGLE;}
 {num}rad                {return ANGLE;}
 {num}grad               {return ANGLE;}
-{num}ms                 {return TIME;}
-{num}s                  {return TIME;}
+{num}ms                 {
+                          yylval->real = strtod(yytext, NULL);
+                          return TIME_MS;
+                        }
+{num}s                  {
+                          yylval->real = strtod(yytext, NULL);
+                          return TIME_S;
+                        }
 {num}Hz                 {
                           yylval->real = strtod(yytext, NULL);
                           return FREQ_HZ;
