@@ -86,9 +86,18 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
 {num}in                 {return LENGTH;}
 {num}pt                 {return LENGTH;}
 {num}pc                 {return LENGTH;}
-{num}deg                {return ANGLE;}
-{num}rad                {return ANGLE;}
-{num}grad               {return ANGLE;}
+{num}deg                {
+                          yylval->real = strtod(yytext, NULL);
+                          return ANGLE_DEG;
+                        }
+{num}rad                {
+                          yylval->real = strtod(yytext, NULL);
+                          return ANGLE_RAD;
+                        }
+{num}grad               {
+                          yylval->real = strtod(yytext, NULL);
+                          return ANGLE_GRAD;
+                        }
 {num}ms                 {
                           yylval->real = strtod(yytext, NULL);
                           return TIME_MS;

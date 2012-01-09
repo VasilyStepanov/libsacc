@@ -32,7 +32,9 @@ SAC_LexicalUnit *value;
 
 %start stylesheet
 
-%token <val> ANGLE
+%token <real> ANGLE_DEG
+%token <real> ANGLE_RAD
+%token <real> ANGLE_GRAD
 %token <val> CDC
 %token <val> CDO
 %token <val> CHARSET_SYM
@@ -321,12 +323,26 @@ term
                                           $$->desc.dimension.unit = "s";
                                           $$->desc.dimension.value.ureal = $1;
                                         }
+  | ANGLE_DEG _spaces0                  {
+                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_DEGREE);
+                                          $$->desc.dimension.unit = "deg";
+                                          $$->desc.dimension.value.ureal = $1;
+                                        }
+  | ANGLE_RAD _spaces0                  {
+                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_RADIAN);
+                                          $$->desc.dimension.unit = "rad";
+                                          $$->desc.dimension.value.ureal = $1;
+                                        }
+  | ANGLE_GRAD _spaces0                 {
+                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_GRADIAN);
+                                          $$->desc.dimension.unit = "grad";
+                                          $$->desc.dimension.value.ureal = $1;
+                                        }
   ;
 _unary_term
   : LENGTH _spaces0
   | EMS _spaces0
   | EXS _spaces0
-  | ANGLE _spaces0
   | function
   ;
 function

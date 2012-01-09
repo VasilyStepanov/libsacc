@@ -114,6 +114,18 @@ void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
         stream_printf(out, "percentage(%g%s)",
           value->desc.dimension.value.sreal, value->desc.dimension.unit);
         break;
+      case SAC_DEGREE:
+        stream_printf(out, "degree(%g%s)",
+          value->desc.dimension.value.ureal, value->desc.dimension.unit);
+        break;
+      case SAC_GRADIAN:
+        stream_printf(out, "gradian(%g%s)",
+          value->desc.dimension.value.ureal, value->desc.dimension.unit);
+        break;
+      case SAC_RADIAN:
+        stream_printf(out, "radian(%g%s)",
+          value->desc.dimension.value.ureal, value->desc.dimension.unit);
+        break;
       case SAC_MILLISECOND:
         stream_printf(out, "msecs(%g%s)",
           value->desc.dimension.value.ureal, value->desc.dimension.unit);
@@ -175,9 +187,6 @@ void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
       case SAC_COUNTER_FUNCTION:
       case SAC_COUNTERS_FUNCTION:
       case SAC_RGBCOLOR:
-      case SAC_DEGREE:
-      case SAC_GRADIAN:
-      case SAC_RADIAN:
       case SAC_ATTR:
       case SAC_RECT_FUNCTION:
       case SAC_FUNCTION:
@@ -253,6 +262,7 @@ void test_parser_basics() {
   stream_printf(css, "  prop-percentage : 149%% -148%%;\n");
   stream_printf(css, "  prop-freq : 50.1hz 5.1khz;\n");
   stream_printf(css, "  prop-time : 25.1S 50.2MS;\n");
+  stream_printf(css, "  prop-angle : 90.0deg 1.57rad 100.0grad;\n");
   stream_printf(css, "}\n");
   parse_stylesheet(parser, stream_str(css));
   stream_close(css);
@@ -283,6 +293,8 @@ void test_parser_basics() {
     "sub(hertz(50.1Hz)) sub(khertz(5.1kHz))\n");
   stream_printf(match_stream, "  prop('prop-time') "
     "sub(secs(25.1s)) sub(msecs(50.2ms))\n");
+  stream_printf(match_stream, "  prop('prop-angle') "
+    "sub(degree(90deg)) sub(radian(1.57rad)) sub(gradian(100grad))\n");
   stream_printf(match_stream, "doc }\n");
   assert_equals(stream_str(match_stream), stream_str(parser_stream));
   stream_close(match_stream);
