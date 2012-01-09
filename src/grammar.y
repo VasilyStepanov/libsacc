@@ -177,8 +177,9 @@ combinator
   | /* empty */
   ;
 unary_operator
-  : '-' { $$ = '-'; }
-  | '+' { $$ = '+'; }
+  : '-'         { $$ = '-'; }
+  | '+'         { $$ = '+'; }
+  | /* empty */ { $$ = '+'; }
   ;
 property
   : IDENT _spaces0 { $$ = $1; }
@@ -261,8 +262,7 @@ expr
                         }
   ;
 term
-  : _unary_term
-  | unary_operator _unary_term
+  : unary_operator _unary_term
   | STRING _spaces0                     {
                                           $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
                                           $$->desc.stringValue = $1;
@@ -294,28 +294,15 @@ term
                                           $$->desc.stringValue = "kHz";
                                           $$->desc.dimension.value.ureal = $1;
                                         }
-  | INT _spaces0                        {
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
-                                          $$->desc.integer = $1;
-                                        }
   | unary_operator INT _spaces0         {
                                           if ($1 == '-') $2 = -$2;
                                           $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
                                           $$->desc.integer = $2;
                                         }
-  | REAL _spaces0                       {
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_REAL);
-                                          $$->desc.real = $1;
-                                        }
   | unary_operator REAL _spaces0        {
                                           if ($1 == '-') $2 = -$2;
                                           $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_REAL);
                                           $$->desc.real = $2;
-                                        }
-  | PERCENTAGE _spaces0                 {
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_PERCENTAGE);
-                                          $$->desc.dimension.unit = "%";
-                                          $$->desc.dimension.value.sreal = $1;
                                         }
   | unary_operator PERCENTAGE _spaces0  {
                                           if ($1 == '-') $2 = -$2;
