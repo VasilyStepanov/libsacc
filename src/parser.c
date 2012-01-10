@@ -20,6 +20,8 @@ extern void yyparse();
 struct parser_s {
   SAC_StartDocumentHandler start_document_handler;
   SAC_EndDocumentHandler end_document_handler;
+  SAC_StartStyleHandler start_style_handler;
+  SAC_EndStyleHandler end_style_handler;
   SAC_PropertyHandler property_handler;
   void *user_data;
 };
@@ -59,6 +61,16 @@ void SAC_SetDocumentHandler(SAC_Parser parser,
 {
   PARSER(parser)->start_document_handler = start;
   PARSER(parser)->end_document_handler = end;
+}
+
+
+
+void SAC_SetStyleHandler(SAC_Parser parser,
+  SAC_StartStyleHandler start,
+  SAC_EndStyleHandler end)
+{
+  PARSER(parser)->start_style_handler = start;
+  PARSER(parser)->end_style_handler = end;
 }
 
 

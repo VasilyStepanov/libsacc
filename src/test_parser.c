@@ -1,6 +1,7 @@
 #include "test_parser.h"
 
 #include "test_utils.h"
+#include "gcc.h"
 
 #include <sacc.h>
 
@@ -89,6 +90,20 @@ void start_document(void *userData) {
 void end_document(void *userData) {
   userdata_dec_indent(userData);
   userdata_printf(userData, "doc }\n");
+}
+
+
+
+void start_style(void *userData, const SAC_Selector *selectors[] SAC_UNUSED) {
+  userdata_printf(userData, "style {\n");
+  userdata_inc_indent(userData);
+}
+
+
+
+void end_style(void *userData, const SAC_Selector *selectors[] SAC_UNUSED) {
+  userdata_dec_indent(userData);
+  userdata_printf(userData, "style }\n");
 }
 
 
@@ -258,6 +273,7 @@ SAC_Parser create_parser(stream_t stream) {
   parser = SAC_CreateParser();
   
   SAC_SetDocumentHandler(parser, start_document, end_document);
+  SAC_SetStyleHandler(parser, start_style, end_style);
   SAC_SetPropertyHandler(parser, property);
   SAC_SetUserData(parser, userData);
   return parser;
