@@ -158,7 +158,8 @@ int SAC_ParseStyleDeclaration(SAC_Parser parser, const char *buffer, int len) {
   void *scanner;
   struct yy_extra_t yy_extra;
 
-  yy_extra.mpool = mpool_open(16384);
+  parser_clear(parser);
+  yy_extra.mpool = PARSER(parser)->mpool;
   yy_extra.parser = parser;
 
   yylex_init_extra(&yy_extra, &scanner);
@@ -167,7 +168,6 @@ int SAC_ParseStyleDeclaration(SAC_Parser parser, const char *buffer, int len) {
   yyparse(scanner);
 
   yylex_destroy(scanner);
-  mpool_close(yy_extra.mpool);
   return 0;
 }
 
@@ -179,7 +179,8 @@ const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
   void *scanner;
   struct yy_extra_t yy_extra;
 
-  yy_extra.mpool = mpool_open(16384);
+  parser_clear(parser);
+  yy_extra.mpool = PARSER(parser)->mpool;
   yy_extra.parser = parser;
 
   yylex_init_extra(&yy_extra, &scanner);
@@ -188,6 +189,5 @@ const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
   yyparse(scanner);
 
   yylex_destroy(scanner);
-  mpool_close(yy_extra.mpool);
   return 0;
 }
