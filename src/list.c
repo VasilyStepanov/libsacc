@@ -79,6 +79,17 @@ list_iter_t list_next(list_iter_t iter) {
 
 
 
+void list_push_front(list_t list, mpool_t mpool, void *obj) {
+  struct list_item_s *item;
+
+  item = list_item_open(mpool, obj);
+
+  item->next = LIST(list)->head->next;
+  LIST(list)->head->next = item;
+}
+
+
+
 void list_push_back(list_t list, mpool_t mpool, void *obj) {
   struct list_item_s *item;
 

@@ -19,6 +19,8 @@ list_iter_t list_head(list_t list);
 
 list_iter_t list_next(list_iter_t iter);
 
+void list_push_front(list_t list, mpool_t mpool, void *obj);
+
 void list_push_back(list_t list, mpool_t mpool, void *obj);
 
 
