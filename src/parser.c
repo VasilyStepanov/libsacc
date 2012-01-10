@@ -142,6 +142,7 @@ int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
   parser_clear(parser);
   yy_extra.mpool = PARSER(parser)->mpool;
   yy_extra.parser = parser;
+  yy_extra.start_token = START_AS_STYLESHEET;
   yy_extra.output = NULL;
 
   yylex_init_extra(&yy_extra, &scanner);
@@ -162,6 +163,7 @@ int SAC_ParseStyleDeclaration(SAC_Parser parser, const char *buffer, int len) {
   parser_clear(parser);
   yy_extra.mpool = PARSER(parser)->mpool;
   yy_extra.parser = parser;
+  yy_extra.start_token = START_AS_STYLE_DECLARATIONS;
   yy_extra.output = NULL;
 
   yylex_init_extra(&yy_extra, &scanner);
@@ -184,6 +186,7 @@ const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
   parser_clear(parser);
   yy_extra.mpool = PARSER(parser)->mpool;
   yy_extra.parser = parser;
+  yy_extra.start_token = START_AS_SELECTORS;
   yy_extra.output = NULL;
 
   yylex_init_extra(&yy_extra, &scanner);

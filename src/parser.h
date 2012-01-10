@@ -11,6 +11,7 @@
 
 #define YY_SCANNER_MPOOL(yy_scanner) YY_EXTRA(yy_scanner)->mpool
 #define YY_SCANNER_PARSER(yy_scanner) YY_EXTRA(yy_scanner)->parser
+#define YY_SCANNER_START_TOKEN(yy_scanner) YY_EXTRA(yy_scanner)->start_token
 #define YY_SCANNER_OUTPUT(yy_scanner) YY_EXTRA(yy_scanner)->output
 
 extern void* yyget_extra();
@@ -18,6 +19,7 @@ extern void* yyget_extra();
 struct yy_extra_t {
   mpool_t mpool;
   SAC_Parser parser;
+  int start_token;
   void *output;
 };
 

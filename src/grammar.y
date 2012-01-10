@@ -41,6 +41,10 @@ list_t list;
 
 %start start
 
+%token <val> START_AS_STYLE_DECLARATIONS
+%token <val> START_AS_SELECTORS
+%token <val> START_AS_STYLESHEET
+
 %token <real> ANGLE_DEG
 %token <real> ANGLE_RAD
 %token <real> ANGLE_GRAD
@@ -92,11 +96,11 @@ list_t list;
 %%
 
 start
-  : _declarations1 {
+  : START_AS_STYLE_DECLARATIONS _declarations1 {
       list_iter_t it;
 
       parser_start_document(YY_SCANNER_PARSER(scanner));
-      for (it = list_head($1); it != NULL; it = list_next(it)) {
+      for (it = list_head($2); it != NULL; it = list_next(it)) {
         declaration_t decl = *it;
 
         parser_property_handler(
@@ -105,11 +109,11 @@ start
       }
       parser_end_document(YY_SCANNER_PARSER(scanner));
     }
-  | _selectors1 {
+  | START_AS_SELECTORS _selectors1 {
       parser_start_document(YY_SCANNER_PARSER(scanner));
       parser_end_document(YY_SCANNER_PARSER(scanner));
     }
-  | stylesheet
+  | START_AS_STYLESHEET stylesheet
   ;
 
 _spaces0

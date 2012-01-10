@@ -42,6 +42,15 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
 
 %%
 
+%{
+  if (YY_SCANNER_START_TOKEN(yyscanner) != 0) {
+    int ret = YY_SCANNER_START_TOKEN(yyscanner);
+
+    YY_SCANNER_START_TOKEN(yyscanner) = 0;
+    return ret;
+  }
+%}
+
 [ \t\r\n\f]+            {return S;}
 
 \/\*[^*]*\*+([^/][^*]*\*+)*\/ /* ignore comments */
