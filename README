@@ -3,16 +3,11 @@ SAC implementation written in C.
 Features:
 
   - Fast
-
       Parser is written in C. It uses LEX and YACC. Has its own memory pool.
 
-
   - Relevant
-
-      Follow W3 specifications to parse CSS3. Follow W3 recomendations to design
-    the API.
-
+      Follow W3 specifications to parse CSS3. Follow W3 recomendations in API
+    design.
 
   - Useful
-      
       Can be used in a multithreaded environment.
