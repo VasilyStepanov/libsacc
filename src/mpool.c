@@ -7,6 +7,7 @@
 
 
 
+#define MOBJ_WRAP(obj) ((void*)((char*)(obj) + sizeof(struct mobj_s)))
 #define MOBJ_UNWRAP(obj) \
   ((struct mobj_s*)((char*)(obj) - sizeof(struct mobj_s)))
 
@@ -69,7 +70,7 @@ void* mpage_alloc(struct mpage_s *mpage, size_t size) {
 
   if (mpage->free < size) return NULL;
 
-  ret = (char*)mpage->ptr + sizeof(struct mobj_s);
+  ret = MOBJ_WRAP(mpage->ptr);
   mpage->used += size;
   mpage->free -= size;
   mpage->ptr = (char*)mpage->ptr + size;
