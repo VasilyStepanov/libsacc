@@ -104,7 +104,7 @@ mpool_t mpool_open(size_t page_size) {
 
 
 void mpool_close(mpool_t mpool) {
-  mpage_close_all(MPOOL(mpool)->page);
+  if (mpool != NULL) mpage_close_all(MPOOL(mpool)->page);
   free(mpool);
 }
 

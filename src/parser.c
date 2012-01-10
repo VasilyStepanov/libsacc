@@ -17,6 +17,7 @@ extern void yyparse();
 #define PARSER(parser) ((struct parser_s*)(parser))
 
 struct parser_s {
+  mpool_t mpool;
   SAC_StartDocumentHandler start_document_handler;
   SAC_EndDocumentHandler end_document_handler;
   SAC_StartStyleHandler start_style_handler;
@@ -74,6 +75,13 @@ void parser_property_handler(
 
 
 
+void parser_clear(SAC_Parser parser) {
+  mpool_close(PARSER(parser)->mpool);
+  PARSER(parser)->mpool = mpool_open(16384);
+}
+
+
+
 void SAC_SetDocumentHandler(SAC_Parser parser,
   SAC_StartDocumentHandler start,
   SAC_EndDocumentHandler end)
@@ -121,6 +129,7 @@ SAC_Parser SAC_CreateParser() {
 
 
 void SAC_DisposeParser(SAC_Parser parser) {
+  mpool_close(PARSER(parser)->mpool);
   free(parser);
 }
 
@@ -130,7 +139,8 @@ int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
   void *scanner;
   struct yy_extra_t yy_extra;
 
-  yy_extra.mpool = mpool_open(16384);
+  parser_clear(parser);
+  yy_extra.mpool = PARSER(parser)->mpool;
   yy_extra.parser = parser;
 
   yylex_init_extra(&yy_extra, &scanner);
@@ -139,7 +149,6 @@ int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
   yyparse(scanner);
 
   yylex_destroy(scanner);
-  mpool_close(yy_extra.mpool);
   return 0;
 }
 
