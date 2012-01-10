@@ -163,7 +163,6 @@ struct _SAC_LexicalUnit {
       SAC_STRING name;
       /* including operators, like the comma
          #000 is converted to rgb(0, 0, 0)
-         can be NULL if SAC_FUNCTION
        */
       SAC_LexicalUnit **parameters;
     } function;
