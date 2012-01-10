@@ -71,11 +71,11 @@ SAC_LexicalUnit *value;
 %token <str> UNICODERANGE
 
 %type <str> property;
+%type <ch> unary_operator;
 %type <value> expr;
 %type <value> term;
 %type <value> operator;
-%type <value> _unary_term;
-%type <ch> unary_operator;
+%type <value> function;
 
 %%
 
@@ -278,8 +278,7 @@ expr
     }
   ;
 term
-  : unary_operator _unary_term
-  | STRING _spaces0 {
+  : STRING _spaces0 {
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
       $$->desc.stringValue = $1;
     }
@@ -399,12 +398,23 @@ term
       $$->desc.dimension.unit = "pc";
       $$->desc.dimension.value.sreal = $2;
     }
-  ;
-_unary_term
-  : function
+  | function { $$ = $1; }
   ;
 function
-  : FUNCTION _spaces0 expr ')' _spaces0
+  : FUNCTION _spaces0 expr ')' _spaces0 {
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_FUNCTION);
+      $$->desc.function.name = $1;
+      $$->desc.function.parameters = $3;
+
+      if ($3->lexicalUnitType == SAC_SUB_EXPRESSION) {
+        $$->desc.function.parameters = $3->desc.subValues;
+      } else {
+        $$->desc.function.parameters = lexical_unit_array_alloc(
+          YY_SCANNER_MPOOL(scanner), 1
+        );
+        $$->desc.function.parameters[0] = $3;
+      }
+    }
   ;
 /*
  * There is a constraint on the color that it must

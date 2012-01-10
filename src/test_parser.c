@@ -177,6 +177,18 @@ void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
       case SAC_URI:
         stream_printf(out, "uri('%s')", value->desc.uri);
         break;
+      case SAC_FUNCTION:
+        {
+          SAC_LexicalUnit **arg;
+
+          stream_printf(out, "func('%s')", value->desc.function.name);
+          for (arg = value->desc.function.parameters; *arg != NULL; ++arg) {
+            stream_printf(out, " arg(");
+            dump_lexical_unit(out, *arg);
+            stream_printf(out, ")");
+          }
+        }
+        break;
       case SAC_IDENT:
         stream_printf(out, "ident('%s')", value->desc.ident);
         break;
@@ -189,6 +201,7 @@ void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
       case SAC_SUB_EXPRESSION:
         {
           SAC_LexicalUnit **sub;
+
           for (sub = value->desc.subValues; *sub != NULL; ++sub) {
             if (sub != value->desc.subValues) stream_printf(out, " ");
             stream_printf(out, "sub(");
@@ -213,7 +226,6 @@ void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
       case SAC_RGBCOLOR:
       case SAC_ATTR:
       case SAC_RECT_FUNCTION:
-      case SAC_FUNCTION:
       case SAC_DIMENSION:
         break;
     };
@@ -295,6 +307,7 @@ void test_parser_basics() {
   stream_printf(css, "  prop-in : 1.6IN;\n");
   stream_printf(css, "  prop-pt : 1.7PT;\n");
   stream_printf(css, "  prop-pc : 1.8PC;\n");
+  stream_printf(css, "  prop-func : foo('arg') bar('arg1', 2);\n");
   stream_printf(css, "}\n");
   parse_stylesheet(parser, stream_str(css));
   stream_close(css);
@@ -335,6 +348,9 @@ void test_parser_basics() {
   stream_printf(match_stream, "  prop('prop-in') inch(1.6in)\n");
   stream_printf(match_stream, "  prop('prop-pt') point(1.7pt)\n");
   stream_printf(match_stream, "  prop('prop-pc') pica(1.8pc)\n");
+  stream_printf(match_stream, "  prop('prop-func') "
+    "sub(func('foo') arg(str('arg'))) "
+    "sub(func('bar') arg(str('arg1')) arg(,) arg(int(2)))\n");
   stream_printf(match_stream, "doc }\n");
   assert_equals(stream_str(match_stream), stream_str(parser_stream));
   stream_close(match_stream);

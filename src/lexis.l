@@ -170,7 +170,12 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
                           );
                           return URI;
                         }
-{ident}"("              {return FUNCTION;}
+{ident}"("              {
+                          yylval->str = mpool_strndup(
+                            YY_SCANNER_MPOOL(yyscanner), yytext, yyleng - 1
+                          );
+                          return FUNCTION;
+                        }
 
 U\+{range}              {
                           yylval->str = mpool_strndup(
