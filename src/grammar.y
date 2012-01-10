@@ -4,6 +4,7 @@
  */
 %code requires {
 #include "list.h"
+#include "vector.h"
 #include "declaration.h"
 #include "lexical_unit.h"
 #include "mpool.h"
@@ -301,9 +302,10 @@ expr
   | expr operator term {
       size_t old_size;
       size_t new_size;
+      SAC_LexicalUnit **raw;
       
       if ($1->lexicalUnitType == SAC_SUB_EXPRESSION) {
-        old_size = lexical_unit_array_size($1->desc.subValues);
+        old_size = vector_size($1->desc.subValues);
       } else {
         old_size = 1;
       }
@@ -313,19 +315,18 @@ expr
 
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_SUB_EXPRESSION);
       if ($1->lexicalUnitType == SAC_SUB_EXPRESSION) {
-        $$->desc.subValues = lexical_unit_array_alloc(
-          YY_SCANNER_MPOOL(scanner), new_size
-        );
-        lexical_unit_array_cpy($$->desc.subValues, $1->desc.subValues);
+        $$->desc.subValues = vector_open(YY_SCANNER_MPOOL(scanner), new_size);
+        vector_cpy(
+          vector_head($$->desc.subValues), vector_head($1->desc.subValues));
+        raw = (SAC_LexicalUnit**)vector_head($$->desc.subValues);
       } else {
-        $$->desc.subValues = lexical_unit_array_alloc(
-          YY_SCANNER_MPOOL(scanner), new_size
-        );
-        $$->desc.subValues[0] = $1;
+        $$->desc.subValues = vector_open(YY_SCANNER_MPOOL(scanner), new_size);
+        raw = (SAC_LexicalUnit**)vector_head($$->desc.subValues);
+        raw[0] = $1;
       }
 
-      if ($2 != NULL) $$->desc.subValues[new_size - 2] = $2;
-      $$->desc.subValues[new_size - 1] = $3;
+      if ($2 != NULL) raw[new_size - 2] = $2;
+      raw[new_size - 1] = $3;
     }
   ;
 term
@@ -459,10 +460,10 @@ function
       if ($3->lexicalUnitType == SAC_SUB_EXPRESSION) {
         $$->desc.function.parameters = $3->desc.subValues;
       } else {
-        $$->desc.function.parameters = lexical_unit_array_alloc(
+        $$->desc.function.parameters = vector_open(
           YY_SCANNER_MPOOL(scanner), 1
         );
-        $$->desc.function.parameters[0] = $3;
+        vector_head($$->desc.function.parameters)[0] = $3;
       }
     }
   ;
@@ -491,30 +492,29 @@ hexcolor
       }
 
       if (ok) {
-        $$->desc.function.parameters = lexical_unit_array_alloc(
-          YY_SCANNER_MPOOL(scanner), 5
-        );
+        SAC_LexicalUnit **raw;
+        
+        $$->desc.function.parameters = vector_open(
+          YY_SCANNER_MPOOL(scanner), 5);
+        raw = (SAC_LexicalUnit**)vector_head($$->desc.function.parameters);
 
-        $$->desc.function.parameters[0] = lexical_unit_alloc(
-          YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
-        $$->desc.function.parameters[0]->desc.integer = r;
+        raw[0] = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
+        raw[0]->desc.integer = r;
 
-        $$->desc.function.parameters[1] = lexical_unit_alloc(
+        raw[1] = lexical_unit_alloc(
           YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_COMMA);
 
-        $$->desc.function.parameters[2] = lexical_unit_alloc(
-          YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
-        $$->desc.function.parameters[2]->desc.integer = g;
+        raw[2] = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
+        raw[2]->desc.integer = g;
 
-        $$->desc.function.parameters[3] = lexical_unit_alloc(
+        raw[3] = lexical_unit_alloc(
           YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_COMMA);
 
-        $$->desc.function.parameters[4] = lexical_unit_alloc(
-          YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
-        $$->desc.function.parameters[4]->desc.integer = b;
+        raw[4] = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
+        raw[4]->desc.integer = b;
 
       } else {
-        $$->desc.function.parameters = lexical_unit_array_alloc(
+        $$->desc.function.parameters = vector_open(
           YY_SCANNER_MPOOL(scanner), 0
         );
       }

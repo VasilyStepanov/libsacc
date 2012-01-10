@@ -42,4 +42,5 @@ void vector_close(vector_t vector, mpool_t mpool) {
 void vector_cpy(vector_iter_t dest, vector_iter_t src) {
   for (; *src != NULL; src = vector_next(src), dest = vector_next(dest))
     *dest = *src;
+  *vector_next(dest) = NULL;
 }
