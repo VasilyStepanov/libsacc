@@ -300,7 +300,13 @@ void parse_styledeclaration(SAC_Parser parser, const char *buffer) {
 
 
 
-void test_parser_basics() {
+const SAC_Selector** parse_selector(SAC_Parser parser, const char *buffer) {
+  return SAC_ParseSelectors(parser, buffer, strlen(buffer));
+}
+
+
+
+void test_parser_styledeclaration() {
   stream_t parser_stream = stream_open();
   stream_t css = stream_open();
   stream_t match_stream = stream_open();
@@ -376,7 +382,9 @@ void test_parser_basics() {
     "sub(func('rgb')) "
     "sub(func('rgb') arg(int(10)) arg(,) arg(int(11)) arg(,) arg(int(12))) "
     "sub(func('rgb')) "
-    "sub(func('rgb') arg(int(171)) arg(,) arg(int(205)) arg(,) arg(int(239)))\n");
+    "sub(func('rgb') arg(int(171)) arg(,) "
+                    "arg(int(205)) arg(,) "
+                    "arg(int(239)))\n");
   stream_printf(match_stream, "doc }\n");
   assert_equals(stream_str(match_stream), stream_str(parser_stream));
   stream_close(match_stream);
@@ -386,6 +394,28 @@ void test_parser_basics() {
 
 
 
+void test_parser_selector() {
+  stream_t parser_stream = stream_open();
+  stream_t css = stream_open();
+  stream_t match_stream = stream_open();
+  SAC_Parser parser = create_parser(parser_stream);
+  
+  stream_printf(css, "");
+  parse_selector(parser, stream_str(css));
+  stream_close(css);
+
+  dispose_parser(parser);
+
+  stream_printf(match_stream, "");
+  assert_equals(stream_str(match_stream), stream_str(parser_stream));
+  stream_close(match_stream);
+
+  stream_close(parser_stream);
+}
+
+
+
 void test_parser() {
-  test_parser_basics();
+  test_parser_styledeclaration();
+  test_parser_selector();
 }

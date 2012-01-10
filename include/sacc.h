@@ -474,13 +474,16 @@ void SAC_SetUserData(SAC_Parser parser, void *userData);
  */
 void* SAC_GetUserData(SAC_Parser parser);
 
-SAC_Parser SAC_CreateParser();
-
-void SAC_DisposeParser(SAC_Parser parser);
-
 int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len);
 
 int SAC_ParseStyleDeclaration(SAC_Parser parser, const char *buffer, int len);
+
+const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
+  const char * buffer, int len);
+
+SAC_Parser SAC_CreateParser();
+
+void SAC_DisposeParser(SAC_Parser parser);
 
 #ifdef __cplusplus
 }
