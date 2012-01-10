@@ -118,6 +118,30 @@ void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
         stream_printf(out, "ex(%g%s)",
           value->desc.dimension.value.sreal, value->desc.dimension.unit);
         break;
+      case SAC_LENGTH_PIXEL:
+        stream_printf(out, "pixel(%g%s)",
+          value->desc.dimension.value.sreal, value->desc.dimension.unit);
+        break;
+      case SAC_LENGTH_INCH:
+        stream_printf(out, "inch(%g%s)",
+          value->desc.dimension.value.sreal, value->desc.dimension.unit);
+        break;
+      case SAC_LENGTH_CENTIMETER:
+        stream_printf(out, "centimeter(%g%s)",
+          value->desc.dimension.value.sreal, value->desc.dimension.unit);
+        break;
+      case SAC_LENGTH_MILLIMETER:
+        stream_printf(out, "millimeter(%g%s)",
+          value->desc.dimension.value.sreal, value->desc.dimension.unit);
+        break;
+      case SAC_LENGTH_POINT:
+        stream_printf(out, "point(%g%s)",
+          value->desc.dimension.value.sreal, value->desc.dimension.unit);
+        break;
+      case SAC_LENGTH_PICA:
+        stream_printf(out, "pica(%g%s)",
+          value->desc.dimension.value.sreal, value->desc.dimension.unit);
+        break;
       case SAC_PERCENTAGE:
         stream_printf(out, "percentage(%g%s)",
           value->desc.dimension.value.sreal, value->desc.dimension.unit);
@@ -184,12 +208,6 @@ void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
       case SAC_OPERATOR_LE:
       case SAC_OPERATOR_GE:
       case SAC_OPERATOR_TILDE:
-      case SAC_LENGTH_PIXEL:
-      case SAC_LENGTH_INCH:
-      case SAC_LENGTH_CENTIMETER:
-      case SAC_LENGTH_MILLIMETER:
-      case SAC_LENGTH_POINT:
-      case SAC_LENGTH_PICA:
       case SAC_COUNTER_FUNCTION:
       case SAC_COUNTERS_FUNCTION:
       case SAC_RGBCOLOR:
@@ -268,9 +286,15 @@ void test_parser_basics() {
   stream_printf(css, "  prop-percentage : 149%% -148%%;\n");
   stream_printf(css, "  prop-freq : 50.1hz 5.1khz;\n");
   stream_printf(css, "  prop-time : 25.1S 50.2MS;\n");
-  stream_printf(css, "  prop-angle : 90.0deg 1.57rad 100.0grad;\n");
-  stream_printf(css, "  prop-em : 1.1em;\n");
-  stream_printf(css, "  prop-ex : 1.2ex;\n");
+  stream_printf(css, "  prop-angle : 90.0DEG 1.57RAD 100.0GRAD;\n");
+  stream_printf(css, "  prop-em : 1.1EM;\n");
+  stream_printf(css, "  prop-ex : 1.2EX;\n");
+  stream_printf(css, "  prop-px : 1.3PX;\n");
+  stream_printf(css, "  prop-cm : 1.4CM;\n");
+  stream_printf(css, "  prop-mm : 1.5MM;\n");
+  stream_printf(css, "  prop-in : 1.6IN;\n");
+  stream_printf(css, "  prop-pt : 1.7PT;\n");
+  stream_printf(css, "  prop-pc : 1.8PC;\n");
   stream_printf(css, "}\n");
   parse_stylesheet(parser, stream_str(css));
   stream_close(css);
@@ -305,6 +329,12 @@ void test_parser_basics() {
     "sub(degree(90deg)) sub(radian(1.57rad)) sub(gradian(100grad))\n");
   stream_printf(match_stream, "  prop('prop-em') em(1.1em)\n");
   stream_printf(match_stream, "  prop('prop-ex') ex(1.2ex)\n");
+  stream_printf(match_stream, "  prop('prop-px') pixel(1.3px)\n");
+  stream_printf(match_stream, "  prop('prop-cm') centimeter(1.4cm)\n");
+  stream_printf(match_stream, "  prop('prop-mm') millimeter(1.5mm)\n");
+  stream_printf(match_stream, "  prop('prop-in') inch(1.6in)\n");
+  stream_printf(match_stream, "  prop('prop-pt') point(1.7pt)\n");
+  stream_printf(match_stream, "  prop('prop-pc') pica(1.8pc)\n");
   stream_printf(match_stream, "doc }\n");
   assert_equals(stream_str(match_stream), stream_str(parser_stream));
   stream_close(match_stream);

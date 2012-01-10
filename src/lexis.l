@@ -86,12 +86,30 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
                           yylval->real = strtod(yytext, NULL);
                           return LENGTH_EX;
                         }
-{num}px                 {return LENGTH;}
-{num}cm                 {return LENGTH;}
-{num}mm                 {return LENGTH;}
-{num}in                 {return LENGTH;}
-{num}pt                 {return LENGTH;}
-{num}pc                 {return LENGTH;}
+{num}px                 {
+                          yylval->real = strtod(yytext, NULL);
+                          return LENGTH_PIXEL;
+                        }
+{num}cm                 {
+                          yylval->real = strtod(yytext, NULL);
+                          return LENGTH_CENTIMETER;
+                        }
+{num}mm                 {
+                          yylval->real = strtod(yytext, NULL);
+                          return LENGTH_MILLIMETER;
+                        }
+{num}in                 {
+                          yylval->real = strtod(yytext, NULL);
+                          return LENGTH_INCH;
+                        }
+{num}pt                 {
+                          yylval->real = strtod(yytext, NULL);
+                          return LENGTH_POINT;
+                        }
+{num}pc                 {
+                          yylval->real = strtod(yytext, NULL);
+                          return LENGTH_PICA;
+                        }
 {num}deg                {
                           yylval->real = strtod(yytext, NULL);
                           return ANGLE_DEG;

@@ -51,7 +51,12 @@ SAC_LexicalUnit *value;
 %token <val> INCLUDES
 %token <val> IMPORT_SYM
 %token <val> IMPORTANT_SYM
-%token <val> LENGTH
+%token <real> LENGTH_PIXEL
+%token <real> LENGTH_CENTIMETER
+%token <real> LENGTH_MILLIMETER
+%token <real> LENGTH_INCH
+%token <real> LENGTH_POINT
+%token <real> LENGTH_PICA
 %token <val> MEDIA_SYM
 %token <val> NAMESPACE_SYM
 %token <integer> INT
@@ -170,9 +175,9 @@ font_face
   : FONT_FACE_SYM _spaces0 '{' _spaces0 _declarations1 '}' _spaces0
   ;
 operator
-  : '/' _spaces0  { $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_SLASH); }
-  | ',' _spaces0  { $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_COMMA); }
-  |               { $$ = NULL; }
+  : '/' _spaces0 { $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_SLASH); }
+  | ',' _spaces0 { $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_COMMA); }
+  | /* empty */ { $$ = NULL; }
   ;
 combinator
   : '+' _spaces0
@@ -180,8 +185,8 @@ combinator
   | /* empty */
   ;
 unary_operator
-  : '-'         { $$ = '-'; }
-  | '+'         { $$ = '+'; }
+  : '-' { $$ = '-'; }
+  | '+' { $$ = '+'; }
   | /* empty */ { $$ = '+'; }
   ;
 property
@@ -229,131 +234,174 @@ pseudo
   | ':' FUNCTION _spaces0 IDENT _spaces0 ')'
   ;
 declaration
-  : property ':' _spaces0 expr      { parser_property_handler(YY_SCANNER_PARSER(scanner), $1, $4, SAC_FALSE); }
-  | property ':' _spaces0 expr prio { parser_property_handler(YY_SCANNER_PARSER(scanner), $1, $4, SAC_TRUE); }
+  : property ':' _spaces0 expr {
+      parser_property_handler(YY_SCANNER_PARSER(scanner), $1, $4, SAC_FALSE);
+    }
+  | property ':' _spaces0 expr prio {
+      parser_property_handler(YY_SCANNER_PARSER(scanner), $1, $4, SAC_TRUE);
+    }
   | /* empty */
   ;
 prio
   : IMPORTANT_SYM _spaces0
   ;
 expr
-  : term                { $$ = $1; }
-  | expr operator term  {
-                          size_t old_size;
-                          size_t new_size;
-                          
-                          if ($1->lexicalUnitType == SAC_SUB_EXPRESSION) {
-                            old_size = lexical_unit_array_size($1->desc.subValues);
-                          } else {
-                            old_size = 1;
-                          }
+  : term { $$ = $1; }
+  | expr operator term {
+      size_t old_size;
+      size_t new_size;
+      
+      if ($1->lexicalUnitType == SAC_SUB_EXPRESSION) {
+        old_size = lexical_unit_array_size($1->desc.subValues);
+      } else {
+        old_size = 1;
+      }
 
-                          new_size = old_size + 1;
-                          if ($2 != NULL) ++new_size;
+      new_size = old_size + 1;
+      if ($2 != NULL) ++new_size;
 
-                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_SUB_EXPRESSION);
-                          if ($1->lexicalUnitType == SAC_SUB_EXPRESSION) {
-                            $$->desc.subValues = lexical_unit_array_alloc(YY_SCANNER_MPOOL(scanner), new_size);
-                            lexical_unit_array_cpy($$->desc.subValues, $1->desc.subValues);
-                          } else {
-                            $$->desc.subValues = lexical_unit_array_alloc(YY_SCANNER_MPOOL(scanner), new_size);
-                            $$->desc.subValues[0] = $1;
-                          }
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_SUB_EXPRESSION);
+      if ($1->lexicalUnitType == SAC_SUB_EXPRESSION) {
+        $$->desc.subValues = lexical_unit_array_alloc(
+          YY_SCANNER_MPOOL(scanner), new_size
+        );
+        lexical_unit_array_cpy($$->desc.subValues, $1->desc.subValues);
+      } else {
+        $$->desc.subValues = lexical_unit_array_alloc(
+          YY_SCANNER_MPOOL(scanner), new_size
+        );
+        $$->desc.subValues[0] = $1;
+      }
 
-                          if ($2 != NULL) $$->desc.subValues[new_size - 2] = $2;
-                          $$->desc.subValues[new_size - 1] = $3;
-                        }
+      if ($2 != NULL) $$->desc.subValues[new_size - 2] = $2;
+      $$->desc.subValues[new_size - 1] = $3;
+    }
   ;
 term
   : unary_operator _unary_term
-  | STRING _spaces0                     {
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
-                                          $$->desc.stringValue = $1;
-                                        }
-  | IDENT _spaces0                      {
-                                          if (strcmp($1, "inherit") != 0) {
-                                            $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_IDENT);
-                                            $$->desc.ident = $1;
-                                          } else {
-                                            $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INHERIT);
-                                          }
-                                        }
-  | URI _spaces0                        {
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_URI);
-                                          $$->desc.uri = $1;
-                                        }
-  | UNICODERANGE _spaces0               {
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_UNICODERANGE);
-                                          $$->desc.unicodeRange = $1;
-                                        }
+  | STRING _spaces0 {
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
+      $$->desc.stringValue = $1;
+    }
+  | IDENT _spaces0 {
+      if (strcmp($1, "inherit") != 0) {
+        $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_IDENT);
+        $$->desc.ident = $1;
+      } else {
+        $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INHERIT);
+      }
+    }
+  | URI _spaces0 {
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_URI);
+      $$->desc.uri = $1;
+    }
+  | UNICODERANGE _spaces0 {
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_UNICODERANGE);
+      $$->desc.unicodeRange = $1;
+    }
   | hexcolor
-  | FREQ_HZ _spaces0                    {
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_HERTZ);
-                                          $$->desc.dimension.unit = "Hz";
-                                          $$->desc.dimension.value.ureal = $1;
-                                        }
-  | FREQ_KHZ _spaces0                   {
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_KILOHERTZ);
-                                          $$->desc.stringValue = "kHz";
-                                          $$->desc.dimension.value.ureal = $1;
-                                        }
-  | unary_operator INT _spaces0         {
-                                          if ($1 == '-') $2 = -$2;
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
-                                          $$->desc.integer = $2;
-                                        }
-  | unary_operator REAL _spaces0        {
-                                          if ($1 == '-') $2 = -$2;
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_REAL);
-                                          $$->desc.real = $2;
-                                        }
-  | unary_operator PERCENTAGE _spaces0  {
-                                          if ($1 == '-') $2 = -$2;
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_PERCENTAGE);
-                                          $$->desc.dimension.unit = "%";
-                                          $$->desc.dimension.value.sreal = $2;
-                                        }
-  | TIME_MS _spaces0                    {
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_MILLISECOND);
-                                          $$->desc.dimension.unit = "ms";
-                                          $$->desc.dimension.value.ureal = $1;
-                                        }
-  | TIME_S _spaces0                     {
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_SECOND);
-                                          $$->desc.dimension.unit = "s";
-                                          $$->desc.dimension.value.ureal = $1;
-                                        }
-  | ANGLE_DEG _spaces0                  {
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_DEGREE);
-                                          $$->desc.dimension.unit = "deg";
-                                          $$->desc.dimension.value.ureal = $1;
-                                        }
-  | ANGLE_RAD _spaces0                  {
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_RADIAN);
-                                          $$->desc.dimension.unit = "rad";
-                                          $$->desc.dimension.value.ureal = $1;
-                                        }
-  | ANGLE_GRAD _spaces0                 {
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_GRADIAN);
-                                          $$->desc.dimension.unit = "grad";
-                                          $$->desc.dimension.value.ureal = $1;
-                                        }
-  | unary_operator LENGTH_EM _spaces0   {
-                                          if ($1 == '-') $2 = -$2;
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_EM);
-                                          $$->desc.dimension.unit = "em";
-                                          $$->desc.dimension.value.sreal = $2;
-                                        }
-  | unary_operator LENGTH_EX _spaces0   {
-                                          if ($1 == '-') $2 = -$2;
-                                          $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_EX);
-                                          $$->desc.dimension.unit = "ex";
-                                          $$->desc.dimension.value.sreal = $2;
-                                        }
+  | FREQ_HZ _spaces0 {
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_HERTZ);
+      $$->desc.dimension.unit = "Hz";
+      $$->desc.dimension.value.ureal = $1;
+    }
+  | FREQ_KHZ _spaces0 {
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_KILOHERTZ);
+      $$->desc.stringValue = "kHz";
+      $$->desc.dimension.value.ureal = $1;
+    }
+  | unary_operator INT _spaces0 {
+      if ($1 == '-') $2 = -$2;
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
+      $$->desc.integer = $2;
+    }
+  | unary_operator REAL _spaces0 {
+      if ($1 == '-') $2 = -$2;
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_REAL);
+      $$->desc.real = $2;
+    }
+  | unary_operator PERCENTAGE _spaces0 {
+      if ($1 == '-') $2 = -$2;
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_PERCENTAGE);
+      $$->desc.dimension.unit = "%";
+      $$->desc.dimension.value.sreal = $2;
+    }
+  | TIME_MS _spaces0 {
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_MILLISECOND);
+      $$->desc.dimension.unit = "ms";
+      $$->desc.dimension.value.ureal = $1;
+    }
+  | TIME_S _spaces0 {
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_SECOND);
+      $$->desc.dimension.unit = "s";
+      $$->desc.dimension.value.ureal = $1;
+    }
+  | ANGLE_DEG _spaces0 {
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_DEGREE);
+      $$->desc.dimension.unit = "deg";
+      $$->desc.dimension.value.ureal = $1;
+    }
+  | ANGLE_RAD _spaces0 {
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_RADIAN);
+      $$->desc.dimension.unit = "rad";
+      $$->desc.dimension.value.ureal = $1;
+    }
+  | ANGLE_GRAD _spaces0 {
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_GRADIAN);
+      $$->desc.dimension.unit = "grad";
+      $$->desc.dimension.value.ureal = $1;
+    }
+  | unary_operator LENGTH_EM _spaces0 {
+      if ($1 == '-') $2 = -$2;
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_EM);
+      $$->desc.dimension.unit = "em";
+      $$->desc.dimension.value.sreal = $2;
+    }
+  | unary_operator LENGTH_EX _spaces0 {
+      if ($1 == '-') $2 = -$2;
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_EX);
+      $$->desc.dimension.unit = "ex";
+      $$->desc.dimension.value.sreal = $2;
+    }
+  | unary_operator LENGTH_PIXEL _spaces0 {
+      if ($1 == '-') $2 = -$2;
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_PIXEL);
+      $$->desc.dimension.unit = "px";
+      $$->desc.dimension.value.sreal = $2;
+    }
+  | unary_operator LENGTH_INCH _spaces0 {
+      if ($1 == '-') $2 = -$2;
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_INCH);
+      $$->desc.dimension.unit = "in";
+      $$->desc.dimension.value.sreal = $2;
+    }
+  | unary_operator LENGTH_CENTIMETER _spaces0 {
+      if ($1 == '-') $2 = -$2;
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_CENTIMETER);
+      $$->desc.dimension.unit = "cm";
+      $$->desc.dimension.value.sreal = $2;
+    }
+  | unary_operator LENGTH_MILLIMETER _spaces0 {
+      if ($1 == '-') $2 = -$2;
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_MILLIMETER);
+      $$->desc.dimension.unit = "mm";
+      $$->desc.dimension.value.sreal = $2;
+    }
+  | unary_operator LENGTH_POINT _spaces0 {
+      if ($1 == '-') $2 = -$2;
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_POINT);
+      $$->desc.dimension.unit = "pt";
+      $$->desc.dimension.value.sreal = $2;
+    }
+  | unary_operator LENGTH_PICA _spaces0 {
+      if ($1 == '-') $2 = -$2;
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_PICA);
+      $$->desc.dimension.unit = "pc";
+      $$->desc.dimension.value.sreal = $2;
+    }
   ;
 _unary_term
-  : LENGTH _spaces0
-  | function
+  : function
   ;
 function
   : FUNCTION _spaces0 expr ')' _spaces0
