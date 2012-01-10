@@ -7,11 +7,13 @@
 
 
 
-#define MOBJ_DATASIZE sizeof(size_t) * 2
+#define MOBJ_UNWRAP(obj) \
+  ((struct mobj_s*)((char*)(obj) - sizeof(struct mobj_s)))
 
-#define MOBJ_UNWRAP_SIZE(obj) (*(((size_t*)(obj)) - 1))
+#define MOBJ_UNWRAP_SIZE(obj) MOBJ_UNWRAP(obj)->size
 
-#define MOBJ_UNWRAP_MPAGE(obj) (*(struct mpage_s**)(((size_t*)(obj)) - 2))
+#define MOBJ_UNWRAP_MPAGE(obj) MOBJ_UNWRAP(obj)->mpage
+
 
 
 
@@ -25,10 +27,17 @@ struct mpage_s {
 
 
 
+struct mobj_s {
+  struct mpage_s *mpage;
+  size_t size;
+};
+
+
+
 struct mpage_s* mpage_open(struct mpage_s *prev, size_t size) {
   struct mpage_s *ret = malloc(sizeof(struct mpage_s));
 
-  size = MALLIGN(size + MOBJ_DATASIZE);
+  size = MALLIGN(size + sizeof(struct mobj_s));
   ret->prev = prev;
   ret->data = (char*)malloc(size);
   ret->ptr = ret->data;
@@ -56,16 +65,16 @@ void mpage_close_all(struct mpage_s *mpage) {
 void* mpage_alloc(struct mpage_s *mpage, size_t size) {
   void *ret;
 
-  size = MALLIGN(size + MOBJ_DATASIZE);
+  size = MALLIGN(size + sizeof(struct mobj_s));
 
   if (mpage->free < size) return NULL;
 
-  ret = (char*)mpage->ptr + MOBJ_DATASIZE;
+  ret = (char*)mpage->ptr + sizeof(struct mobj_s);
   mpage->used += size;
   mpage->free -= size;
   mpage->ptr = (char*)mpage->ptr + size;
 
-  MOBJ_UNWRAP_SIZE(ret) = size - MOBJ_DATASIZE;
+  MOBJ_UNWRAP_SIZE(ret) = size - sizeof(struct mobj_s);
   MOBJ_UNWRAP_MPAGE(ret) = mpage;
 
   return ret;
@@ -146,7 +155,7 @@ void mpool_free(mpool_t mpool, void *ptr) {
   if (ptr == NULL) return;
   
   page = MOBJ_UNWRAP_MPAGE(ptr);
-  page->used -= MOBJ_UNWRAP_SIZE(ptr) + MOBJ_DATASIZE;
+  page->used -= MOBJ_UNWRAP_SIZE(ptr) + sizeof(struct mobj_s);
 
   if (page->used == 0 && !(page->prev == NULL && MPOOL(mpool)->page == page)) {
     struct mpage_s *cur;
