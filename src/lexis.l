@@ -67,7 +67,14 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
                           return IDENT;
                         }
 
-"#"{name}               {return HASH;}
+"#"{name}               {
+                          yylval->str = mpool_strndup(
+                            YY_SCANNER_MPOOL(yyscanner),
+                            yytext + 1,
+                            yyleng - 1
+                          );
+                          return HASH;
+                        }
 
 "@import"               {return IMPORT_SYM;}
 "@page"                 {return PAGE_SYM;}

@@ -177,6 +177,7 @@ void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
       case SAC_URI:
         stream_printf(out, "uri('%s')", value->desc.uri);
         break;
+      case SAC_RGBCOLOR:
       case SAC_FUNCTION:
         {
           SAC_LexicalUnit **arg;
@@ -223,7 +224,6 @@ void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
       case SAC_OPERATOR_TILDE:
       case SAC_COUNTER_FUNCTION:
       case SAC_COUNTERS_FUNCTION:
-      case SAC_RGBCOLOR:
       case SAC_ATTR:
       case SAC_RECT_FUNCTION:
       case SAC_DIMENSION:
@@ -308,6 +308,7 @@ void test_parser_basics() {
   stream_printf(css, "  prop-pt : 1.7PT;\n");
   stream_printf(css, "  prop-pc : 1.8PC;\n");
   stream_printf(css, "  prop-func : foo('arg') bar('arg1', 2);\n");
+  stream_printf(css, "  prop-color : #ab #aBc #abcde #aBCdef;\n");
   stream_printf(css, "}\n");
   parse_stylesheet(parser, stream_str(css));
   stream_close(css);
@@ -351,6 +352,11 @@ void test_parser_basics() {
   stream_printf(match_stream, "  prop('prop-func') "
     "sub(func('foo') arg(str('arg'))) "
     "sub(func('bar') arg(str('arg1')) arg(,) arg(int(2)))\n");
+  stream_printf(match_stream, "  prop('prop-color') "
+    "sub(func('rgb')) "
+    "sub(func('rgb') arg(int(10)) arg(,) arg(int(11)) arg(,) arg(int(12))) "
+    "sub(func('rgb')) "
+    "sub(func('rgb') arg(int(171)) arg(,) arg(int(205)) arg(,) arg(int(239)))\n");
   stream_printf(match_stream, "doc }\n");
   assert_equals(stream_str(match_stream), stream_str(parser_stream));
   stream_close(match_stream);

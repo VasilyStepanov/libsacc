@@ -10,6 +10,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #define YYLEX_PARAM scanner
 #define YYPARSE_PARAM scanner
@@ -45,8 +46,8 @@ SAC_LexicalUnit *value;
 %token <val> FONT_FACE_SYM
 %token <real> FREQ_HZ
 %token <real> FREQ_KHZ
-%token <val> FUNCTION
-%token <val> HASH
+%token <str> FUNCTION
+%token <str> HASH
 %token <str> IDENT
 %token <val> INCLUDES
 %token <val> IMPORT_SYM
@@ -76,6 +77,7 @@ SAC_LexicalUnit *value;
 %type <value> term;
 %type <value> operator;
 %type <value> function;
+%type <value> hexcolor;
 
 %%
 
@@ -298,7 +300,6 @@ term
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_UNICODERANGE);
       $$->desc.unicodeRange = $1;
     }
-  | hexcolor
   | FREQ_HZ _spaces0 {
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_HERTZ);
       $$->desc.dimension.unit = "Hz";
@@ -399,12 +400,12 @@ term
       $$->desc.dimension.value.sreal = $2;
     }
   | function { $$ = $1; }
+  | hexcolor { $$ = $1; }
   ;
 function
   : FUNCTION _spaces0 expr ')' _spaces0 {
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_FUNCTION);
       $$->desc.function.name = $1;
-      $$->desc.function.parameters = $3;
 
       if ($3->lexicalUnitType == SAC_SUB_EXPRESSION) {
         $$->desc.function.parameters = $3->desc.subValues;
@@ -422,5 +423,51 @@ function
  * after the "#"; e.g., "#000" is OK, but "#abcd" is not.
  */
 hexcolor
-  : HASH _spaces0
+  : HASH _spaces0 {
+      unsigned int r, g, b;
+      int ok;
+      size_t len;
+
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_RGBCOLOR);
+      $$->desc.function.name = "rgb";
+
+      len = strlen($1);
+      
+      if (len == 6) {
+        ok = sscanf($1, "%2x%2x%2x", &r, &g, &b) == 3;
+      } else if (len == 3) {
+        ok = sscanf($1, "%1x%1x%1x", &r, &g, &b) == 3;
+      } else {
+        ok = 0;
+      }
+
+      if (ok) {
+        $$->desc.function.parameters = lexical_unit_array_alloc(
+          YY_SCANNER_MPOOL(scanner), 5
+        );
+
+        $$->desc.function.parameters[0] = lexical_unit_alloc(
+          YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
+        $$->desc.function.parameters[0]->desc.integer = r;
+
+        $$->desc.function.parameters[1] = lexical_unit_alloc(
+          YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_COMMA);
+
+        $$->desc.function.parameters[2] = lexical_unit_alloc(
+          YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
+        $$->desc.function.parameters[2]->desc.integer = g;
+
+        $$->desc.function.parameters[3] = lexical_unit_alloc(
+          YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_COMMA);
+
+        $$->desc.function.parameters[4] = lexical_unit_alloc(
+          YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
+        $$->desc.function.parameters[4]->desc.integer = b;
+
+      } else {
+        $$->desc.function.parameters = lexical_unit_array_alloc(
+          YY_SCANNER_MPOOL(scanner), 0
+        );
+      }
+    }
   ;
