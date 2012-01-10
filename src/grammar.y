@@ -193,9 +193,15 @@ font_face
   : FONT_FACE_SYM _spaces0 '{' _spaces0 _declarations1 '}' _spaces0
   ;
 operator
-  : '/' _spaces0 { $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_SLASH); }
-  | ',' _spaces0 { $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_COMMA); }
-  | /* empty */ { $$ = NULL; }
+  : '/' _spaces0 {
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_SLASH);
+    }
+  | ',' _spaces0 {
+      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_COMMA);
+    }
+  | /* empty */ {
+      $$ = NULL;
+    }
   ;
 combinator
   : '+' _spaces0
