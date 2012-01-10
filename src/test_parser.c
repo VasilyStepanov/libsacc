@@ -332,47 +332,49 @@ void test_parser_basics() {
   dispose_parser(parser);
 
   stream_printf(match_stream, "doc {\n");
-  stream_printf(match_stream, "  prop('prop-ident') ident('ident')\n");
-  stream_printf(match_stream, "  prop('prop-inherit') inherit\n");
-  stream_printf(match_stream, "  prop('prop-string') "
+  stream_printf(match_stream, "  style {\n");
+  stream_printf(match_stream, "    prop('prop-ident') ident('ident')\n");
+  stream_printf(match_stream, "    prop('prop-inherit') inherit\n");
+  stream_printf(match_stream, "    prop('prop-string') "
     "sub(str('string')) sub(str('string'))\n");
-  stream_printf(match_stream, "  prop('prop-uri1') uri('uri')\n");
-  stream_printf(match_stream, "  prop('prop-uri2') "
+  stream_printf(match_stream, "    prop('prop-uri1') uri('uri')\n");
+  stream_printf(match_stream, "    prop('prop-uri2') "
     "uri('http://example.com/')\n");
-  stream_printf(match_stream, "  prop('prop-unicode') "
+  stream_printf(match_stream, "    prop('prop-unicode') "
     "sub(urange('U+A5')) sub(,) "
     "sub(urange('U+0-7F')) sub(,) "
     "sub(urange('U+590-5ff')) sub(,) "
     "sub(urange('U+4E00-9FFF')) sub(,) "
     "sub(urange('U+30\?\?'))\n");
-  stream_printf(match_stream, "  prop('prop-int') "
+  stream_printf(match_stream, "    prop('prop-int') "
     "sub(int(149)) sub(int(-148))\n");
-  stream_printf(match_stream, "  prop('prop-real') "
+  stream_printf(match_stream, "    prop('prop-real') "
     "sub(real(3.14)) sub(real(-2.71))\n");
-  stream_printf(match_stream, "  prop('prop-percentage') "
+  stream_printf(match_stream, "    prop('prop-percentage') "
     "sub(percentage(149%%)) sub(percentage(-148%%))\n");
-  stream_printf(match_stream, "  prop('prop-freq') "
+  stream_printf(match_stream, "    prop('prop-freq') "
     "sub(hertz(50.1Hz)) sub(khertz(5.1kHz))\n");
-  stream_printf(match_stream, "  prop('prop-time') "
+  stream_printf(match_stream, "    prop('prop-time') "
     "sub(secs(25.1s)) sub(msecs(50.2ms))\n");
-  stream_printf(match_stream, "  prop('prop-angle') "
+  stream_printf(match_stream, "    prop('prop-angle') "
     "sub(degree(90deg)) sub(radian(1.57rad)) sub(gradian(100grad))\n");
-  stream_printf(match_stream, "  prop('prop-em') em(1.1em)\n");
-  stream_printf(match_stream, "  prop('prop-ex') ex(1.2ex)\n");
-  stream_printf(match_stream, "  prop('prop-px') pixel(1.3px)\n");
-  stream_printf(match_stream, "  prop('prop-cm') centimeter(1.4cm)\n");
-  stream_printf(match_stream, "  prop('prop-mm') millimeter(1.5mm)\n");
-  stream_printf(match_stream, "  prop('prop-in') inch(1.6in)\n");
-  stream_printf(match_stream, "  prop('prop-pt') point(1.7pt)\n");
-  stream_printf(match_stream, "  prop('prop-pc') pica(1.8pc)\n");
-  stream_printf(match_stream, "  prop('prop-func') "
+  stream_printf(match_stream, "    prop('prop-em') em(1.1em)\n");
+  stream_printf(match_stream, "    prop('prop-ex') ex(1.2ex)\n");
+  stream_printf(match_stream, "    prop('prop-px') pixel(1.3px)\n");
+  stream_printf(match_stream, "    prop('prop-cm') centimeter(1.4cm)\n");
+  stream_printf(match_stream, "    prop('prop-mm') millimeter(1.5mm)\n");
+  stream_printf(match_stream, "    prop('prop-in') inch(1.6in)\n");
+  stream_printf(match_stream, "    prop('prop-pt') point(1.7pt)\n");
+  stream_printf(match_stream, "    prop('prop-pc') pica(1.8pc)\n");
+  stream_printf(match_stream, "    prop('prop-func') "
     "sub(func('foo') arg(str('arg'))) "
     "sub(func('bar') arg(str('arg1')) arg(,) arg(int(2)))\n");
-  stream_printf(match_stream, "  prop('prop-color') "
+  stream_printf(match_stream, "    prop('prop-color') "
     "sub(func('rgb')) "
     "sub(func('rgb') arg(int(10)) arg(,) arg(int(11)) arg(,) arg(int(12))) "
     "sub(func('rgb')) "
     "sub(func('rgb') arg(int(171)) arg(,) arg(int(205)) arg(,) arg(int(239)))\n");
+  stream_printf(match_stream, "  style }\n");
   stream_printf(match_stream, "doc }\n");
   assert_equals(stream_str(match_stream), stream_str(parser_stream));
   stream_close(match_stream);

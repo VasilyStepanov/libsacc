@@ -41,6 +41,26 @@ void parser_end_document(SAC_Parser parser) {
 
 
 
+void parser_start_style_handler(
+  SAC_Parser parser,
+  const SAC_Selector *selectors[])
+{
+  if (PARSER(parser)->start_style_handler != NULL)
+    PARSER(parser)->start_style_handler(PARSER(parser)->user_data, selectors);
+}
+
+
+
+void parser_end_style_handler(
+  SAC_Parser parser,
+  const SAC_Selector *selectors[])
+{
+  if (PARSER(parser)->end_style_handler != NULL)
+    PARSER(parser)->end_style_handler(PARSER(parser)->user_data, selectors);
+}
+
+
+
 void parser_property_handler(
   SAC_Parser parser,
   const SAC_STRING propertyName,

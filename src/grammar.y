@@ -213,6 +213,7 @@ property
 ruleset
   : _selectors1 '{' _spaces0 _declarations1 '}' _spaces0 {
       list_iter_t it;
+      parser_start_style_handler(YY_SCANNER_PARSER(scanner), NULL);
       for (it = list_head($4); it != NULL; it = list_next(it)) {
         declaration_t decl = *it;
 
@@ -220,6 +221,7 @@ ruleset
           YY_SCANNER_PARSER(scanner),
           decl->property, decl->value, decl->important);
       }
+      parser_end_style_handler(YY_SCANNER_PARSER(scanner), NULL);
     }
   ;
 selector
