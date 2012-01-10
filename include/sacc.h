@@ -480,6 +480,8 @@ void SAC_DisposeParser(SAC_Parser parser);
 
 int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len);
 
+int SAC_ParseStyleDeclaration(SAC_Parser parser, const char *buffer, int len);
+
 #ifdef __cplusplus
 }
 #endif

@@ -135,12 +135,27 @@ int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
 
   yylex_init_extra(&yy_extra, &scanner);
 
-  parser_start_document(parser);
-
   yy_scan_bytes(buffer, len, scanner);
   yyparse(scanner);
 
-  parser_end_document(parser);
+  yylex_destroy(scanner);
+  mpool_close(yy_extra.mpool);
+  return 0;
+}
+
+
+
+int SAC_ParseStyleDeclaration(SAC_Parser parser, const char *buffer, int len) {
+  void *scanner;
+  struct yy_extra_t yy_extra;
+
+  yy_extra.mpool = mpool_open(16384);
+  yy_extra.parser = parser;
+
+  yylex_init_extra(&yy_extra, &scanner);
+
+  yy_scan_bytes(buffer, len, scanner);
+  yyparse(scanner);
 
   yylex_destroy(scanner);
   mpool_close(yy_extra.mpool);

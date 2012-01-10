@@ -39,7 +39,7 @@ list_t list;
 %locations
 %pure_parser
 
-%start stylesheet
+%start start
 
 %token <real> ANGLE_DEG
 %token <real> ANGLE_RAD
@@ -90,6 +90,23 @@ list_t list;
 %type <list> _declarations1;
 
 %%
+
+start
+  : _declarations1 {
+      list_iter_t it;
+
+      parser_start_document(YY_SCANNER_PARSER(scanner));
+      for (it = list_head($1); it != NULL; it = list_next(it)) {
+        declaration_t decl = *it;
+
+        parser_property_handler(
+          YY_SCANNER_PARSER(scanner),
+          decl->property, decl->value, decl->important);
+      }
+      parser_end_document(YY_SCANNER_PARSER(scanner));
+    }
+  | stylesheet
+  ;
 
 _spaces0
   :
@@ -217,18 +234,7 @@ property
   : IDENT _spaces0 { $$ = $1; }
   ;
 ruleset
-  : _selectors1 '{' _spaces0 _declarations1 '}' _spaces0 {
-      list_iter_t it;
-      parser_start_style_handler(YY_SCANNER_PARSER(scanner), NULL);
-      for (it = list_head($4); it != NULL; it = list_next(it)) {
-        declaration_t decl = *it;
-
-        parser_property_handler(
-          YY_SCANNER_PARSER(scanner),
-          decl->property, decl->value, decl->important);
-      }
-      parser_end_style_handler(YY_SCANNER_PARSER(scanner), NULL);
-    }
+  : _selectors1 '{' _spaces0 _declarations1 '}' _spaces0
   ;
 selector
   : simple_selector

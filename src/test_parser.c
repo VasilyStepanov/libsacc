@@ -294,87 +294,89 @@ void parse_stylesheet(SAC_Parser parser, const char *buffer) {
 
 
 
+void parse_styledeclaration(SAC_Parser parser, const char *buffer) {
+  SAC_ParseStyleDeclaration(parser, buffer, strlen(buffer));
+}
+
+
+
 void test_parser_basics() {
   stream_t parser_stream = stream_open();
   stream_t css = stream_open();
   stream_t match_stream = stream_open();
   SAC_Parser parser = create_parser(parser_stream);
   
-  stream_printf(css, "selector {\n");
-  stream_printf(css, "  prop-ident : ident;\n");
-  stream_printf(css, "  prop-inherit : inherit;\n");
-  stream_printf(css, "  prop-string : 'string' \"string\";\n");
-  stream_printf(css, "  prop-uri1 : url( \t\r\n\f\"uri\"\f\n\r\t );\n");
-  stream_printf(css, "  prop-uri2 : "
+  stream_printf(css, "prop-ident : ident;\n");
+  stream_printf(css, "prop-inherit : inherit;\n");
+  stream_printf(css, "prop-string : 'string' \"string\";\n");
+  stream_printf(css, "prop-uri1 : url( \t\r\n\f\"uri\"\f\n\r\t );\n");
+  stream_printf(css, "prop-uri2 : "
     "url( \t\r\n\fhttp://example.com/\f\n\r\t );\n");
-  stream_printf(css, "  prop-unicode : "
+  stream_printf(css, "prop-unicode : "
     "U+A5, U+0-7F, U+590-5ff, U+4E00-9FFF, U+30??;\n");
-  stream_printf(css, "  prop-int : 149 -148;\n");
-  stream_printf(css, "  prop-real : 3.14 -2.71;\n");
-  stream_printf(css, "  prop-percentage : 149%% -148%%;\n");
-  stream_printf(css, "  prop-freq : 50.1hz 5.1khz;\n");
-  stream_printf(css, "  prop-time : 25.1S 50.2MS;\n");
-  stream_printf(css, "  prop-angle : 90.0DEG 1.57RAD 100.0GRAD;\n");
-  stream_printf(css, "  prop-em : 1.1EM;\n");
-  stream_printf(css, "  prop-ex : 1.2EX;\n");
-  stream_printf(css, "  prop-px : 1.3PX;\n");
-  stream_printf(css, "  prop-cm : 1.4CM;\n");
-  stream_printf(css, "  prop-mm : 1.5MM;\n");
-  stream_printf(css, "  prop-in : 1.6IN;\n");
-  stream_printf(css, "  prop-pt : 1.7PT;\n");
-  stream_printf(css, "  prop-pc : 1.8PC;\n");
-  stream_printf(css, "  prop-func : foo('arg') bar('arg1', 2);\n");
-  stream_printf(css, "  prop-color : #ab #aBc #abcde #aBCdef;\n");
-  stream_printf(css, "}\n");
-  parse_stylesheet(parser, stream_str(css));
+  stream_printf(css, "prop-int : 149 -148;\n");
+  stream_printf(css, "prop-real : 3.14 -2.71;\n");
+  stream_printf(css, "prop-percentage : 149%% -148%%;\n");
+  stream_printf(css, "prop-freq : 50.1hz 5.1khz;\n");
+  stream_printf(css, "prop-time : 25.1S 50.2MS;\n");
+  stream_printf(css, "prop-angle : 90.0DEG 1.57RAD 100.0GRAD;\n");
+  stream_printf(css, "prop-em : 1.1EM;\n");
+  stream_printf(css, "prop-ex : 1.2EX;\n");
+  stream_printf(css, "prop-px : 1.3PX;\n");
+  stream_printf(css, "prop-cm : 1.4CM;\n");
+  stream_printf(css, "prop-mm : 1.5MM;\n");
+  stream_printf(css, "prop-in : 1.6IN;\n");
+  stream_printf(css, "prop-pt : 1.7PT;\n");
+  stream_printf(css, "prop-pc : 1.8PC;\n");
+  stream_printf(css, "prop-func : foo('arg') bar('arg1', 2);\n");
+  stream_printf(css, "prop-color : #ab #aBc #abcde #aBCdef;\n");
+  parse_styledeclaration(parser, stream_str(css));
   stream_close(css);
 
   dispose_parser(parser);
 
   stream_printf(match_stream, "doc {\n");
-  stream_printf(match_stream, "  style {\n");
-  stream_printf(match_stream, "    prop('prop-ident') ident('ident')\n");
-  stream_printf(match_stream, "    prop('prop-inherit') inherit\n");
-  stream_printf(match_stream, "    prop('prop-string') "
+  stream_printf(match_stream, "  prop('prop-ident') ident('ident')\n");
+  stream_printf(match_stream, "  prop('prop-inherit') inherit\n");
+  stream_printf(match_stream, "  prop('prop-string') "
     "sub(str('string')) sub(str('string'))\n");
-  stream_printf(match_stream, "    prop('prop-uri1') uri('uri')\n");
-  stream_printf(match_stream, "    prop('prop-uri2') "
+  stream_printf(match_stream, "  prop('prop-uri1') uri('uri')\n");
+  stream_printf(match_stream, "  prop('prop-uri2') "
     "uri('http://example.com/')\n");
-  stream_printf(match_stream, "    prop('prop-unicode') "
+  stream_printf(match_stream, "  prop('prop-unicode') "
     "sub(urange('U+A5')) sub(,) "
     "sub(urange('U+0-7F')) sub(,) "
     "sub(urange('U+590-5ff')) sub(,) "
     "sub(urange('U+4E00-9FFF')) sub(,) "
     "sub(urange('U+30\?\?'))\n");
-  stream_printf(match_stream, "    prop('prop-int') "
+  stream_printf(match_stream, "  prop('prop-int') "
     "sub(int(149)) sub(int(-148))\n");
-  stream_printf(match_stream, "    prop('prop-real') "
+  stream_printf(match_stream, "  prop('prop-real') "
     "sub(real(3.14)) sub(real(-2.71))\n");
-  stream_printf(match_stream, "    prop('prop-percentage') "
+  stream_printf(match_stream, "  prop('prop-percentage') "
     "sub(percentage(149%%)) sub(percentage(-148%%))\n");
-  stream_printf(match_stream, "    prop('prop-freq') "
+  stream_printf(match_stream, "  prop('prop-freq') "
     "sub(hertz(50.1Hz)) sub(khertz(5.1kHz))\n");
-  stream_printf(match_stream, "    prop('prop-time') "
+  stream_printf(match_stream, "  prop('prop-time') "
     "sub(secs(25.1s)) sub(msecs(50.2ms))\n");
-  stream_printf(match_stream, "    prop('prop-angle') "
+  stream_printf(match_stream, "  prop('prop-angle') "
     "sub(degree(90deg)) sub(radian(1.57rad)) sub(gradian(100grad))\n");
-  stream_printf(match_stream, "    prop('prop-em') em(1.1em)\n");
-  stream_printf(match_stream, "    prop('prop-ex') ex(1.2ex)\n");
-  stream_printf(match_stream, "    prop('prop-px') pixel(1.3px)\n");
-  stream_printf(match_stream, "    prop('prop-cm') centimeter(1.4cm)\n");
-  stream_printf(match_stream, "    prop('prop-mm') millimeter(1.5mm)\n");
-  stream_printf(match_stream, "    prop('prop-in') inch(1.6in)\n");
-  stream_printf(match_stream, "    prop('prop-pt') point(1.7pt)\n");
-  stream_printf(match_stream, "    prop('prop-pc') pica(1.8pc)\n");
-  stream_printf(match_stream, "    prop('prop-func') "
+  stream_printf(match_stream, "  prop('prop-em') em(1.1em)\n");
+  stream_printf(match_stream, "  prop('prop-ex') ex(1.2ex)\n");
+  stream_printf(match_stream, "  prop('prop-px') pixel(1.3px)\n");
+  stream_printf(match_stream, "  prop('prop-cm') centimeter(1.4cm)\n");
+  stream_printf(match_stream, "  prop('prop-mm') millimeter(1.5mm)\n");
+  stream_printf(match_stream, "  prop('prop-in') inch(1.6in)\n");
+  stream_printf(match_stream, "  prop('prop-pt') point(1.7pt)\n");
+  stream_printf(match_stream, "  prop('prop-pc') pica(1.8pc)\n");
+  stream_printf(match_stream, "  prop('prop-func') "
     "sub(func('foo') arg(str('arg'))) "
     "sub(func('bar') arg(str('arg1')) arg(,) arg(int(2)))\n");
-  stream_printf(match_stream, "    prop('prop-color') "
+  stream_printf(match_stream, "  prop('prop-color') "
     "sub(func('rgb')) "
     "sub(func('rgb') arg(int(10)) arg(,) arg(int(11)) arg(,) arg(int(12))) "
     "sub(func('rgb')) "
     "sub(func('rgb') arg(int(171)) arg(,) arg(int(205)) arg(,) arg(int(239)))\n");
-  stream_printf(match_stream, "  style }\n");
   stream_printf(match_stream, "doc }\n");
   assert_equals(stream_str(match_stream), stream_str(parser_stream));
   stream_close(match_stream);
