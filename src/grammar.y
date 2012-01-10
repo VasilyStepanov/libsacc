@@ -4,7 +4,7 @@
  */
 %{
 #include "parser.h"
-#include "lexical_unit.h"
+#include "list.h"
 
 #include <sacc.h>
 
@@ -26,6 +26,8 @@ double real;
 char ch;
 char *str;
 SAC_LexicalUnit *value;
+declaration_t decl;
+list_t list;
 }
 
 %locations
@@ -78,6 +80,8 @@ SAC_LexicalUnit *value;
 %type <value> operator;
 %type <value> function;
 %type <value> hexcolor;
+%type <decl> declaration;
+%type <list> _declarations1;
 
 %%
 
@@ -116,8 +120,14 @@ _selectors1
   | _selectors1 ',' _spaces0 selector
   ;
 _declarations1
-  : declaration
-  | _declarations1 ';' _spaces0 declaration
+  : declaration {
+      $$ = list_open(YY_SCANNER_MPOOL(scanner));
+      if ($1 != NULL) list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
+    }
+  | _declarations1 ';' _spaces0 declaration {
+      if ($4 != NULL) list_push_back($1, YY_SCANNER_MPOOL(scanner), $4);
+      $$ = $1;
+    }
   ;
 _simple_selector_values0
   :
@@ -195,7 +205,16 @@ property
   : IDENT _spaces0 { $$ = $1; }
   ;
 ruleset
-  : _selectors1 '{' _spaces0 _declarations1 '}' _spaces0
+  : _selectors1 '{' _spaces0 _declarations1 '}' _spaces0 {
+      list_iter_t it;
+      for (it = list_head($4); it != NULL; it = list_next(it)) {
+        declaration_t decl = *it;
+
+        parser_property_handler(
+          YY_SCANNER_PARSER(scanner),
+          decl->property, decl->value, decl->important);
+      }
+    }
   ;
 selector
   : simple_selector
@@ -237,12 +256,14 @@ pseudo
   ;
 declaration
   : property ':' _spaces0 expr {
-      parser_property_handler(YY_SCANNER_PARSER(scanner), $1, $4, SAC_FALSE);
+      $$ = declaration_alloc(YY_SCANNER_MPOOL(scanner), $1, $4, SAC_FALSE);
     }
   | property ':' _spaces0 expr prio {
-      parser_property_handler(YY_SCANNER_PARSER(scanner), $1, $4, SAC_TRUE);
+      $$ = declaration_alloc(YY_SCANNER_MPOOL(scanner), $1, $4, SAC_TRUE);
     }
-  | /* empty */
+  | /* empty */ {
+      $$ = NULL;
+    }
   ;
 prio
   : IMPORTANT_SYM _spaces0

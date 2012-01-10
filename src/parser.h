@@ -2,6 +2,9 @@
 #define PARSER_H
 
 #include "mpool.h"
+#include "list.h"
+#include "declaration.h"
+#include "lexical_unit.h"
 
 #include <sacc.h>
 

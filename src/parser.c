@@ -2,7 +2,6 @@
 
 #include "parser.h"
 #include "grammar.h"
-#include "mpool.h"
 
 #include <stdlib.h>
 #include <string.h>

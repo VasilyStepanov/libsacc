@@ -25,7 +25,8 @@ libsacc_la_SOURCES = parser.c \
                      list.c \
                      mpool_extra.c \
                      string_extra.c \
-                     lexical_unit.c
+                     lexical_unit.c \
+                     declaration.c
 
 libsacc_la_LIBADD = libgrammar.la
 
