@@ -395,18 +395,20 @@ void test_parser_styledeclaration() {
 
 
 void test_parser_selector() {
+  const SAC_Selector **selectors;
   stream_t parser_stream = stream_open();
   stream_t css = stream_open();
   stream_t match_stream = stream_open();
   SAC_Parser parser = create_parser(parser_stream);
   
-  stream_printf(css, "");
-  parse_selector(parser, stream_str(css));
+  stream_printf(css, "selector");
+  selectors = parse_selector(parser, stream_str(css));
   stream_close(css);
 
   dispose_parser(parser);
 
-  stream_printf(match_stream, "");
+  stream_printf(match_stream, "doc {\n");
+  stream_printf(match_stream, "doc }\n");
   assert_equals(stream_str(match_stream), stream_str(parser_stream));
   stream_close(match_stream);
 

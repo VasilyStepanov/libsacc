@@ -105,6 +105,10 @@ start
       }
       parser_end_document(YY_SCANNER_PARSER(scanner));
     }
+  | _selectors1 {
+      parser_start_document(YY_SCANNER_PARSER(scanner));
+      parser_end_document(YY_SCANNER_PARSER(scanner));
+    }
   | stylesheet
   ;
 
