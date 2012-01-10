@@ -1,10 +1,25 @@
 #include "vector.h"
 
 
+#define VECTOR_WRAP(vector) \
+  ((vector_t*)((char*)(vector) + sizeof(struct vector_s)))
+
+#define VECTOR_UNWRAP(vector) \
+  ((struct vector_s*)((char*)(vector) - sizeof(struct vector_s)))
+
+#define VECTOR_UNWRAP_SIZE(vector) VECTOR_UNWRAP(vector)->size
+
+struct vector_s {
+  size_t size;
+};
+
+
 
 vector_t vector_open(mpool_t mpool, size_t size) {
-  vector_t ret = mpool_alloc(mpool, sizeof(void*) * (size + 1));
+  vector_t ret = VECTOR_WRAP(mpool_alloc(mpool,
+    sizeof(struct vector_s) + sizeof(void*) * (size + 1)));
   ((void**)ret)[size] = NULL;
+  VECTOR_UNWRAP_SIZE(ret) = size;
   return ret;
 }
 
@@ -23,24 +38,18 @@ vector_iter_t vector_next(vector_iter_t iter) {
 
 
 size_t vector_size(vector_t vector) {
-  size_t size = 0;
-  vector_iter_t it;
-
-  for (it = vector_head(vector); *it != NULL; it = vector_next(it)) ++size;
-
-  return size;
+  return VECTOR_UNWRAP_SIZE(vector);
 }
 
 
 
 void vector_close(vector_t vector, mpool_t mpool) {
-  mpool_free(mpool, vector);
+  mpool_free(mpool, VECTOR_UNWRAP(vector));
 }
 
 
 
 void vector_cpy(vector_iter_t dest, vector_iter_t src) {
-  for (; *src != NULL; src = vector_next(src), dest = vector_next(dest))
-    *dest = *src;
-  *vector_next(dest) = NULL;
+  for (; *src != NULL; ++src, ++dest) *dest = *src;
+  *(++dest) = NULL;
 }
