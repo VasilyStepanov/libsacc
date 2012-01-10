@@ -11,11 +11,11 @@
 %{
 #include <sacc.h>
 
-#include "parser.h"
 #include "grammar.h"
 #include "mpool.h"
 #include "mpool_extra.h"
 #include "string_extra.h"
+#include "parser.h"
 
 #include <stdlib.h>
 %}

@@ -35,7 +35,7 @@ libsacc_la_LIBADD = libgrammar.la
 libgrammar_la_SOURCES = lexis.l \
                         grammar.y
 
-libgrammar_la_CFLAGS = $(GENERIC_CFLAGS) -Wno-unused-parameter
+libgrammar_la_CFLAGS = $(GENERIC_CFLAGS) -Wno-unused-parameter -Werror
 
 
 

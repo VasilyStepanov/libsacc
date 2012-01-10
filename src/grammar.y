@@ -2,9 +2,15 @@
  * Reference: http://www.w3.org/TR/css3-syntax/#grammar0
  * TODO: Replace this with something more relevant.
  */
+%code requires {
+#include "list.h"
+#include "declaration.h"
+#include "lexical_unit.h"
+#include "mpool.h"
+}
+
 %{
 #include "parser.h"
-#include "list.h"
 
 #include <sacc.h>
 
