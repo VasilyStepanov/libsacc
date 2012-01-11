@@ -114,16 +114,14 @@ start
       parser_end_document(YY_SCANNER_PARSER(scanner));
     }
   | START_AS_SELECTORS _selectors1 {
-      size_t size = 0;
-      list_iter_t lit;
       vector_t v;
+      list_iter_t lit;
       vector_iter_t vit;
 
       parser_start_document(YY_SCANNER_PARSER(scanner));
-      for (lit = list_head($2); lit != NULL; lit = list_next(lit)) ++size;
-      v = vector_open(YY_SCANNER_MPOOL(scanner), size);
+      v = vector_open(YY_SCANNER_MPOOL(scanner), list_size($2));
 
-      for (lit = list_head($2), vit = v;
+      for (lit = list_head($2), vit = vector_head(v);
            lit != NULL;
            lit = list_next(lit), ++vit)
       {
@@ -346,7 +344,7 @@ expr
       if ($1->lexicalUnitType == SAC_SUB_EXPRESSION) {
         $$->desc.subValues = vector_open(YY_SCANNER_MPOOL(scanner), new_size);
         vector_cpy(
-          (vector_iter_t)$$->desc.subValues, (vector_iter_t)$1->desc.subValues);
+          vector_head($$->desc.subValues), vector_head($1->desc.subValues));
         raw = (SAC_LexicalUnit**)$$->desc.subValues;
       } else {
         $$->desc.subValues = vector_open(YY_SCANNER_MPOOL(scanner), new_size);

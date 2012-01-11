@@ -98,3 +98,14 @@ void list_push_back(list_t list, mpool_t mpool, void *obj) {
   LIST(list)->tail->next = item;
   LIST(list)->tail = item;
 }
+
+
+
+size_t list_size(list_t list) {
+  size_t ret;
+  list_iter_t it;
+
+  for (ret = 0, it = list_head(list); it != NULL; ++ret, it = list_next(it));
+
+  return ret;
+}

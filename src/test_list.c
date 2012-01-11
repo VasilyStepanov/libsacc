@@ -75,6 +75,8 @@ void test_list_push_front() {
   it = list_next(it);
   assert(it == NULL);
 
+  assert(list_size(list) == 3);
+
   list_close(list, mpool);
   mpool_close(mpool);
 }

@@ -23,6 +23,8 @@ void list_push_front(list_t list, mpool_t mpool, void *obj);
 
 void list_push_back(list_t list, mpool_t mpool, void *obj);
 
+size_t list_size(list_t list);
+
 
 
 #endif
