@@ -255,6 +255,7 @@ void dump_condition(stream_t out, const SAC_Condition *condition) {
     case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
     case SAC_ATTRIBUTE_CONDITION:
     case SAC_CLASS_CONDITION:
+    case SAC_PSEUDO_CLASS_CONDITION:
     case SAC_ID_CONDITION:
       stream_printf(out, "cond_");
       switch (condition->conditionType) {
@@ -272,6 +273,9 @@ void dump_condition(stream_t out, const SAC_Condition *condition) {
           break;
         case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
           stream_printf(out, "begin_hypen");
+          break;
+        case SAC_PSEUDO_CLASS_CONDITION:
+          stream_printf(out, "pseudo_class");
           break;
         default:
           stream_printf(out, "unknown_%d", condition->conditionType);
@@ -315,7 +319,6 @@ void dump_condition(stream_t out, const SAC_Condition *condition) {
     case SAC_NEGATIVE_CONDITION:
     case SAC_POSITIONAL_CONDITION:
     case SAC_LANG_CONDITION:
-    case SAC_PSEUDO_CLASS_CONDITION:
     case SAC_ONLY_CHILD_CONDITION:
     case SAC_ONLY_TYPE_CONDITION:
     case SAC_CONTENT_CONDITION:
@@ -530,6 +533,7 @@ void test_parser_selector() {
   stream_printf(css, ", .class1#some-id.class2\n");
   stream_printf(css, ", "
     "[attr][iattr=ident][sattr=\"str\"][oneof~=\"inc\"][hypen|=\"dash\"]\n");
+  stream_printf(css, ", :pseudo-class\n");
   selectors = parse_selector(parser, stream_str(css));
   stream_close(css);
 
@@ -561,6 +565,10 @@ void test_parser_selector() {
             "cond_attr(NULL, 'sattr', true, 'str')), "
           "cond_one_of(NULL, 'oneof', true, 'inc')), "
         "cond_begin_hypen(NULL, 'hypen', true, 'dash')))\n");
+  stream_printf(match_stream, 
+    "sel_cond("
+      "sel_any, "
+      "cond_pseudo_class(NULL, 'pseudo-class', false, NULL))\n");
   assert_equals(stream_str(match_stream), stream_str(selector_stream));
   stream_close(match_stream);
   stream_close(selector_stream);

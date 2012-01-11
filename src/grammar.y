@@ -107,6 +107,7 @@ SAC_ConditionType cond_type;
 %type <cond> _attribute_conditions1;
 %type <cond> class;
 %type <cond> attrib;
+%type <cond> pseudo;
 %type <cond_type> _attrib_match;
 
 %%
@@ -325,7 +326,9 @@ _attribute_condition
   | attrib {
       $$ = $1;
     }
-  | pseudo
+  | pseudo {
+      $$ = $1;
+    }
   ;
 class
   : '.' IDENT {
@@ -378,8 +381,17 @@ _attrib_value
     }
   ;
 pseudo
-  : ':' IDENT
+  : ':' IDENT {
+      $$ = condition_alloc(
+        YY_SCANNER_MPOOL(scanner), SAC_PSEUDO_CLASS_CONDITION);
+      $$->desc.attribute.namespaceURI = NULL;
+      $$->desc.attribute.localName = $2;
+      $$->desc.attribute.specified = SAC_FALSE;
+      $$->desc.attribute.value = NULL;
+    }
+/*
   | ':' FUNCTION _spaces0 IDENT _spaces0 ')'
+*/
   ;
 declaration
   : property ':' _spaces0 expr {
