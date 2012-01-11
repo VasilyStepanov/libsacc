@@ -102,6 +102,7 @@ SAC_ConditionType cond_type;
 %type <list> _selectors1;
 %type <sel> selector;
 %type <sel> simple_selector;
+%type <sel> element_name;
 %type <cond> _attribute_condition;
 %type <cond> _attribute_conditions0;
 %type <cond> _attribute_conditions1;
@@ -203,7 +204,7 @@ _attribute_conditions0
     }
   | _attribute_conditions0 _attribute_condition {
       if ($1 == NULL) {
-        $$ = $1;
+        $$ = $2;
       } else {
         $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_AND_CONDITION);
         $$->desc.combinator.firstCondition = $1;
@@ -310,7 +311,16 @@ simple_selector
         YY_SCANNER_MPOOL(scanner), SAC_ANY_NODE_SELECTOR);
       $$->desc.conditional.condition = $1;
     }
-  | element_name _attribute_conditions0 _spaces0
+  | element_name _attribute_conditions0 _spaces0 {
+      if ($2 == NULL) {
+        $$ = $1;
+      } else {
+        $$ = selector_alloc(
+          YY_SCANNER_MPOOL(scanner), SAC_CONDITIONAL_SELECTOR);
+        $$->desc.conditional.simpleSelector = $1;
+        $$->desc.conditional.condition = $2;
+      }
+    }
   ;
 _attribute_condition
   : HASH {
@@ -340,8 +350,14 @@ class
     }
   ;
 element_name
-  : IDENT
-  | '*'
+  : IDENT {
+      $$ = selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_ELEMENT_NODE_SELECTOR);
+      $$->desc.element.namespaceURI = NULL;
+      $$->desc.element.localName = $1;
+    }
+  | '*' {
+      $$ = selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_ANY_NODE_SELECTOR);
+    }
   ;
 attrib
   : '[' _spaces0 IDENT _spaces0 ']' {

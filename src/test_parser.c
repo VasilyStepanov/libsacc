@@ -341,9 +341,27 @@ void dump_selector(stream_t out, const SAC_Selector *selector) {
     case SAC_ANY_NODE_SELECTOR:
       stream_printf(out, "sel_any");
       break;
+    case SAC_ELEMENT_NODE_SELECTOR:
+      stream_printf(out, "sel_el(");
+
+      if (selector->desc.element.namespaceURI != NULL) {
+        stream_printf(out, selector->desc.element.namespaceURI);
+      } else {
+        stream_printf(out, "NULL");
+      }
+
+      stream_printf(out, ", ");
+
+      if (selector->desc.element.localName != NULL) {
+        stream_printf(out, selector->desc.element.localName);
+      } else {
+        stream_printf(out, "NULL");
+      }
+
+      stream_printf(out, ")");
+      break;
     case SAC_ROOT_NODE_SELECTOR:
     case SAC_NEGATIVE_SELECTOR:
-    case SAC_ELEMENT_NODE_SELECTOR:
     case SAC_TEXT_NODE_SELECTOR:
     case SAC_CDATA_SECTION_NODE_SELECTOR:
     case SAC_PROCESSING_INSTRUCTION_NODE_SELECTOR:
@@ -529,11 +547,13 @@ void test_parser_selector() {
   SAC_Parser parser = create_parser(parser_stream);
   
   stream_printf(css, "#some-id\n");
+  stream_printf(css, ", div.some-class\n");
   stream_printf(css, ", .some-class\n");
   stream_printf(css, ", .class1#some-id.class2\n");
   stream_printf(css, ", "
     "[attr][iattr=ident][sattr=\"str\"][oneof~=\"inc\"][hypen|=\"dash\"]\n");
   stream_printf(css, ", :pseudo-class\n");
+  stream_printf(css, ", *.foo:bar\n");
   selectors = parse_selector(parser, stream_str(css));
   stream_close(css);
 
@@ -543,6 +563,10 @@ void test_parser_selector() {
   match_stream = stream_open();
   stream_printf(match_stream,
     "sel_cond(sel_any, cond_id(NULL, 'id', true, 'some-id'))\n");
+  stream_printf(match_stream,
+    "sel_cond("
+      "sel_el(NULL, div), "
+      "cond_class(NULL, 'class', true, 'some-class'))\n");
   stream_printf(match_stream,
     "sel_cond(sel_any, cond_class(NULL, 'class', true, 'some-class'))\n");
   stream_printf(match_stream,
@@ -569,6 +593,12 @@ void test_parser_selector() {
     "sel_cond("
       "sel_any, "
       "cond_pseudo_class(NULL, 'pseudo-class', false, NULL))\n");
+  stream_printf(match_stream, 
+    "sel_cond("
+      "sel_any, "
+      "cond_and("
+        "cond_class(NULL, 'class', true, 'foo'), "
+        "cond_pseudo_class(NULL, 'bar', false, NULL)))\n");
   assert_equals(stream_str(match_stream), stream_str(selector_stream));
   stream_close(match_stream);
   stream_close(selector_stream);
