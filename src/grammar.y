@@ -7,6 +7,8 @@
 #include "vector.h"
 #include "declaration.h"
 #include "lexical_unit.h"
+#include "condition.h"
+#include "selector.h"
 #include "mpool.h"
 }
 
@@ -22,7 +24,7 @@
 #define YYLEX_PARAM scanner
 #define YYPARSE_PARAM scanner
 
-void yyerror() {}
+void yyerror(const char *msg) { printf("ERROR: %s\n", msg); }
 extern int yylex();
 %}
 
@@ -35,7 +37,8 @@ char *str;
 SAC_LexicalUnit *value;
 declaration_t decl;
 list_t list;
-SAC_Selector *selector;
+SAC_Selector *sel;
+SAC_Condition *cond;
 }
 
 %locations
@@ -95,7 +98,11 @@ SAC_Selector *selector;
 %type <decl> declaration;
 %type <list> _declarations1;
 %type <list> _selectors1;
-%type <selector> selector;
+%type <sel> selector;
+%type <sel> simple_selector;
+%type <cond> _attribute_condition;
+%type <cond> _attribute_conditions0;
+%type <cond> _attribute_conditions1;
 
 %%
 
@@ -184,13 +191,29 @@ _declarations1
       if ($4 != NULL) list_push_back($$, YY_SCANNER_MPOOL(scanner), $4);
     }
   ;
-_simple_selector_values0
-  :
-  | _simple_selector_values0 _simple_selector_value
+_attribute_conditions0
+  : /* empty */ {
+      $$ = NULL;
+    }
+  | _attribute_conditions0 _attribute_condition {
+      if ($1 == NULL) {
+        $$ = $1;
+      } else {
+        $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_AND_CONDITION);
+        $$->desc.combinator.firstCondition = $1;
+        $$->desc.combinator.secondCondition = $2;
+      }
+    }
   ;
-_simple_selector_values1
-  : _simple_selector_value
-  | _simple_selector_values1 _simple_selector_value
+_attribute_conditions1
+  : _attribute_condition {
+      $$ = $1;
+    }
+  | _attribute_conditions1 _attribute_condition {
+      $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_AND_CONDITION);
+      $$->desc.combinator.firstCondition = $1;
+      $$->desc.combinator.secondCondition = $2;
+    }
   ;
 
 stylesheet
@@ -270,18 +293,27 @@ ruleset
   ;
 selector
   : simple_selector {
-      $$ = NULL;
+      $$ = $1;
     }
-  | selector combinator simple_selector {
-      $$ = NULL;
-    }
+  | selector combinator simple_selector
   ;
 simple_selector
-  : _simple_selector_values1 _spaces0
-  | element_name _simple_selector_values0 _spaces0
+  : _attribute_conditions1 _spaces0 {
+      $$ = selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_CONDITIONAL_SELECTOR);
+      $$->desc.conditional.simpleSelector = selector_alloc(
+        YY_SCANNER_MPOOL(scanner), SAC_ANY_NODE_SELECTOR);
+      $$->desc.conditional.condition = $1;
+    }
+  | element_name _attribute_conditions0 _spaces0
   ;
-_simple_selector_value
-  : HASH
+_attribute_condition
+  : HASH {
+      $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_ID_CONDITION);
+      $$->desc.attribute.namespaceURI = NULL;
+      $$->desc.attribute.localName = "id";
+      $$->desc.attribute.specified = SAC_TRUE;
+      $$->desc.attribute.value = $1;
+    }
   | class
   | attrib
   | pseudo

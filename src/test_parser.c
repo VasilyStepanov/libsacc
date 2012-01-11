@@ -249,6 +249,86 @@ void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
 
 
 
+void dump_condition(stream_t out, const SAC_Condition *condition) {
+  switch (condition->conditionType) {
+    case SAC_ID_CONDITION:
+      stream_printf(out, "cond_id(");
+
+      if (condition->desc.attribute.namespaceURI != NULL) {
+        stream_printf(out, "'%s'", condition->desc.attribute.namespaceURI);
+      } else {
+        stream_printf(out, "NULL");
+      }
+
+      stream_printf(out, ", ");
+
+      if (condition->desc.attribute.localName != NULL) {
+        stream_printf(out, "'%s'", condition->desc.attribute.localName);
+      } else {
+        stream_printf(out, "NULL");
+      }
+
+      stream_printf(out, ", %s, ",
+        condition->desc.attribute.specified == SAC_TRUE ? "true" : "false");
+
+      if (condition->desc.attribute.value != NULL) {
+        stream_printf(out, "'%s'", condition->desc.attribute.value);
+      } else {
+        stream_printf(out, "NULL");
+      }
+
+      stream_printf(out, ")");
+      break;
+    case SAC_AND_CONDITION:
+    case SAC_OR_CONDITION:
+    case SAC_NEGATIVE_CONDITION:
+    case SAC_POSITIONAL_CONDITION:
+    case SAC_ATTRIBUTE_CONDITION:
+    case SAC_LANG_CONDITION:
+    case SAC_ONE_OF_ATTRIBUTE_CONDITION:
+    case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
+    case SAC_CLASS_CONDITION:
+    case SAC_PSEUDO_CLASS_CONDITION:
+    case SAC_ONLY_CHILD_CONDITION:
+    case SAC_ONLY_TYPE_CONDITION:
+    case SAC_CONTENT_CONDITION:
+      stream_printf(out, "cond(unknown %d)", condition->conditionType);
+      break;
+  }
+}
+
+
+
+void dump_selector(stream_t out, const SAC_Selector *selector) {
+  switch (selector->selectorType) {
+    case SAC_CONDITIONAL_SELECTOR:
+      stream_printf(out, "sel_cond(");
+      dump_selector(out, selector->desc.conditional.simpleSelector);
+      stream_printf(out, ", ");
+      dump_condition(out, selector->desc.conditional.condition);
+      stream_printf(out, ")");
+      break;
+    case SAC_ANY_NODE_SELECTOR:
+      stream_printf(out, "sel_any");
+      break;
+    case SAC_ROOT_NODE_SELECTOR:
+    case SAC_NEGATIVE_SELECTOR:
+    case SAC_ELEMENT_NODE_SELECTOR:
+    case SAC_TEXT_NODE_SELECTOR:
+    case SAC_CDATA_SECTION_NODE_SELECTOR:
+    case SAC_PROCESSING_INSTRUCTION_NODE_SELECTOR:
+    case SAC_COMMENT_NODE_SELECTOR:
+    case SAC_PSEUDO_ELEMENT_SELECTOR:
+    case SAC_DESCENDANT_SELECTOR:
+    case SAC_CHILD_SELECTOR:
+    case SAC_DIRECT_ADJACENT_SELECTOR:
+      stream_printf(out, "sel(unknown %d)", selector->selectorType);
+      break;
+  }
+}
+
+
+
 void dump_selectors(stream_t out, const SAC_Selector **value) {
   const SAC_Selector **it;
 
@@ -258,8 +338,8 @@ void dump_selectors(stream_t out, const SAC_Selector **value) {
   }
 
   for (it = value; *it != NULL; ++it) {
-    if (it == value) stream_printf(out, " ", "x");
-    stream_printf(out, "NULL", "x");
+    if (it != value) stream_printf(out, " ");
+    dump_selector(out, *it);
   }
 }
 
@@ -418,7 +498,7 @@ void test_parser_selector() {
   stream_t match_stream;
   SAC_Parser parser = create_parser(parser_stream);
   
-  stream_printf(css, "selector");
+  stream_printf(css, "#some-id");
   selectors = parse_selector(parser, stream_str(css));
   stream_close(css);
 
@@ -426,7 +506,8 @@ void test_parser_selector() {
   dump_selectors(selector_stream, selectors);
 
   match_stream = stream_open();
-  stream_printf(match_stream, "");
+  stream_printf(match_stream,
+    "sel_cond(sel_any, cond_id(NULL, 'id', true, 'some-id'))");
   assert_equals(stream_str(match_stream), stream_str(selector_stream));
   stream_close(match_stream);
   stream_close(selector_stream);
