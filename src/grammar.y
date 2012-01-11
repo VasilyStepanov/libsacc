@@ -122,9 +122,10 @@ start
       parser_start_document(YY_SCANNER_PARSER(scanner));
       for (lit = list_head($2); lit != NULL; lit = list_next(lit)) ++size;
       v = vector_open(YY_SCANNER_MPOOL(scanner), size);
-      for (lit = list_head($2), vit = vector_head(v);
+
+      for (lit = list_head($2), vit = v;
            lit != NULL;
-           lit = list_next(lit), vit = vector_next(vit))
+           lit = list_next(lit), ++vit)
       {
         *vit = *lit;
       }
@@ -345,11 +346,11 @@ expr
       if ($1->lexicalUnitType == SAC_SUB_EXPRESSION) {
         $$->desc.subValues = vector_open(YY_SCANNER_MPOOL(scanner), new_size);
         vector_cpy(
-          vector_head($$->desc.subValues), vector_head($1->desc.subValues));
-        raw = (SAC_LexicalUnit**)vector_head($$->desc.subValues);
+          (vector_iter_t)$$->desc.subValues, (vector_iter_t)$1->desc.subValues);
+        raw = (SAC_LexicalUnit**)$$->desc.subValues;
       } else {
         $$->desc.subValues = vector_open(YY_SCANNER_MPOOL(scanner), new_size);
-        raw = (SAC_LexicalUnit**)vector_head($$->desc.subValues);
+        raw = (SAC_LexicalUnit**)$$->desc.subValues;
         raw[0] = $1;
       }
 
@@ -491,7 +492,7 @@ function
         $$->desc.function.parameters = vector_open(
           YY_SCANNER_MPOOL(scanner), 1
         );
-        vector_head($$->desc.function.parameters)[0] = $3;
+        $$->desc.function.parameters[0] = $3;
       }
     }
   ;
@@ -524,7 +525,7 @@ hexcolor
         
         $$->desc.function.parameters = vector_open(
           YY_SCANNER_MPOOL(scanner), 5);
-        raw = (SAC_LexicalUnit**)vector_head($$->desc.function.parameters);
+        raw = (SAC_LexicalUnit**)$$->desc.function.parameters;
 
         raw[0] = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
         raw[0]->desc.integer = r;
