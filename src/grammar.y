@@ -103,6 +103,7 @@ SAC_Condition *cond;
 %type <cond> _attribute_condition;
 %type <cond> _attribute_conditions0;
 %type <cond> _attribute_conditions1;
+%type <cond> class;
 
 %%
 
@@ -314,12 +315,20 @@ _attribute_condition
       $$->desc.attribute.specified = SAC_TRUE;
       $$->desc.attribute.value = $1;
     }
-  | class
+  | class {
+      $$ = $1;
+    }
   | attrib
   | pseudo
   ;
 class
-  : '.' IDENT
+  : '.' IDENT {
+      $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_CLASS_CONDITION);
+      $$->desc.attribute.namespaceURI = NULL;
+      $$->desc.attribute.localName = "class";
+      $$->desc.attribute.specified = SAC_TRUE;
+      $$->desc.attribute.value = $2;
+    }
   ;
 element_name
   : IDENT

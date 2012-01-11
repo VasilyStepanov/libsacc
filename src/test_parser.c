@@ -251,8 +251,21 @@ void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
 
 void dump_condition(stream_t out, const SAC_Condition *condition) {
   switch (condition->conditionType) {
+    case SAC_CLASS_CONDITION:
     case SAC_ID_CONDITION:
-      stream_printf(out, "cond_id(");
+      stream_printf(out, "cond_");
+      switch (condition->conditionType) {
+        case SAC_ID_CONDITION:
+          stream_printf(out, "id");
+          break;
+        case SAC_CLASS_CONDITION:
+          stream_printf(out, "class");
+          break;
+        default:
+          stream_printf(out, "unknown_%d", condition->conditionType);
+          break;
+      }
+      stream_printf(out, "(");
 
       if (condition->desc.attribute.namespaceURI != NULL) {
         stream_printf(out, "'%s'", condition->desc.attribute.namespaceURI);
@@ -287,7 +300,6 @@ void dump_condition(stream_t out, const SAC_Condition *condition) {
     case SAC_LANG_CONDITION:
     case SAC_ONE_OF_ATTRIBUTE_CONDITION:
     case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
-    case SAC_CLASS_CONDITION:
     case SAC_PSEUDO_CLASS_CONDITION:
     case SAC_ONLY_CHILD_CONDITION:
     case SAC_ONLY_TYPE_CONDITION:
@@ -338,8 +350,8 @@ void dump_selectors(stream_t out, const SAC_Selector **value) {
   }
 
   for (it = value; *it != NULL; ++it) {
-    if (it != value) stream_printf(out, " ");
     dump_selector(out, *it);
+    stream_printf(out, "\n");
   }
 }
 
@@ -498,7 +510,8 @@ void test_parser_selector() {
   stream_t match_stream;
   SAC_Parser parser = create_parser(parser_stream);
   
-  stream_printf(css, "#some-id");
+  stream_printf(css, "#some-id\n");
+  stream_printf(css, ", .some-class\n");
   selectors = parse_selector(parser, stream_str(css));
   stream_close(css);
 
@@ -507,7 +520,9 @@ void test_parser_selector() {
 
   match_stream = stream_open();
   stream_printf(match_stream,
-    "sel_cond(sel_any, cond_id(NULL, 'id', true, 'some-id'))");
+    "sel_cond(sel_any, cond_id(NULL, 'id', true, 'some-id'))\n");
+  stream_printf(match_stream,
+    "sel_cond(sel_any, cond_class(NULL, 'class', true, 'some-class'))\n");
   assert_equals(stream_str(match_stream), stream_str(selector_stream));
   stream_close(match_stream);
   stream_close(selector_stream);
