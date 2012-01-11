@@ -2,6 +2,7 @@
 #include "test_list.h"
 #include "test_vector.h"
 #include "test_lexical_unit.h"
+#include "test_condition.h"
 #include "test_selector.h"
 #include "test_parser.h"
 
@@ -14,6 +15,7 @@ int main() {
   test_list();
   test_vector();
   test_lexical_unit();
+  test_condition();
   test_selector();
   test_parser();
   return EXIT_SUCCESS;
