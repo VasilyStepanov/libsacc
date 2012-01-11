@@ -89,6 +89,7 @@ SAC_Condition *cond;
 %token <str> UNICODERANGE
 
 %type <str> property;
+%type <str> _attrib_value;
 %type <ch> unary_operator;
 %type <value> expr;
 %type <value> term;
@@ -104,6 +105,7 @@ SAC_Condition *cond;
 %type <cond> _attribute_conditions0;
 %type <cond> _attribute_conditions1;
 %type <cond> class;
+%type <cond> attrib;
 
 %%
 
@@ -318,7 +320,9 @@ _attribute_condition
   | class {
       $$ = $1;
     }
-  | attrib
+  | attrib {
+      $$ = $1;
+    }
   | pseudo
   ;
 class
@@ -335,8 +339,22 @@ element_name
   | '*'
   ;
 attrib
-  : '[' _spaces0 IDENT _spaces0 ']'
-  | '[' _spaces0 IDENT _spaces0 _attrib_match _spaces0 _attrib_value _spaces0 ']'
+  : '[' _spaces0 IDENT _spaces0 ']' {
+      $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_ATTRIBUTE_CONDITION);
+      $$->desc.attribute.namespaceURI = NULL;
+      $$->desc.attribute.localName = $3;
+      $$->desc.attribute.specified = SAC_FALSE;
+      $$->desc.attribute.value = NULL;
+    }
+  | '[' _spaces0 IDENT _spaces0 _attrib_match
+    _spaces0 _attrib_value _spaces0 ']'
+    {
+      $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_ATTRIBUTE_CONDITION);
+      $$->desc.attribute.namespaceURI = NULL;
+      $$->desc.attribute.localName = $3;
+      $$->desc.attribute.specified = SAC_TRUE;
+      $$->desc.attribute.value = $7;
+    }
   ;
 _attrib_match
   : '='
@@ -344,8 +362,12 @@ _attrib_match
   | DASHMATCH
   ;
 _attrib_value
-  : IDENT
-  | STRING
+  : IDENT {
+      $$ = $1;
+    }
+  | STRING {
+      $$ = $1;
+    }
   ;
 pseudo
   : ':' IDENT

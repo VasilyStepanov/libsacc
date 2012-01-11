@@ -251,6 +251,7 @@ void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
 
 void dump_condition(stream_t out, const SAC_Condition *condition) {
   switch (condition->conditionType) {
+    case SAC_ATTRIBUTE_CONDITION:
     case SAC_CLASS_CONDITION:
     case SAC_ID_CONDITION:
       stream_printf(out, "cond_");
@@ -260,6 +261,9 @@ void dump_condition(stream_t out, const SAC_Condition *condition) {
           break;
         case SAC_CLASS_CONDITION:
           stream_printf(out, "class");
+          break;
+        case SAC_ATTRIBUTE_CONDITION:
+          stream_printf(out, "attr");
           break;
         default:
           stream_printf(out, "unknown_%d", condition->conditionType);
@@ -302,7 +306,6 @@ void dump_condition(stream_t out, const SAC_Condition *condition) {
     case SAC_OR_CONDITION:
     case SAC_NEGATIVE_CONDITION:
     case SAC_POSITIONAL_CONDITION:
-    case SAC_ATTRIBUTE_CONDITION:
     case SAC_LANG_CONDITION:
     case SAC_ONE_OF_ATTRIBUTE_CONDITION:
     case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
@@ -519,6 +522,7 @@ void test_parser_selector() {
   stream_printf(css, "#some-id\n");
   stream_printf(css, ", .some-class\n");
   stream_printf(css, ", .class1#some-id.class2\n");
+  stream_printf(css, ", [attr][iattr=ident][sattr=\"str\"]\n");
   selectors = parse_selector(parser, stream_str(css));
   stream_close(css);
 
@@ -538,6 +542,14 @@ void test_parser_selector() {
           "cond_class(NULL, 'class', true, 'class1'), "
           "cond_id(NULL, 'id', true, 'some-id')), "
         "cond_class(NULL, 'class', true, 'class2')))\n");
+  stream_printf(match_stream,
+    "sel_cond("
+      "sel_any, "
+      "cond_and("
+        "cond_and("
+          "cond_attr(NULL, 'attr', false, NULL), "
+          "cond_attr(NULL, 'iattr', true, 'ident')), "
+          "cond_attr(NULL, 'sattr', true, 'str')))\n");
   assert_equals(stream_str(match_stream), stream_str(selector_stream));
   stream_close(match_stream);
   stream_close(selector_stream);
