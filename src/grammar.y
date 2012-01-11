@@ -282,11 +282,6 @@ operator
       $$ = NULL;
     }
   ;
-combinator
-  : '+' _spaces0
-  | '>' _spaces0
-  | /* empty */
-  ;
 unary_operator
   : '-' { $$ = '-'; }
   | '+' { $$ = '+'; }
@@ -302,7 +297,23 @@ selector
   : simple_selector {
       $$ = $1;
     }
-  | selector combinator simple_selector
+  | selector '+' _spaces0 simple_selector {
+      $$ = selector_alloc(
+        YY_SCANNER_MPOOL(scanner), SAC_DIRECT_ADJACENT_SELECTOR);
+      $$->desc.sibling.nodeType = ANY_NODE;
+      $$->desc.sibling.firstSelector = $1;
+      $$->desc.sibling.secondSelector = $4;
+    }
+  | selector '>' _spaces0 simple_selector {
+      $$ = selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_CHILD_SELECTOR);
+      $$->desc.descendant.descendantSelector = $1;
+      $$->desc.descendant.simpleSelector = $4;
+    }
+  | selector _spaces0 simple_selector {
+      $$ = selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_DESCENDANT_SELECTOR);
+      $$->desc.descendant.descendantSelector = $1;
+      $$->desc.descendant.simpleSelector = $3;
+    }
   ;
 simple_selector
   : _attribute_conditions1 _spaces0 {

@@ -329,6 +329,37 @@ void dump_condition(stream_t out, const SAC_Condition *condition) {
 
 
 
+void dump_node_type(stream_t out, SAC_nodeType type) {
+  switch (type) {
+    case ELEMENT_NODE:
+      stream_printf(out, "ELEMENT");
+      break;
+    case ATTRIBUTE_NODE:
+      stream_printf(out, "ATTRIBUTE");
+      break;
+    case TEXT_NODE:
+      stream_printf(out, "TEXT");
+      break;
+    case CDATA_NODE:
+      stream_printf(out, "CDATA");
+      break;
+    case ENTITY_REFERENCE_NODE:
+      stream_printf(out, "ENTITY_REFERENCE");
+      break;
+    case PROCESSING_INSTRUCTION_NODE:
+      stream_printf(out, "PROCESSING_INSTRUCTION");
+      break;
+    case COMMENT_NODE:
+      stream_printf(out, "COMMENT");
+      break;
+    case ANY_NODE:
+      stream_printf(out, "ANY");
+      break;
+  }
+}
+
+
+
 void dump_selector(stream_t out, const SAC_Selector *selector) {
   switch (selector->selectorType) {
     case SAC_CONDITIONAL_SELECTOR:
@@ -360,16 +391,42 @@ void dump_selector(stream_t out, const SAC_Selector *selector) {
 
       stream_printf(out, ")");
       break;
+    case SAC_DESCENDANT_SELECTOR:
+    case SAC_CHILD_SELECTOR:
+      stream_printf(out, "sel_");
+      switch (selector->selectorType) {
+        case SAC_DESCENDANT_SELECTOR:
+          stream_printf(out, "desc");
+          break;
+        case SAC_CHILD_SELECTOR:
+          stream_printf(out, "child");
+          break;
+        default:
+          stream_printf(out, "unknown_%d", selector->selectorType);
+          break;
+      }
+      stream_printf(out, "(");
+      dump_selector(out, selector->desc.descendant.descendantSelector);
+      stream_printf(out, ", ");
+      dump_selector(out, selector->desc.descendant.simpleSelector);
+      stream_printf(out, ")");
+      break;
+    case SAC_DIRECT_ADJACENT_SELECTOR:
+      stream_printf(out, "sel_sib(");
+      dump_node_type(out, selector->desc.sibling.nodeType);
+      stream_printf(out, ", ");
+      dump_selector(out, selector->desc.sibling.firstSelector);
+      stream_printf(out, ", ");
+      dump_selector(out, selector->desc.sibling.secondSelector);
+      stream_printf(out, ")");
+      break;
+    case SAC_PSEUDO_ELEMENT_SELECTOR:
     case SAC_ROOT_NODE_SELECTOR:
     case SAC_NEGATIVE_SELECTOR:
     case SAC_TEXT_NODE_SELECTOR:
     case SAC_CDATA_SECTION_NODE_SELECTOR:
     case SAC_PROCESSING_INSTRUCTION_NODE_SELECTOR:
     case SAC_COMMENT_NODE_SELECTOR:
-    case SAC_PSEUDO_ELEMENT_SELECTOR:
-    case SAC_DESCENDANT_SELECTOR:
-    case SAC_CHILD_SELECTOR:
-    case SAC_DIRECT_ADJACENT_SELECTOR:
       stream_printf(out, "sel(unknown %d)", selector->selectorType);
       break;
   }
@@ -554,6 +611,9 @@ void test_parser_selector() {
     "[attr][iattr=ident][sattr=\"str\"][oneof~=\"inc\"][hypen|=\"dash\"]\n");
   stream_printf(css, ", :pseudo-class\n");
   stream_printf(css, ", *.foo:bar\n");
+  stream_printf(css, ", a b c\n");
+  stream_printf(css, ", a + b + c\n");
+  stream_printf(css, ", a > b > c\n");
   selectors = parse_selector(parser, stream_str(css));
   stream_close(css);
 
@@ -599,6 +659,26 @@ void test_parser_selector() {
       "cond_and("
         "cond_class(NULL, 'class', true, 'foo'), "
         "cond_pseudo_class(NULL, 'bar', false, NULL)))\n");
+  stream_printf(match_stream, 
+    "sel_desc("
+      "sel_desc("
+        "sel_el(NULL, a), "
+        "sel_el(NULL, b)), "
+      "sel_el(NULL, c))\n");
+  stream_printf(match_stream, 
+    "sel_sib("
+      "ANY, "
+      "sel_sib("
+        "ANY, "
+        "sel_el(NULL, a), "
+        "sel_el(NULL, b)), "
+      "sel_el(NULL, c))\n");
+  stream_printf(match_stream, 
+    "sel_child("
+      "sel_child("
+        "sel_el(NULL, a), "
+        "sel_el(NULL, b)), "
+      "sel_el(NULL, c))\n");
   assert_equals(stream_str(match_stream), stream_str(selector_stream));
   stream_close(match_stream);
   stream_close(selector_stream);
