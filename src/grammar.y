@@ -39,6 +39,7 @@ declaration_t decl;
 list_t list;
 SAC_Selector *sel;
 SAC_Condition *cond;
+SAC_ConditionType cond_type;
 }
 
 %locations
@@ -106,6 +107,7 @@ SAC_Condition *cond;
 %type <cond> _attribute_conditions1;
 %type <cond> class;
 %type <cond> attrib;
+%type <cond_type> _attrib_match;
 
 %%
 
@@ -349,7 +351,7 @@ attrib
   | '[' _spaces0 IDENT _spaces0 _attrib_match
     _spaces0 _attrib_value _spaces0 ']'
     {
-      $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_ATTRIBUTE_CONDITION);
+      $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), $5);
       $$->desc.attribute.namespaceURI = NULL;
       $$->desc.attribute.localName = $3;
       $$->desc.attribute.specified = SAC_TRUE;
@@ -357,9 +359,15 @@ attrib
     }
   ;
 _attrib_match
-  : '='
-  | INCLUDES
-  | DASHMATCH
+  : '=' {
+      $$ = SAC_ATTRIBUTE_CONDITION;
+    }
+  | INCLUDES {
+      $$ = SAC_ONE_OF_ATTRIBUTE_CONDITION;
+    }
+  | DASHMATCH {
+      $$ = SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION;
+    }
   ;
 _attrib_value
   : IDENT {
