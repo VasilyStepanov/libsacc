@@ -293,6 +293,12 @@ void dump_condition(stream_t out, const SAC_Condition *condition) {
       stream_printf(out, ")");
       break;
     case SAC_AND_CONDITION:
+      stream_printf(out, "cond_and(");
+      dump_condition(out, condition->desc.combinator.firstCondition);
+      stream_printf(out, ", ");
+      dump_condition(out, condition->desc.combinator.secondCondition);
+      stream_printf(out, ")");
+      break;
     case SAC_OR_CONDITION:
     case SAC_NEGATIVE_CONDITION:
     case SAC_POSITIONAL_CONDITION:
@@ -512,6 +518,7 @@ void test_parser_selector() {
   
   stream_printf(css, "#some-id\n");
   stream_printf(css, ", .some-class\n");
+  stream_printf(css, ", .class1#some-id.class2\n");
   selectors = parse_selector(parser, stream_str(css));
   stream_close(css);
 
@@ -523,6 +530,14 @@ void test_parser_selector() {
     "sel_cond(sel_any, cond_id(NULL, 'id', true, 'some-id'))\n");
   stream_printf(match_stream,
     "sel_cond(sel_any, cond_class(NULL, 'class', true, 'some-class'))\n");
+  stream_printf(match_stream,
+    "sel_cond("
+      "sel_any, "
+      "cond_and("
+        "cond_and("
+          "cond_class(NULL, 'class', true, 'class1'), "
+          "cond_id(NULL, 'id', true, 'some-id')), "
+        "cond_class(NULL, 'class', true, 'class2')))\n");
   assert_equals(stream_str(match_stream), stream_str(selector_stream));
   stream_close(match_stream);
   stream_close(selector_stream);
