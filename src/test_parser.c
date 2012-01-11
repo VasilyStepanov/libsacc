@@ -249,6 +249,22 @@ void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
 
 
 
+void dump_selectors(stream_t out, const SAC_Selector **value) {
+  const SAC_Selector **it;
+
+  if (value == NULL) {
+    stream_printf(out, "NULL\n");
+    return;
+  }
+
+  for (it = value; *it != NULL; ++it) {
+    if (it == value) stream_printf(out, " ", "x");
+    stream_printf(out, "NULL", "x");
+  }
+}
+
+
+
 void property(
   void *userData,
   const SAC_STRING propertyName,
@@ -398,15 +414,26 @@ void test_parser_selector() {
   const SAC_Selector **selectors;
   stream_t parser_stream = stream_open();
   stream_t css = stream_open();
-  stream_t match_stream = stream_open();
+  stream_t selector_stream;
+  stream_t match_stream;
   SAC_Parser parser = create_parser(parser_stream);
   
   stream_printf(css, "selector");
   selectors = parse_selector(parser, stream_str(css));
   stream_close(css);
 
+  selector_stream = stream_open();
+  dump_selectors(selector_stream, selectors);
+
+  match_stream = stream_open();
+  stream_printf(match_stream, "");
+  assert_equals(stream_str(match_stream), stream_str(selector_stream));
+  stream_close(match_stream);
+  stream_close(selector_stream);
+
   dispose_parser(parser);
 
+  match_stream = stream_open();
   stream_printf(match_stream, "doc {\n");
   stream_printf(match_stream, "doc }\n");
   assert_equals(stream_str(match_stream), stream_str(parser_stream));

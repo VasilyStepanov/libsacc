@@ -35,6 +35,7 @@ char *str;
 SAC_LexicalUnit *value;
 declaration_t decl;
 list_t list;
+SAC_Selector *selector;
 }
 
 %locations
@@ -93,6 +94,8 @@ list_t list;
 %type <value> hexcolor;
 %type <decl> declaration;
 %type <list> _declarations1;
+%type <list> _selectors1;
+%type <selector> selector;
 
 %%
 
@@ -111,8 +114,23 @@ start
       parser_end_document(YY_SCANNER_PARSER(scanner));
     }
   | START_AS_SELECTORS _selectors1 {
+      size_t size = 0;
+      list_iter_t lit;
+      vector_t v;
+      vector_iter_t vit;
+
       parser_start_document(YY_SCANNER_PARSER(scanner));
+      for (lit = list_head($2); lit != NULL; lit = list_next(lit)) ++size;
+      v = vector_open(YY_SCANNER_MPOOL(scanner), size);
+      for (lit = list_head($2), vit = vector_head(v);
+           lit != NULL;
+           lit = list_next(lit), vit = vector_next(vit))
+      {
+        *vit = *lit;
+      }
       parser_end_document(YY_SCANNER_PARSER(scanner));
+
+      YY_SCANNER_OUTPUT(scanner) = v;
     }
   | START_AS_STYLESHEET stylesheet
   ;
@@ -148,8 +166,14 @@ _rulesets0
   | _rulesets0 ruleset
   ;
 _selectors1
-  : selector
-  | _selectors1 ',' _spaces0 selector
+  : selector {
+      $$ = list_open(YY_SCANNER_MPOOL(scanner));
+      list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
+    }
+  | _selectors1 ',' _spaces0 selector {
+      $$ = $1;
+      list_push_back($$, YY_SCANNER_MPOOL(scanner), $4);
+    }
   ;
 _declarations1
   : declaration {
@@ -157,8 +181,8 @@ _declarations1
       if ($1 != NULL) list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
     }
   | _declarations1 ';' _spaces0 declaration {
-      if ($4 != NULL) list_push_back($1, YY_SCANNER_MPOOL(scanner), $4);
       $$ = $1;
+      if ($4 != NULL) list_push_back($$, YY_SCANNER_MPOOL(scanner), $4);
     }
   ;
 _simple_selector_values0
@@ -246,8 +270,12 @@ ruleset
   : _selectors1 '{' _spaces0 _declarations1 '}' _spaces0
   ;
 selector
-  : simple_selector
-  | selector combinator simple_selector
+  : simple_selector {
+      $$ = NULL;
+    }
+  | selector combinator simple_selector {
+      $$ = NULL;
+    }
   ;
 simple_selector
   : _simple_selector_values1 _spaces0
