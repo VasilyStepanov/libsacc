@@ -11,7 +11,7 @@
 
 static void test_list_basics() {
   mpool_t mpool;
-  list_t list;
+  SAC_List list;
   list_iter_t it;
   int a = 1, b = 2, c = 3;
   
@@ -47,7 +47,7 @@ static void test_list_basics() {
 
 static void test_list_push_front() {
   mpool_t mpool;
-  list_t list;
+  SAC_List list;
   list_iter_t it;
   int a = 1, b = 2, c = 3;
   
