@@ -219,3 +219,24 @@ int SAC_ParseRule(SAC_Parser parser, const char *buffer, int len) {
   yylex_destroy(scanner);
   return 0;
 }
+
+
+
+void SAC_parser_style_unit_handler(SAC_Parser parser, SAC_StyleUnit *unit) {
+  SAC_ListIter lit;
+
+  switch (unit->type) {
+    case SAC_RULESET:
+      SAC_parser_start_style_handler(parser, unit->desc.ruleset.selectors);
+      for (lit = SAC_list_head(unit->desc.ruleset.declarations);
+           lit != NULL;
+           lit = SAC_list_next(lit))
+      {
+        SAC_Declaration *declaration = *lit;
+        SAC_parser_property_handler(parser,
+          declaration->property, declaration->value, declaration->important);
+      }
+      SAC_parser_end_style_handler(parser, unit->desc.ruleset.selectors);
+    break;
+  }
+}

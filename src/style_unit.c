@@ -2,12 +2,9 @@
 
 
 
-SAC_StyleUnit* SAC_style_unit_alloc(SAC_MPool mpool,
-  SAC_Vector selectors, SAC_List declarations)
-{
-  SAC_StyleUnit *rule = (SAC_StyleUnit*)SAC_mpool_alloc(mpool,
+SAC_StyleUnit* SAC_style_unit_alloc(SAC_MPool mpool, SAC_StyleUnitType type) {
+  SAC_StyleUnit *style = (SAC_StyleUnit*)SAC_mpool_alloc(mpool,
     sizeof(SAC_StyleUnit));
-  rule->selectors = selectors;
-  rule->declarations = declarations;
-  return rule;
+  style->type = type;
+  return style;
 }

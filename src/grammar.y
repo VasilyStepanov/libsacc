@@ -101,9 +101,12 @@ SAC_ConditionType cond_type;
 %type <value> hexcolor;
 %type <decl> declaration;
 %type <style> ruleset;
+%type <style> style_unit;
 %type <list> declarations;
 %type <list> selectors;
 %type <list> expr;
+%type <list> stylesheet;
+%type <list> maybe_style_units;
 %type <sel> selector;
 %type <sel> simple_selector;
 %type <sel> element_name;
@@ -150,22 +153,18 @@ start
       YY_SCANNER_OUTPUT(scanner) = v;
     }
   | START_AS_RULE ruleset maybe_spaces {
+      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+      SAC_parser_style_unit_handler(YY_SCANNER_PARSER(scanner), $2);
+      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+    }
+  | START_AS_STYLESHEET stylesheet {
       SAC_ListIter lit;
 
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
-      SAC_parser_start_style_handler(YY_SCANNER_PARSER(scanner), $2->selectors);
-      for (lit = SAC_list_head($2->declarations);
-           lit != NULL;
-           lit = SAC_list_next(lit))
-      {
-        SAC_Declaration *declaration = *lit;
-        SAC_parser_property_handler(YY_SCANNER_PARSER(scanner),
-          declaration->property, declaration->value, declaration->important);
-      }
-      SAC_parser_end_style_handler(YY_SCANNER_PARSER(scanner), $2->selectors);
+      for (lit = SAC_list_head($2); lit != NULL; lit = SAC_list_next(lit))
+        SAC_parser_style_unit_handler(YY_SCANNER_PARSER(scanner), *lit);
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
     }
-  | START_AS_STYLESHEET stylesheet
   ;
 
 maybe_spaces
@@ -179,8 +178,13 @@ maybe_comments
   | maybe_comments CDC
   ;
 maybe_style_units
-  :
-  | maybe_style_units style_unit
+  : /* empty */ {
+      $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
+    }
+  | maybe_style_units style_unit {
+      $$ = $1;
+      SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $2);
+    }
   ;
 maybe_imports
   :
@@ -237,7 +241,9 @@ attribute_conditions
     }
   ;
 stylesheet
-  : maybe_charset maybe_imports maybe_namespaces maybe_style_units
+  : maybe_charset maybe_imports maybe_namespaces maybe_style_units {
+      $$ = $4;
+    }
   ;
 maybe_charset
   :
@@ -247,7 +253,9 @@ charset
   : CHARSET_SYM maybe_spaces STRING maybe_spaces ';' maybe_comments
   ;
 style_unit
-  : ruleset maybe_comments
+  : ruleset maybe_comments {
+      $$ = $1;
+    }
   | media maybe_comments
   | page maybe_comments
   | font_face maybe_comments
@@ -328,7 +336,9 @@ ruleset
       }
 
       
-      $$ = SAC_style_unit_alloc(YY_SCANNER_MPOOL(scanner), vector, $4);
+      $$ = SAC_style_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_RULESET);
+      $$->desc.ruleset.selectors = vector;
+      $$->desc.ruleset.declarations = $4;
     }
   ;
 selector

@@ -494,11 +494,9 @@ static void dispose_parser(SAC_Parser parser) {
 
 
 
-/*
 static void parse_stylesheet(SAC_Parser parser, const char *buffer) {
   SAC_ParseStyleSheet(parser, buffer, strlen(buffer));
 }
-*/
 
 
 
@@ -740,8 +738,38 @@ static void test_parser_rule() {
 
 
 
+static void test_parser_stylesheet() {
+  stream_t parser_stream = stream_open();
+  stream_t css = stream_open();
+  stream_t match_stream = stream_open();
+  SAC_Parser parser = create_parser(parser_stream);
+  
+  stream_printf(css, "element {\n");
+  stream_printf(css, "  prop : ident;\n");
+  stream_printf(css, "}\n");
+  parse_stylesheet(parser, stream_str(css));
+  stream_close(css);
+
+  dispose_parser(parser);
+
+  stream_printf(match_stream, "doc {\n");
+  stream_printf(match_stream, "  style\n");
+  stream_printf(match_stream, "sel_el(NULL, element)\n");
+  stream_printf(match_stream, "  {\n");
+  stream_printf(match_stream, "    prop('prop') ident('ident')\n");
+  stream_printf(match_stream, "  style }\n");
+  stream_printf(match_stream, "doc }\n");
+  assert_equals(stream_str(match_stream), stream_str(parser_stream));
+  stream_close(match_stream);
+
+  stream_close(parser_stream);
+}
+
+
+
 void test_parser() {
   test_parser_styledeclaration();
   test_parser_selector();
   test_parser_rule();
+  test_parser_stylesheet();
 }
