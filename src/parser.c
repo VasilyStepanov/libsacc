@@ -137,7 +137,7 @@ void SAC_DisposeParser(SAC_Parser parser) {
 
 int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
   void *scanner;
-  struct yy_extra_t yy_extra;
+  SAC_YYExtra yy_extra;
 
   parser_clear(parser);
   yy_extra.mpool = PARSER(parser)->mpool;
@@ -158,7 +158,7 @@ int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
 
 int SAC_ParseStyleDeclaration(SAC_Parser parser, const char *buffer, int len) {
   void *scanner;
-  struct yy_extra_t yy_extra;
+  SAC_YYExtra yy_extra;
 
   parser_clear(parser);
   yy_extra.mpool = PARSER(parser)->mpool;
@@ -181,7 +181,7 @@ const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
   const char *buffer, int len)
 {
   void *scanner;
-  struct yy_extra_t yy_extra;
+  SAC_YYExtra yy_extra;
 
   parser_clear(parser);
   yy_extra.mpool = PARSER(parser)->mpool;
@@ -202,7 +202,7 @@ const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
 
 int SAC_ParseRule(SAC_Parser parser, const char *buffer, int len) {
   void *scanner;
-  struct yy_extra_t yy_extra;
+  SAC_YYExtra yy_extra;
 
   parser_clear(parser);
   yy_extra.mpool = PARSER(parser)->mpool;
