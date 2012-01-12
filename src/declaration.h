@@ -13,12 +13,13 @@ struct declaration_s {
   SAC_Boolean important;
 };
 
-typedef struct declaration_s *declaration_t;
+typedef struct declaration_s* declaration_t;
 
 
 
-declaration_t declaration_alloc(
-  mpool_t mpool,
+declaration_t declaration_alloc(mpool_t mpool,
   SAC_STRING property, SAC_LexicalUnit *value, SAC_Boolean important);
+
+
 
 #endif
