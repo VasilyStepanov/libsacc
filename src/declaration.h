@@ -7,17 +7,17 @@
 
 
 
-struct declaration_s {
+struct _SAC_Declaration {
   SAC_STRING property;
   SAC_LexicalUnit *value;
   SAC_Boolean important;
 };
 
-typedef struct declaration_s* declaration_t;
+typedef struct _SAC_Declaration SAC_Declaration;
 
 
 
-declaration_t declaration_alloc(mpool_t mpool,
+SAC_Declaration* declaration_alloc(mpool_t mpool,
   SAC_STRING property, SAC_LexicalUnit *value, SAC_Boolean important);
 
 

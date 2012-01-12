@@ -36,7 +36,7 @@ double real;
 char ch;
 char *str;
 SAC_LexicalUnit *value;
-declaration_t decl;
+SAC_Declaration *decl;
 rule_t rule;
 list_t list;
 SAC_Selector *sel;
@@ -123,7 +123,7 @@ start
 
       parser_start_document(YY_SCANNER_PARSER(scanner));
       for (it = list_head($2); it != NULL; it = list_next(it)) {
-        declaration_t decl = *it;
+        SAC_Declaration *decl = *it;
 
         parser_property_handler(
           YY_SCANNER_PARSER(scanner),
@@ -158,7 +158,7 @@ start
            lit != NULL;
            lit = list_next(lit))
       {
-        declaration_t declaration = *lit;
+        SAC_Declaration *declaration = *lit;
         parser_property_handler(YY_SCANNER_PARSER(scanner),
           declaration->property, declaration->value, declaration->important);
       }
