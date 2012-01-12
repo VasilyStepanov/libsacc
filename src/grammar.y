@@ -180,15 +180,15 @@ maybe_comments
   ;
 maybe_stylesheet_values
   :
-  | maybe_stylesheet_values stylesheet_value maybe_comments
+  | maybe_stylesheet_values stylesheet_value
   ;
 maybe_imports
   :
-  | maybe_imports import maybe_comments
+  | maybe_imports import
   ;
 maybe_namespaces
   :
-  | maybe_namespaces namespace maybe_comments
+  | maybe_namespaces namespace
   ;
 mediums
   : medium
@@ -237,28 +237,28 @@ attribute_conditions
     }
   ;
 stylesheet
-  : maybe_charset maybe_comments maybe_imports maybe_namespaces maybe_stylesheet_values 
+  : maybe_charset maybe_imports maybe_namespaces maybe_stylesheet_values 
   ;
 maybe_charset
   :
   | charset
   ;
 charset
-  : CHARSET_SYM maybe_spaces STRING maybe_spaces ';'
+  : CHARSET_SYM maybe_spaces STRING maybe_spaces ';' maybe_comments
   ;
 stylesheet_value
-  : ruleset
-  | media
-  | page
-  | font_face
+  : ruleset maybe_comments
+  | media maybe_comments
+  | page maybe_comments
+  | font_face maybe_comments
   ;
 import
-  : IMPORT_SYM maybe_spaces string_or_uri maybe_spaces ';'
-  | IMPORT_SYM maybe_spaces string_or_uri maybe_spaces mediums ';'
+  : IMPORT_SYM maybe_spaces string_or_uri maybe_spaces ';' maybe_comments
+  | IMPORT_SYM maybe_spaces string_or_uri maybe_spaces mediums ';' maybe_comments
   ;
 namespace
-  : NAMESPACE_SYM maybe_spaces string_or_uri maybe_spaces ';'
-  | NAMESPACE_SYM maybe_spaces namespace_prefix maybe_spaces string_or_uri maybe_spaces ';'
+  : NAMESPACE_SYM maybe_spaces string_or_uri maybe_spaces ';' maybe_comments
+  | NAMESPACE_SYM maybe_spaces namespace_prefix maybe_spaces string_or_uri maybe_spaces ';' maybe_comments
   ;
 string_or_uri
   : STRING
