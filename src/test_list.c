@@ -12,35 +12,35 @@
 static void test_list_basics() {
   SAC_MPool mpool;
   SAC_List list;
-  list_iter_t it;
+  SAC_ListIter it;
   int a = 1, b = 2, c = 3;
   
-  mpool = mpool_open(256);
-  list = list_open(mpool);
+  mpool = SAC_mpool_open(256);
+  list = SAC_list_open(mpool);
 
-  assert(list_head(list) == NULL);
+  assert(SAC_list_head(list) == NULL);
 
-  list_push_back(list, mpool, &a);
-  list_push_back(list, mpool, &b);
-  list_push_back(list, mpool, &c);
+  SAC_list_push_back(list, mpool, &a);
+  SAC_list_push_back(list, mpool, &b);
+  SAC_list_push_back(list, mpool, &c);
 
-  it = list_head(list);
+  it = SAC_list_head(list);
   assert(it != NULL);
   assert(*it == &a);
 
-  it = list_next(it);
+  it = SAC_list_next(it);
   assert(it != NULL);
   assert(*it == &b);
 
-  it = list_next(it);
+  it = SAC_list_next(it);
   assert(it != NULL);
   assert(*it == &c);
 
-  it = list_next(it);
+  it = SAC_list_next(it);
   assert(it == NULL);
 
-  list_close(list, mpool);
-  mpool_close(mpool);
+  SAC_list_close(list, mpool);
+  SAC_mpool_close(mpool);
 }
 
 
@@ -48,37 +48,37 @@ static void test_list_basics() {
 static void test_list_push_front() {
   SAC_MPool mpool;
   SAC_List list;
-  list_iter_t it;
+  SAC_ListIter it;
   int a = 1, b = 2, c = 3;
   
-  mpool = mpool_open(256);
-  list = list_open(mpool);
+  mpool = SAC_mpool_open(256);
+  list = SAC_list_open(mpool);
 
-  assert(list_head(list) == NULL);
+  assert(SAC_list_head(list) == NULL);
 
-  list_push_front(list, mpool, &a);
-  list_push_front(list, mpool, &b);
-  list_push_front(list, mpool, &c);
+  SAC_list_push_front(list, mpool, &a);
+  SAC_list_push_front(list, mpool, &b);
+  SAC_list_push_front(list, mpool, &c);
 
-  it = list_head(list);
+  it = SAC_list_head(list);
   assert(it != NULL);
   assert(*it == &c);
 
-  it = list_next(it);
+  it = SAC_list_next(it);
   assert(it != NULL);
   assert(*it == &b);
 
-  it = list_next(it);
+  it = SAC_list_next(it);
   assert(it != NULL);
   assert(*it == &a);
 
-  it = list_next(it);
+  it = SAC_list_next(it);
   assert(it == NULL);
 
-  assert(list_size(list) == 3);
+  assert(SAC_list_size(list) == 3);
 
-  list_close(list, mpool);
-  mpool_close(mpool);
+  SAC_list_close(list, mpool);
+  SAC_mpool_close(mpool);
 }
 
 

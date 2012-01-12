@@ -92,7 +92,7 @@ struct _SAC_MPool {
 
 
 
-SAC_MPool mpool_open(size_t page_size) {
+SAC_MPool SAC_mpool_open(size_t page_size) {
   struct _SAC_MPool *ret;
 
   ret = (struct _SAC_MPool*)malloc(sizeof(struct _SAC_MPool));
@@ -103,14 +103,14 @@ SAC_MPool mpool_open(size_t page_size) {
 
 
 
-void mpool_close(SAC_MPool mpool) {
+void SAC_mpool_close(SAC_MPool mpool) {
   if (mpool != NULL) mpage_close_all(MPOOL(mpool)->page);
   free(mpool);
 }
 
 
 
-void* mpool_alloc(SAC_MPool mpool, size_t size) {
+void* SAC_mpool_alloc(SAC_MPool mpool, size_t size) {
   void *ret;
 
   if (size == 0) return NULL;
@@ -129,19 +129,19 @@ void* mpool_alloc(SAC_MPool mpool, size_t size) {
 
 
 
-void* mpool_realloc(SAC_MPool mpool, void *ptr, size_t size) {
-  if (ptr == NULL) return mpool_alloc(mpool, size);
+void* SAC_mpool_realloc(SAC_MPool mpool, void *ptr, size_t size) {
+  if (ptr == NULL) return SAC_mpool_alloc(mpool, size);
 
   if (size == 0) {
-    mpool_free(mpool, ptr);
+    SAC_mpool_free(mpool, ptr);
     return NULL;
   }
 
   if (MOBJ_UNWRAP_SIZE(ptr) < size) {
-    void *ret = mpool_alloc(mpool, size);
+    void *ret = SAC_mpool_alloc(mpool, size);
 
     memcpy(ret, ptr, MOBJ_UNWRAP_SIZE(ptr));
-    mpool_free(mpool, ptr);
+    SAC_mpool_free(mpool, ptr);
     return ret;
   }
   
@@ -150,7 +150,7 @@ void* mpool_realloc(SAC_MPool mpool, void *ptr, size_t size) {
 
 
 
-void mpool_free(SAC_MPool mpool, void *ptr) {
+void SAC_mpool_free(SAC_MPool mpool, void *ptr) {
   struct _SAC_MPage *page;
 
   if (ptr == NULL) return;
@@ -180,7 +180,7 @@ void mpool_free(SAC_MPool mpool, void *ptr) {
 
 
 
-void mpool_stats(SAC_MPool mpool, size_t *pages) {
+void SAC_mpool_stats(SAC_MPool mpool, size_t *pages) {
   size_t _pages;
   struct _SAC_MPage *cur;
   

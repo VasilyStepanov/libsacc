@@ -13,12 +13,12 @@ static void test_selector_alloc() {
   SAC_MPool mpool;
   SAC_Selector *selector;
 
-  mpool = mpool_open(256);
-  selector = selector_alloc(mpool, SAC_ANY_NODE_SELECTOR);
+  mpool = SAC_mpool_open(256);
+  selector = SAC_selector_alloc(mpool, SAC_ANY_NODE_SELECTOR);
 
   assert(selector->selectorType == SAC_ANY_NODE_SELECTOR);
   
-  mpool_close(mpool);
+  SAC_mpool_close(mpool);
 }
 
 

@@ -119,51 +119,51 @@ SAC_ConditionType cond_type;
 
 start
   : START_AS_STYLE_DECLARATIONS declarations {
-      list_iter_t it;
+      SAC_ListIter it;
 
-      parser_start_document(YY_SCANNER_PARSER(scanner));
-      for (it = list_head($2); it != NULL; it = list_next(it)) {
+      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+      for (it = SAC_list_head($2); it != NULL; it = SAC_list_next(it)) {
         SAC_Declaration *decl = *it;
 
-        parser_property_handler(
+        SAC_parser_property_handler(
           YY_SCANNER_PARSER(scanner),
           decl->property, decl->value, decl->important);
       }
-      parser_end_document(YY_SCANNER_PARSER(scanner));
+      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
     }
   | START_AS_SELECTORS selectors {
       SAC_Vector v;
-      list_iter_t lit;
+      SAC_ListIter lit;
       SAC_VectorIter vit;
 
-      parser_start_document(YY_SCANNER_PARSER(scanner));
-      v = vector_open(YY_SCANNER_MPOOL(scanner), list_size($2));
+      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+      v = SAC_vector_open(YY_SCANNER_MPOOL(scanner), SAC_list_size($2));
 
-      for (lit = list_head($2), vit = vector_head(v);
+      for (lit = SAC_list_head($2), vit = SAC_vector_head(v);
            lit != NULL;
-           lit = list_next(lit), ++vit)
+           lit = SAC_list_next(lit), ++vit)
       {
         *vit = *lit;
       }
-      parser_end_document(YY_SCANNER_PARSER(scanner));
+      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
 
       YY_SCANNER_OUTPUT(scanner) = v;
     }
   | START_AS_RULE ruleset maybe_spaces {
-      list_iter_t lit;
+      SAC_ListIter lit;
 
-      parser_start_document(YY_SCANNER_PARSER(scanner));
-      parser_start_style_handler(YY_SCANNER_PARSER(scanner), $2->selectors);
-      for (lit = list_head($2->declarations);
+      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+      SAC_parser_start_style_handler(YY_SCANNER_PARSER(scanner), $2->selectors);
+      for (lit = SAC_list_head($2->declarations);
            lit != NULL;
-           lit = list_next(lit))
+           lit = SAC_list_next(lit))
       {
         SAC_Declaration *declaration = *lit;
-        parser_property_handler(YY_SCANNER_PARSER(scanner),
+        SAC_parser_property_handler(YY_SCANNER_PARSER(scanner),
           declaration->property, declaration->value, declaration->important);
       }
-      parser_end_style_handler(YY_SCANNER_PARSER(scanner), $2->selectors);
-      parser_end_document(YY_SCANNER_PARSER(scanner));
+      SAC_parser_end_style_handler(YY_SCANNER_PARSER(scanner), $2->selectors);
+      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
     }
   | START_AS_STYLESHEET stylesheet
   ;
@@ -200,22 +200,22 @@ maybe_rulesets
   ;
 selectors
   : selector {
-      $$ = list_open(YY_SCANNER_MPOOL(scanner));
-      list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
+      $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
+      SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
     }
   | selectors ',' maybe_spaces selector {
       $$ = $1;
-      list_push_back($$, YY_SCANNER_MPOOL(scanner), $4);
+      SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4);
     }
   ;
 declarations
   : declaration {
-      $$ = list_open(YY_SCANNER_MPOOL(scanner));
-      if ($1 != NULL) list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
+      $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
+      if ($1 != NULL) SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
     }
   | declarations ';' maybe_spaces declaration {
       $$ = $1;
-      if ($4 != NULL) list_push_back($$, YY_SCANNER_MPOOL(scanner), $4);
+      if ($4 != NULL) SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4);
     }
   ;
 maybe_attribute_conditions
@@ -231,7 +231,7 @@ attribute_conditions
       $$ = $1;
     }
   | attribute_conditions attribute_condition {
-      $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_AND_CONDITION);
+      $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_AND_CONDITION);
       $$->desc.combinator.firstCondition = $1;
       $$->desc.combinator.secondCondition = $2;
     }
@@ -292,10 +292,12 @@ font_face
   ;
 operator
   : '/' maybe_spaces {
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_SLASH);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner),
+        SAC_OPERATOR_SLASH);
     }
   | ',' maybe_spaces {
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_COMMA);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner),
+        SAC_OPERATOR_COMMA);
     }
   | /* empty */ {
       $$ = NULL;
@@ -311,22 +313,22 @@ property
   ;
 ruleset
   : selectors '{' maybe_spaces declarations '}' {
-      list_iter_t lit;
+      SAC_ListIter lit;
       SAC_Vector vector;
       SAC_VectorIter vit;
 
-      vector = vector_open(YY_SCANNER_MPOOL(scanner), list_size($1));
-      for (lit = list_head($1),
-           vit = vector_head(vector);
+      vector = SAC_vector_open(YY_SCANNER_MPOOL(scanner), SAC_list_size($1));
+      for (lit = SAC_list_head($1),
+           vit = SAC_vector_head(vector);
            lit != NULL;
-           lit = list_next(lit),
+           lit = SAC_list_next(lit),
            ++vit)
       {
         *vit = *lit;
       }
 
       
-      $$ = rule_alloc(YY_SCANNER_MPOOL(scanner), vector, $4);
+      $$ = SAC_rule_alloc(YY_SCANNER_MPOOL(scanner), vector, $4);
     }
   ;
 selector
@@ -334,27 +336,29 @@ selector
       $$ = $1;
     }
   | selector '+' maybe_spaces simple_selector {
-      $$ = selector_alloc(
+      $$ = SAC_selector_alloc(
         YY_SCANNER_MPOOL(scanner), SAC_DIRECT_ADJACENT_SELECTOR);
       $$->desc.sibling.nodeType = ANY_NODE;
       $$->desc.sibling.firstSelector = $1;
       $$->desc.sibling.secondSelector = $4;
     }
   | selector '>' maybe_spaces simple_selector {
-      $$ = selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_CHILD_SELECTOR);
+      $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_CHILD_SELECTOR);
       $$->desc.descendant.descendantSelector = $1;
       $$->desc.descendant.simpleSelector = $4;
     }
   | selector maybe_spaces simple_selector {
-      $$ = selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_DESCENDANT_SELECTOR);
+      $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner),
+        SAC_DESCENDANT_SELECTOR);
       $$->desc.descendant.descendantSelector = $1;
       $$->desc.descendant.simpleSelector = $3;
     }
   ;
 simple_selector
   : attribute_conditions maybe_spaces {
-      $$ = selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_CONDITIONAL_SELECTOR);
-      $$->desc.conditional.simpleSelector = selector_alloc(
+      $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner),
+        SAC_CONDITIONAL_SELECTOR);
+      $$->desc.conditional.simpleSelector = SAC_selector_alloc(
         YY_SCANNER_MPOOL(scanner), SAC_ANY_NODE_SELECTOR);
       $$->desc.conditional.condition = $1;
     }
@@ -362,7 +366,7 @@ simple_selector
       if ($2 == NULL) {
         $$ = $1;
       } else {
-        $$ = selector_alloc(
+        $$ = SAC_selector_alloc(
           YY_SCANNER_MPOOL(scanner), SAC_CONDITIONAL_SELECTOR);
         $$->desc.conditional.simpleSelector = $1;
         $$->desc.conditional.condition = $2;
@@ -371,7 +375,7 @@ simple_selector
   ;
 attribute_condition
   : HASH {
-      $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_ID_CONDITION);
+      $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_ID_CONDITION);
       $$->desc.attribute.namespaceURI = NULL;
       $$->desc.attribute.localName = "id";
       $$->desc.attribute.specified = SAC_TRUE;
@@ -389,7 +393,7 @@ attribute_condition
   ;
 class
   : '.' IDENT {
-      $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_CLASS_CONDITION);
+      $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_CLASS_CONDITION);
       $$->desc.attribute.namespaceURI = NULL;
       $$->desc.attribute.localName = "class";
       $$->desc.attribute.specified = SAC_TRUE;
@@ -398,17 +402,19 @@ class
   ;
 element_name
   : IDENT {
-      $$ = selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_ELEMENT_NODE_SELECTOR);
+      $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner),
+        SAC_ELEMENT_NODE_SELECTOR);
       $$->desc.element.namespaceURI = NULL;
       $$->desc.element.localName = $1;
     }
   | '*' {
-      $$ = selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_ANY_NODE_SELECTOR);
+      $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_ANY_NODE_SELECTOR);
     }
   ;
 attrib
   : '[' maybe_spaces IDENT maybe_spaces ']' {
-      $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_ATTRIBUTE_CONDITION);
+      $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner),
+        SAC_ATTRIBUTE_CONDITION);
       $$->desc.attribute.namespaceURI = NULL;
       $$->desc.attribute.localName = $3;
       $$->desc.attribute.specified = SAC_FALSE;
@@ -417,7 +423,7 @@ attrib
   | '[' maybe_spaces IDENT maybe_spaces attrib_match
     maybe_spaces attrib_value maybe_spaces ']'
     {
-      $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), $5);
+      $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner), $5);
       $$->desc.attribute.namespaceURI = NULL;
       $$->desc.attribute.localName = $3;
       $$->desc.attribute.specified = SAC_TRUE;
@@ -445,7 +451,7 @@ attrib_value
   ;
 pseudo
   : ':' IDENT {
-      $$ = condition_alloc(
+      $$ = SAC_condition_alloc(
         YY_SCANNER_MPOOL(scanner), SAC_PSEUDO_CLASS_CONDITION);
       $$->desc.attribute.namespaceURI = NULL;
       $$->desc.attribute.localName = $2;
@@ -458,14 +464,14 @@ pseudo
   ;
 declaration
   : property ':' maybe_spaces expr {
-      $$ = declaration_alloc(
+      $$ = SAC_declaration_alloc(
         YY_SCANNER_MPOOL(scanner), $1,
-        lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner)), SAC_FALSE);
+        SAC_lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner)), SAC_FALSE);
     }
   | property ':' maybe_spaces expr prio {
-      $$ = declaration_alloc(
+      $$ = SAC_declaration_alloc(
         YY_SCANNER_MPOOL(scanner), $1,
-        lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner)), SAC_TRUE);
+        SAC_lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner)), SAC_TRUE);
     }
   | /* empty */ {
       $$ = NULL;
@@ -476,132 +482,134 @@ prio
   ;
 expr
   : term maybe_spaces {
-      $$ = list_open(YY_SCANNER_MPOOL(scanner));
-      list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
+      $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
+      SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
     }
   | expr operator term maybe_spaces {
       $$ = $1;
-      if ($2 != NULL) list_push_back($$, YY_SCANNER_MPOOL(scanner), $2);
-      list_push_back($$, YY_SCANNER_MPOOL(scanner), $3);
+      if ($2 != NULL) SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $2);
+      SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $3);
     }
   ;
 term
   : STRING {
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
       $$->desc.stringValue = $1;
     }
   | IDENT {
       if (strcmp($1, "inherit") != 0) {
-        $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_IDENT);
+        $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_IDENT);
         $$->desc.ident = $1;
       } else {
-        $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INHERIT);
+        $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INHERIT);
       }
     }
   | URI {
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_URI);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_URI);
       $$->desc.uri = $1;
     }
   | UNICODERANGE {
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_UNICODERANGE);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_UNICODERANGE);
       $$->desc.unicodeRange = $1;
     }
   | FREQ_HZ {
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_HERTZ);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_HERTZ);
       $$->desc.dimension.unit = "Hz";
       $$->desc.dimension.value.ureal = $1;
     }
   | FREQ_KHZ {
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_KILOHERTZ);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_KILOHERTZ);
       $$->desc.stringValue = "kHz";
       $$->desc.dimension.value.ureal = $1;
     }
   | unary_operator INT {
       if ($1 == '-') $2 = -$2;
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
       $$->desc.integer = $2;
     }
   | unary_operator REAL {
       if ($1 == '-') $2 = -$2;
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_REAL);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_REAL);
       $$->desc.real = $2;
     }
   | unary_operator PERCENTAGE {
       if ($1 == '-') $2 = -$2;
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_PERCENTAGE);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_PERCENTAGE);
       $$->desc.dimension.unit = "%";
       $$->desc.dimension.value.sreal = $2;
     }
   | TIME_MS {
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_MILLISECOND);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_MILLISECOND);
       $$->desc.dimension.unit = "ms";
       $$->desc.dimension.value.ureal = $1;
     }
   | TIME_S {
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_SECOND);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_SECOND);
       $$->desc.dimension.unit = "s";
       $$->desc.dimension.value.ureal = $1;
     }
   | ANGLE_DEG {
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_DEGREE);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_DEGREE);
       $$->desc.dimension.unit = "deg";
       $$->desc.dimension.value.ureal = $1;
     }
   | ANGLE_RAD {
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_RADIAN);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_RADIAN);
       $$->desc.dimension.unit = "rad";
       $$->desc.dimension.value.ureal = $1;
     }
   | ANGLE_GRAD {
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_GRADIAN);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_GRADIAN);
       $$->desc.dimension.unit = "grad";
       $$->desc.dimension.value.ureal = $1;
     }
   | unary_operator LENGTH_EM {
       if ($1 == '-') $2 = -$2;
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_EM);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_EM);
       $$->desc.dimension.unit = "em";
       $$->desc.dimension.value.sreal = $2;
     }
   | unary_operator LENGTH_EX {
       if ($1 == '-') $2 = -$2;
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_EX);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_EX);
       $$->desc.dimension.unit = "ex";
       $$->desc.dimension.value.sreal = $2;
     }
   | unary_operator LENGTH_PIXEL {
       if ($1 == '-') $2 = -$2;
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_PIXEL);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_PIXEL);
       $$->desc.dimension.unit = "px";
       $$->desc.dimension.value.sreal = $2;
     }
   | unary_operator LENGTH_INCH {
       if ($1 == '-') $2 = -$2;
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_INCH);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_INCH);
       $$->desc.dimension.unit = "in";
       $$->desc.dimension.value.sreal = $2;
     }
   | unary_operator LENGTH_CENTIMETER {
       if ($1 == '-') $2 = -$2;
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_CENTIMETER);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner),
+        SAC_LENGTH_CENTIMETER);
       $$->desc.dimension.unit = "cm";
       $$->desc.dimension.value.sreal = $2;
     }
   | unary_operator LENGTH_MILLIMETER {
       if ($1 == '-') $2 = -$2;
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_MILLIMETER);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner),
+        SAC_LENGTH_MILLIMETER);
       $$->desc.dimension.unit = "mm";
       $$->desc.dimension.value.sreal = $2;
     }
   | unary_operator LENGTH_POINT {
       if ($1 == '-') $2 = -$2;
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_POINT);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_POINT);
       $$->desc.dimension.unit = "pt";
       $$->desc.dimension.value.sreal = $2;
     }
   | unary_operator LENGTH_PICA {
       if ($1 == '-') $2 = -$2;
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_PICA);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_PICA);
       $$->desc.dimension.unit = "pc";
       $$->desc.dimension.value.sreal = $2;
     }
@@ -610,10 +618,10 @@ term
   ;
 function
   : FUNCTION maybe_spaces expr ')' {
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_FUNCTION);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_FUNCTION);
       $$->desc.function.name = $1;
 
-      $$->desc.function.parameters = lexical_unit_vector_from_list(
+      $$->desc.function.parameters = SAC_lexical_unit_vector_from_list(
         $3, YY_SCANNER_MPOOL(scanner));
     }
   ;
@@ -628,7 +636,7 @@ hexcolor
       int ok;
       size_t len;
 
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_RGBCOLOR);
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_RGBCOLOR);
       $$->desc.function.name = "rgb";
 
       len = strlen($1);
@@ -644,27 +652,27 @@ hexcolor
       if (ok) {
         SAC_LexicalUnit **raw;
         
-        $$->desc.function.parameters = vector_open(
+        $$->desc.function.parameters = SAC_vector_open(
           YY_SCANNER_MPOOL(scanner), 5);
         raw = (SAC_LexicalUnit**)$$->desc.function.parameters;
 
-        raw[0] = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
+        raw[0] = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
         raw[0]->desc.integer = r;
 
-        raw[1] = lexical_unit_alloc(
+        raw[1] = SAC_lexical_unit_alloc(
           YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_COMMA);
 
-        raw[2] = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
+        raw[2] = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
         raw[2]->desc.integer = g;
 
-        raw[3] = lexical_unit_alloc(
+        raw[3] = SAC_lexical_unit_alloc(
           YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_COMMA);
 
-        raw[4] = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
+        raw[4] = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
         raw[4]->desc.integer = b;
 
       } else {
-        $$->desc.function.parameters = vector_open(
+        $$->desc.function.parameters = SAC_vector_open(
           YY_SCANNER_MPOOL(scanner), 0
         );
       }

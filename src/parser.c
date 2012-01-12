@@ -28,21 +28,21 @@ struct _SAC_Parser {
 
 
 
-void parser_start_document(SAC_Parser parser) {
+void SAC_parser_start_document(SAC_Parser parser) {
   if (PARSER(parser)->start_document_handler != NULL)
     PARSER(parser)->start_document_handler(PARSER(parser)->user_data);
 }
 
 
 
-void parser_end_document(SAC_Parser parser) {
+void SAC_parser_end_document(SAC_Parser parser) {
   if (PARSER(parser)->end_document_handler != NULL)
     PARSER(parser)->end_document_handler(PARSER(parser)->user_data);
 }
 
 
 
-void parser_start_style_handler(
+void SAC_parser_start_style_handler(
   SAC_Parser parser,
   const SAC_Selector *selectors[])
 {
@@ -52,7 +52,7 @@ void parser_start_style_handler(
 
 
 
-void parser_end_style_handler(
+void SAC_parser_end_style_handler(
   SAC_Parser parser,
   const SAC_Selector *selectors[])
 {
@@ -62,7 +62,7 @@ void parser_end_style_handler(
 
 
 
-void parser_property_handler(
+void SAC_parser_property_handler(
   SAC_Parser parser,
   const SAC_STRING propertyName,
   const SAC_LexicalUnit *value,
@@ -75,9 +75,9 @@ void parser_property_handler(
 
 
 
-static void parser_clear(SAC_Parser parser) {
-  mpool_close(PARSER(parser)->mpool);
-  PARSER(parser)->mpool = mpool_open(16384);
+static void SAC_parser_clear(SAC_Parser parser) {
+  SAC_mpool_close(PARSER(parser)->mpool);
+  PARSER(parser)->mpool = SAC_mpool_open(16384);
 }
 
 
@@ -130,7 +130,7 @@ SAC_Parser SAC_CreateParser() {
 
 
 void SAC_DisposeParser(SAC_Parser parser) {
-  mpool_close(PARSER(parser)->mpool);
+  SAC_mpool_close(PARSER(parser)->mpool);
   free(parser);
 }
 
@@ -140,7 +140,7 @@ int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
   void *scanner;
   SAC_YYExtra yy_extra;
 
-  parser_clear(parser);
+  SAC_parser_clear(parser);
   yy_extra.mpool = PARSER(parser)->mpool;
   yy_extra.parser = parser;
   yy_extra.start_token = START_AS_STYLESHEET;
@@ -161,7 +161,7 @@ int SAC_ParseStyleDeclaration(SAC_Parser parser, const char *buffer, int len) {
   void *scanner;
   SAC_YYExtra yy_extra;
 
-  parser_clear(parser);
+  SAC_parser_clear(parser);
   yy_extra.mpool = PARSER(parser)->mpool;
   yy_extra.parser = parser;
   yy_extra.start_token = START_AS_STYLE_DECLARATIONS;
@@ -184,7 +184,7 @@ const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
   void *scanner;
   SAC_YYExtra yy_extra;
 
-  parser_clear(parser);
+  SAC_parser_clear(parser);
   yy_extra.mpool = PARSER(parser)->mpool;
   yy_extra.parser = parser;
   yy_extra.start_token = START_AS_SELECTORS;
@@ -205,7 +205,7 @@ int SAC_ParseRule(SAC_Parser parser, const char *buffer, int len) {
   void *scanner;
   SAC_YYExtra yy_extra;
 
-  parser_clear(parser);
+  SAC_parser_clear(parser);
   yy_extra.mpool = PARSER(parser)->mpool;
   yy_extra.parser = parser;
   yy_extra.start_token = START_AS_RULE;

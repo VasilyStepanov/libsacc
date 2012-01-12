@@ -7,7 +7,7 @@
 
 
 
-SAC_Selector* selector_alloc(SAC_MPool mpool, SAC_SelectorType type);
+SAC_Selector* SAC_selector_alloc(SAC_MPool mpool, SAC_SelectorType type);
 
 
 

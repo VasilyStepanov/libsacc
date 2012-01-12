@@ -7,7 +7,7 @@
 
 
 
-SAC_Condition* condition_alloc(SAC_MPool mpool, SAC_ConditionType type);
+SAC_Condition* SAC_condition_alloc(SAC_MPool mpool, SAC_ConditionType type);
 
 
 

@@ -61,7 +61,7 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
 "|="                    {return DASHMATCH;}
 
 {string}                {
-                          yylval->str = mpool_strndup(
+                          yylval->str = SAC_mpool_strndup(
                             YY_SCANNER_MPOOL(yyscanner),
                             yytext + 1,
                             yyleng - 2
@@ -70,14 +70,14 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
                         }
 
 {ident}                 {
-                          yylval->str = mpool_strndup(
+                          yylval->str = SAC_mpool_strndup(
                             YY_SCANNER_MPOOL(yyscanner), yytext, yyleng
                           );
                           return IDENT;
                         }
 
 "#"{name}               {
-                          yylval->str = mpool_strndup(
+                          yylval->str = SAC_mpool_strndup(
                             YY_SCANNER_MPOOL(yyscanner),
                             yytext + 1,
                             yyleng - 1
@@ -171,8 +171,11 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
 "url("{w}{string}{w}")" {
                           const char *text;
                           size_t len;
-                          strntrim(yytext + 4, yyleng - 5, &text, &len, " \t\r\n\f");
-                          yylval->str = mpool_strndup(
+                          SAC_strntrim(
+                            yytext + 4, yyleng - 5,
+                            &text, &len,
+                            " \t\r\n\f");
+                          yylval->str = SAC_mpool_strndup(
                             YY_SCANNER_MPOOL(yyscanner), text + 1, len - 2
                           );
                           return URI;
@@ -180,27 +183,30 @@ range     \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))
 "url("{w}{url}{w}")"    {
                           const char *text;
                           size_t len;
-                          strntrim(yytext + 4, yyleng - 5, &text, &len, " \t\r\n\f");
-                          yylval->str = mpool_strndup(
+                          SAC_strntrim(
+                            yytext + 4, yyleng - 5,
+                            &text, &len,
+                            " \t\r\n\f");
+                          yylval->str = SAC_mpool_strndup(
                             YY_SCANNER_MPOOL(yyscanner), text, len
                           );
                           return URI;
                         }
 {ident}"("              {
-                          yylval->str = mpool_strndup(
+                          yylval->str = SAC_mpool_strndup(
                             YY_SCANNER_MPOOL(yyscanner), yytext, yyleng - 1
                           );
                           return FUNCTION;
                         }
 
 U\+{range}              {
-                          yylval->str = mpool_strndup(
+                          yylval->str = SAC_mpool_strndup(
                             YY_SCANNER_MPOOL(yyscanner), yytext, yyleng
                           );
                           return UNICODERANGE;
                         }
 U\+{h}{1,6}-{h}{1,6}    {
-                          yylval->str = mpool_strndup(
+                          yylval->str = SAC_mpool_strndup(
                             YY_SCANNER_MPOOL(yyscanner), yytext, yyleng
                           );
                           return UNICODERANGE;

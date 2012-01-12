@@ -5,9 +5,9 @@
 
 
 
-char* mpool_strdup(SAC_MPool mpool, const char *s);
+char* SAC_mpool_strdup(SAC_MPool mpool, const char *s);
 
-char* mpool_strndup(SAC_MPool mpool, const char *s, size_t n);
+char* SAC_mpool_strndup(SAC_MPool mpool, const char *s, size_t n);
 
 
 

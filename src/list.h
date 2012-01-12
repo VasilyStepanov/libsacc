@@ -7,23 +7,23 @@
 
 typedef void* SAC_List;
 
-typedef void** list_iter_t;
+typedef void** SAC_ListIter;
 
 
 
-SAC_List list_open(SAC_MPool mpool);
+SAC_List SAC_list_open(SAC_MPool mpool);
 
-void list_close(SAC_MPool mpool, SAC_List list);
+void SAC_list_close(SAC_MPool mpool, SAC_List list);
 
-list_iter_t list_head(SAC_List list);
+SAC_ListIter SAC_list_head(SAC_List list);
 
-list_iter_t list_next(list_iter_t iter);
+SAC_ListIter SAC_list_next(SAC_ListIter iter);
 
-void list_push_front(SAC_List list, SAC_MPool mpool, void *obj);
+void SAC_list_push_front(SAC_List list, SAC_MPool mpool, void *obj);
 
-void list_push_back(SAC_List list, SAC_MPool mpool, void *obj);
+void SAC_list_push_back(SAC_List list, SAC_MPool mpool, void *obj);
 
-size_t list_size(SAC_List list);
+size_t SAC_list_size(SAC_List list);
 
 
 
