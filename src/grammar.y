@@ -92,7 +92,6 @@ SAC_ConditionType cond_type;
 %type <str> property;
 %type <str> _attrib_value;
 %type <ch> unary_operator;
-%type <value> expr;
 %type <value> term;
 %type <value> operator;
 %type <value> function;
@@ -100,6 +99,7 @@ SAC_ConditionType cond_type;
 %type <decl> declaration;
 %type <list> _declarations1;
 %type <list> _selectors1;
+%type <list> expr;
 %type <sel> selector;
 %type <sel> simple_selector;
 %type <sel> element_name;
@@ -422,10 +422,14 @@ pseudo
   ;
 declaration
   : property ':' _spaces0 expr {
-      $$ = declaration_alloc(YY_SCANNER_MPOOL(scanner), $1, $4, SAC_FALSE);
+      $$ = declaration_alloc(
+        YY_SCANNER_MPOOL(scanner), $1,
+        lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner)), SAC_FALSE);
     }
   | property ':' _spaces0 expr prio {
-      $$ = declaration_alloc(YY_SCANNER_MPOOL(scanner), $1, $4, SAC_TRUE);
+      $$ = declaration_alloc(
+        YY_SCANNER_MPOOL(scanner), $1,
+        lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner)), SAC_TRUE);
     }
   | /* empty */ {
       $$ = NULL;
@@ -435,35 +439,14 @@ prio
   : IMPORTANT_SYM _spaces0
   ;
 expr
-  : term { $$ = $1; }
+  : term {
+      $$ = list_open(YY_SCANNER_MPOOL(scanner));
+      list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
+    }
   | expr operator term {
-      size_t old_size;
-      size_t new_size;
-      SAC_LexicalUnit **raw;
-      
-      if ($1->lexicalUnitType == SAC_SUB_EXPRESSION) {
-        old_size = vector_size($1->desc.subValues);
-      } else {
-        old_size = 1;
-      }
-
-      new_size = old_size + 1;
-      if ($2 != NULL) ++new_size;
-
-      $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_SUB_EXPRESSION);
-      if ($1->lexicalUnitType == SAC_SUB_EXPRESSION) {
-        $$->desc.subValues = vector_open(YY_SCANNER_MPOOL(scanner), new_size);
-        vector_cpy(
-          vector_head($$->desc.subValues), vector_head($1->desc.subValues));
-        raw = (SAC_LexicalUnit**)$$->desc.subValues;
-      } else {
-        $$->desc.subValues = vector_open(YY_SCANNER_MPOOL(scanner), new_size);
-        raw = (SAC_LexicalUnit**)$$->desc.subValues;
-        raw[0] = $1;
-      }
-
-      if ($2 != NULL) raw[new_size - 2] = $2;
-      raw[new_size - 1] = $3;
+      $$ = $1;
+      if ($2 != NULL) list_push_back($$, YY_SCANNER_MPOOL(scanner), $2);
+      list_push_back($$, YY_SCANNER_MPOOL(scanner), $3);
     }
   ;
 term
@@ -594,14 +577,8 @@ function
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_FUNCTION);
       $$->desc.function.name = $1;
 
-      if ($3->lexicalUnitType == SAC_SUB_EXPRESSION) {
-        $$->desc.function.parameters = $3->desc.subValues;
-      } else {
-        $$->desc.function.parameters = vector_open(
-          YY_SCANNER_MPOOL(scanner), 1
-        );
-        $$->desc.function.parameters[0] = $3;
-      }
+      $$->desc.function.parameters = lexical_unit_vector_from_list(
+        $3, YY_SCANNER_MPOOL(scanner));
     }
   ;
 /*

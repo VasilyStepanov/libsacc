@@ -14,34 +14,46 @@ SAC_LexicalUnit* lexical_unit_alloc(
 
 
 
-SAC_LexicalUnit** lexical_unit_array_alloc(mpool_t mpool, size_t size) {
-  SAC_LexicalUnit **array = mpool_alloc(
-    mpool, sizeof(SAC_LexicalUnit*) * (size + 1)
-  );
+SAC_LexicalUnit** lexical_unit_vector_from_list(list_t list, mpool_t mpool) {
+  vector_t vector;
+  vector_iter_t vit;
+  list_iter_t lit;
 
-  array[size] = NULL;
+  vector = vector_open(mpool, list_size(list));
+  for (lit = list_head(list), vit = vector_head(vector);
+       lit != NULL;
+       lit = list_next(lit), ++vit)
+  {
+    *vit = *lit;
+  }
 
-  return array;
+  return (SAC_LexicalUnit**)vector;
 }
 
 
 
-void lexical_unit_array_cpy(SAC_LexicalUnit **dest, SAC_LexicalUnit **src) {
-  SAC_LexicalUnit **lhs, **rhs;
-
-  for (lhs = dest, rhs = src; *rhs != NULL; ++lhs, ++rhs)
-    *lhs = *rhs;
-
-  *(++rhs) = NULL;
-}
-
-
-
-size_t lexical_unit_array_size(SAC_LexicalUnit **array) {
+SAC_LexicalUnit* lexical_unit_from_list(list_t list, mpool_t mpool) {
   size_t size;
-  SAC_LexicalUnit **it;
+  SAC_LexicalUnit *value;
 
-  for (size = 0, it = array; *it != NULL; ++size, ++it);
-  
-  return size;
+  size = list_size(list);
+  if (size == 1) {
+    value = *list_head(list);
+  } else {
+    vector_t vector;
+    vector_iter_t vit;
+    list_iter_t lit;
+
+    value = lexical_unit_alloc(mpool, SAC_SUB_EXPRESSION);
+    vector = vector_open(mpool, size);
+    for (lit = list_head(list), vit = vector_head(vector);
+         lit != NULL;
+         lit = list_next(lit), ++vit)
+    {
+      *vit = *lit;
+    }
+    value->desc.subValues = vector;
+  }
+
+  return value;
 }
