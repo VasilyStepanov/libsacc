@@ -14,9 +14,9 @@ extern void yyparse();
 
 
 
-#define PARSER(parser) ((struct parser_s*)(parser))
+#define PARSER(parser) ((struct _SAC_Parser*)(parser))
 
-struct parser_s {
+struct _SAC_Parser {
   mpool_t mpool;
   SAC_StartDocumentHandler start_document_handler;
   SAC_EndDocumentHandler end_document_handler;
@@ -121,8 +121,9 @@ void* SAC_GetUserData(SAC_Parser parser) {
 
 
 SAC_Parser SAC_CreateParser() {
-  struct parser_s *ret = (struct parser_s*)malloc(sizeof(struct parser_s));
-  memset(ret, 0, sizeof(struct parser_s));
+  struct _SAC_Parser *ret = (struct _SAC_Parser*)malloc(
+    sizeof(struct _SAC_Parser));
+  memset(ret, 0, sizeof(struct _SAC_Parser));
   return ret;
 }
 
