@@ -44,6 +44,7 @@ static void list_item_close_all(struct list_item_s *item, mpool_t mpool) {
 struct list_s {
   struct list_item_s *head;
   struct list_item_s *tail;
+  size_t size;
 };
 
 
@@ -54,6 +55,7 @@ list_t list_open(mpool_t mpool) {
 
   ret->head = list_item_open(mpool, NULL);
   ret->tail = ret->head;
+  ret->size = 0;
 
   return ret;
 }
@@ -86,6 +88,7 @@ void list_push_front(list_t list, mpool_t mpool, void *obj) {
 
   item->next = LIST(list)->head->next;
   LIST(list)->head->next = item;
+  ++LIST(list)->size;
 }
 
 
@@ -97,15 +100,11 @@ void list_push_back(list_t list, mpool_t mpool, void *obj) {
   
   LIST(list)->tail->next = item;
   LIST(list)->tail = item;
+  ++LIST(list)->size;
 }
 
 
 
 size_t list_size(list_t list) {
-  size_t ret;
-  list_iter_t it;
-
-  for (ret = 0, it = list_head(list); it != NULL; ++ret, it = list_next(it));
-
-  return ret;
+  return LIST(list)->size;
 }
