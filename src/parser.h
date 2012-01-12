@@ -17,7 +17,7 @@
 extern void* yyget_extra();
 
 struct _SAC_YYExtra {
-  mpool_t mpool;
+  SAC_MPool mpool;
   SAC_Parser parser;
   int start_token;
   void *output;

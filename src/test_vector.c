@@ -10,7 +10,7 @@
 
 
 static void test_vector_basics() {
-  mpool_t mpool;
+  SAC_MPool mpool;
   SAC_Vector vector;
   SAC_VectorIter it;
   int a = 1, b = 2, c = 3;
@@ -47,7 +47,7 @@ static void test_vector_basics() {
 
 
 static void test_vector_cpy() {
-  mpool_t mpool;
+  SAC_MPool mpool;
   SAC_Vector vector1, vector2;
   int a = 1, b = 2, c = 3;
   

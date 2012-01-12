@@ -3,7 +3,7 @@
 
 
 SAC_LexicalUnit* lexical_unit_alloc(
-  mpool_t mpool, SAC_LexicalUnitCode type)
+  SAC_MPool mpool, SAC_LexicalUnitCode type)
 {
   SAC_LexicalUnit *value = (SAC_LexicalUnit*)mpool_alloc(
     mpool, sizeof(SAC_LexicalUnit)
@@ -14,7 +14,9 @@ SAC_LexicalUnit* lexical_unit_alloc(
 
 
 
-SAC_LexicalUnit** lexical_unit_vector_from_list(SAC_List list, mpool_t mpool) {
+SAC_LexicalUnit** lexical_unit_vector_from_list(
+  SAC_List list, SAC_MPool mpool)
+{
   SAC_Vector vector;
   SAC_VectorIter vit;
   list_iter_t lit;
@@ -32,7 +34,7 @@ SAC_LexicalUnit** lexical_unit_vector_from_list(SAC_List list, mpool_t mpool) {
 
 
 
-SAC_LexicalUnit* lexical_unit_from_list(SAC_List list, mpool_t mpool) {
+SAC_LexicalUnit* lexical_unit_from_list(SAC_List list, SAC_MPool mpool) {
   size_t size;
   SAC_LexicalUnit *value;
 

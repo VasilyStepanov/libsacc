@@ -10,7 +10,7 @@
 
 
 static void test_condition_alloc() {
-  mpool_t mpool;
+  SAC_MPool mpool;
   SAC_Condition *condition;
 
   mpool = mpool_open(256);

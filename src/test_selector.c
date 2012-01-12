@@ -10,7 +10,7 @@
 
 
 static void test_selector_alloc() {
-  mpool_t mpool;
+  SAC_MPool mpool;
   SAC_Selector *selector;
 
   mpool = mpool_open(256);

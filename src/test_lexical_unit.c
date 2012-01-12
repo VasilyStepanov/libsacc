@@ -10,7 +10,7 @@
 
 
 static void test_lexical_unit_alloc() {
-  mpool_t mpool;
+  SAC_MPool mpool;
   SAC_LexicalUnit *value;
 
   mpool = mpool_open(256);
@@ -24,7 +24,7 @@ static void test_lexical_unit_alloc() {
 
 
 static void test_lexical_unit_vector_from_list() {
-  mpool_t mpool;
+  SAC_MPool mpool;
   SAC_LexicalUnit *a, *b, *c;
   SAC_List list;
   SAC_LexicalUnit **vector;
@@ -61,7 +61,7 @@ static void test_lexical_unit_vector_from_list() {
 
 
 static void test_lexical_unit_from_list() {
-  mpool_t mpool;
+  SAC_MPool mpool;
   SAC_LexicalUnit *a, *b, *c;
   SAC_List list;
   SAC_LexicalUnit *value;

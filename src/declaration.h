@@ -17,7 +17,7 @@ typedef struct _SAC_Declaration SAC_Declaration;
 
 
 
-SAC_Declaration* declaration_alloc(mpool_t mpool,
+SAC_Declaration* declaration_alloc(SAC_MPool mpool,
   SAC_STRING property, SAC_LexicalUnit *value, SAC_Boolean important);
 
 

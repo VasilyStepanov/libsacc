@@ -15,7 +15,7 @@ struct _SAC_ListItem {
 
 
 
-static struct _SAC_ListItem* list_item_open(mpool_t mpool, void *obj) {
+static struct _SAC_ListItem* list_item_open(SAC_MPool mpool, void *obj) {
   struct _SAC_ListItem *ret =
     (struct _SAC_ListItem*)mpool_alloc(mpool, sizeof(struct _SAC_ListItem));
 
@@ -26,13 +26,13 @@ static struct _SAC_ListItem* list_item_open(mpool_t mpool, void *obj) {
 
 
 
-static void list_item_close(struct _SAC_ListItem *item, mpool_t mpool) {
+static void list_item_close(struct _SAC_ListItem *item, SAC_MPool mpool) {
   mpool_free(mpool, item);
 }
 
 
 
-static void list_item_close_all(struct _SAC_ListItem *item, mpool_t mpool) {
+static void list_item_close_all(struct _SAC_ListItem *item, SAC_MPool mpool) {
   if (item->next != NULL) list_item_close_all(item->next, mpool);
   list_item_close(item, mpool);
 }
@@ -49,7 +49,7 @@ struct _SAC_List {
 
 
 
-SAC_List list_open(mpool_t mpool) {
+SAC_List list_open(SAC_MPool mpool) {
   struct _SAC_List *ret =
     (struct _SAC_List*)mpool_alloc(mpool, sizeof(struct _SAC_List));
 
@@ -62,7 +62,7 @@ SAC_List list_open(mpool_t mpool) {
 
 
 
-void list_close(SAC_List list, mpool_t mpool) {
+void list_close(SAC_List list, SAC_MPool mpool) {
   list_item_close_all(LIST(list)->head, mpool);
   mpool_free(mpool, list);
 }
@@ -81,7 +81,7 @@ list_iter_t list_next(list_iter_t iter) {
 
 
 
-void list_push_front(SAC_List list, mpool_t mpool, void *obj) {
+void list_push_front(SAC_List list, SAC_MPool mpool, void *obj) {
   struct _SAC_ListItem *item;
 
   item = list_item_open(mpool, obj);
@@ -93,7 +93,7 @@ void list_push_front(SAC_List list, mpool_t mpool, void *obj) {
 
 
 
-void list_push_back(SAC_List list, mpool_t mpool, void *obj) {
+void list_push_back(SAC_List list, SAC_MPool mpool, void *obj) {
   struct _SAC_ListItem *item;
 
   item = list_item_open(mpool, obj);

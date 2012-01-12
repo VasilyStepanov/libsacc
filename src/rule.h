@@ -16,7 +16,7 @@ typedef struct _SAC_Rule SAC_Rule;
 
 
 
-SAC_Rule* rule_alloc(mpool_t mpool,
+SAC_Rule* rule_alloc(SAC_MPool mpool,
   SAC_Vector selectors, SAC_List declarations);
 
 

@@ -17,7 +17,7 @@ extern void yyparse();
 #define PARSER(parser) ((struct _SAC_Parser*)(parser))
 
 struct _SAC_Parser {
-  mpool_t mpool;
+  SAC_MPool mpool;
   SAC_StartDocumentHandler start_document_handler;
   SAC_EndDocumentHandler end_document_handler;
   SAC_StartStyleHandler start_style_handler;

@@ -7,9 +7,9 @@
 
 
 
-#define MOBJ_WRAP(obj) ((void*)((char*)(obj) + sizeof(struct mobj_s)))
+#define MOBJ_WRAP(obj) ((void*)((char*)(obj) + sizeof(struct _SAC_MObj)))
 #define MOBJ_UNWRAP(obj) \
-  ((struct mobj_s*)((char*)(obj) - sizeof(struct mobj_s)))
+  ((struct _SAC_MObj*)((char*)(obj) - sizeof(struct _SAC_MObj)))
 
 #define MOBJ_UNWRAP_SIZE(obj) MOBJ_UNWRAP(obj)->size
 
@@ -18,8 +18,8 @@
 
 
 
-struct mpage_s {
-  struct mpage_s *prev;
+struct _SAC_MPage {
+  struct _SAC_MPage *prev;
   void *data;
   void *ptr;
   size_t free;
@@ -28,17 +28,17 @@ struct mpage_s {
 
 
 
-struct mobj_s {
-  struct mpage_s *mpage;
+struct _SAC_MObj {
+  struct _SAC_MPage *mpage;
   size_t size;
 };
 
 
 
-static struct mpage_s* mpage_open(struct mpage_s *prev, size_t size) {
-  struct mpage_s *ret = malloc(sizeof(struct mpage_s));
+static struct _SAC_MPage* mpage_open(struct _SAC_MPage *prev, size_t size) {
+  struct _SAC_MPage *ret = malloc(sizeof(struct _SAC_MPage));
 
-  size = MALLIGN(size + sizeof(struct mobj_s));
+  size = MALLIGN(size + sizeof(struct _SAC_MObj));
   ret->prev = prev;
   ret->data = (char*)malloc(size);
   ret->ptr = ret->data;
@@ -49,24 +49,24 @@ static struct mpage_s* mpage_open(struct mpage_s *prev, size_t size) {
 
 
 
-static void mpage_close(struct mpage_s *mpage) {
+static void mpage_close(struct _SAC_MPage *mpage) {
   free(mpage->data);
   free(mpage);
 }
 
 
 
-static void mpage_close_all(struct mpage_s *mpage) {
+static void mpage_close_all(struct _SAC_MPage *mpage) {
   if (mpage->prev != NULL) mpage_close_all(mpage->prev);
   mpage_close(mpage);
 }
 
 
 
-static void* mpage_alloc(struct mpage_s *mpage, size_t size) {
+static void* mpage_alloc(struct _SAC_MPage *mpage, size_t size) {
   void *ret;
 
-  size = MALLIGN(size + sizeof(struct mobj_s));
+  size = MALLIGN(size + sizeof(struct _SAC_MObj));
 
   if (mpage->free < size) return NULL;
 
@@ -75,7 +75,7 @@ static void* mpage_alloc(struct mpage_s *mpage, size_t size) {
   mpage->free -= size;
   mpage->ptr = (char*)mpage->ptr + size;
 
-  MOBJ_UNWRAP_SIZE(ret) = size - sizeof(struct mobj_s);
+  MOBJ_UNWRAP_SIZE(ret) = size - sizeof(struct _SAC_MObj);
   MOBJ_UNWRAP_MPAGE(ret) = mpage;
 
   return ret;
@@ -83,19 +83,19 @@ static void* mpage_alloc(struct mpage_s *mpage, size_t size) {
 
 
 
-#define MPOOL(mpool) ((struct mpool_s*)(mpool))
+#define MPOOL(mpool) ((struct _SAC_MPool*)(mpool))
 
-struct mpool_s {
+struct _SAC_MPool {
   size_t page_size;
-  struct mpage_s *page;
+  struct _SAC_MPage *page;
 };
 
 
 
-mpool_t mpool_open(size_t page_size) {
-  struct mpool_s *ret;
+SAC_MPool mpool_open(size_t page_size) {
+  struct _SAC_MPool *ret;
 
-  ret = (struct mpool_s*)malloc(sizeof(struct mpool_s));
+  ret = (struct _SAC_MPool*)malloc(sizeof(struct _SAC_MPool));
   ret->page_size = page_size;
   ret->page = mpage_open(NULL, ret->page_size);
   return ret;
@@ -103,14 +103,14 @@ mpool_t mpool_open(size_t page_size) {
 
 
 
-void mpool_close(mpool_t mpool) {
+void mpool_close(SAC_MPool mpool) {
   if (mpool != NULL) mpage_close_all(MPOOL(mpool)->page);
   free(mpool);
 }
 
 
 
-void* mpool_alloc(mpool_t mpool, size_t size) {
+void* mpool_alloc(SAC_MPool mpool, size_t size) {
   void *ret;
 
   if (size == 0) return NULL;
@@ -129,7 +129,7 @@ void* mpool_alloc(mpool_t mpool, size_t size) {
 
 
 
-void* mpool_realloc(mpool_t mpool, void *ptr, size_t size) {
+void* mpool_realloc(SAC_MPool mpool, void *ptr, size_t size) {
   if (ptr == NULL) return mpool_alloc(mpool, size);
 
   if (size == 0) {
@@ -150,17 +150,17 @@ void* mpool_realloc(mpool_t mpool, void *ptr, size_t size) {
 
 
 
-void mpool_free(mpool_t mpool, void *ptr) {
-  struct mpage_s *page;
+void mpool_free(SAC_MPool mpool, void *ptr) {
+  struct _SAC_MPage *page;
 
   if (ptr == NULL) return;
   
   page = MOBJ_UNWRAP_MPAGE(ptr);
-  page->used -= MOBJ_UNWRAP_SIZE(ptr) + sizeof(struct mobj_s);
+  page->used -= MOBJ_UNWRAP_SIZE(ptr) + sizeof(struct _SAC_MObj);
 
   if (page->used == 0 && !(page->prev == NULL && MPOOL(mpool)->page == page)) {
-    struct mpage_s *cur;
-    struct mpage_s *next;
+    struct _SAC_MPage *cur;
+    struct _SAC_MPage *next;
 
     cur = MPOOL(mpool)->page;
     next = NULL;
@@ -180,9 +180,9 @@ void mpool_free(mpool_t mpool, void *ptr) {
 
 
 
-void mpool_stats(mpool_t mpool, size_t *pages) {
+void mpool_stats(SAC_MPool mpool, size_t *pages) {
   size_t _pages;
-  struct mpage_s *cur;
+  struct _SAC_MPage *cur;
   
   for (cur = MPOOL(mpool)->page, _pages = 0; cur != NULL; cur = cur->prev)
     ++_pages;
