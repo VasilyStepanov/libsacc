@@ -80,180 +80,6 @@ static void userdata_printf(void *userdata, const char *fmt, ...) {
 
 
 
-static void start_document(void *userData) {
-  userdata_printf(userData, "doc {\n");
-  userdata_inc_indent(userData);
-}
-
-
-
-static void end_document(void *userData) {
-  userdata_dec_indent(userData);
-  userdata_printf(userData, "doc }\n");
-}
-
-
-
-static void start_style(
-  void *userData,
-  const SAC_Selector *selectors[] SAC_UNUSED) {
-  userdata_printf(userData, "style {\n");
-  userdata_inc_indent(userData);
-}
-
-
-
-static void end_style(
-  void *userData,
-  const SAC_Selector *selectors[] SAC_UNUSED)
-{
-  userdata_dec_indent(userData);
-  userdata_printf(userData, "style }\n");
-}
-
-
-
-static void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
-  if (value == NULL) {
-    stream_printf(out, "NULL");
-  } else {
-    switch (value->lexicalUnitType) {
-      case SAC_OPERATOR_COMMA:
-        stream_printf(out, ",");
-        break;
-      case SAC_INHERIT:
-        stream_printf(out, "inherit");
-        break;
-      case SAC_INTEGER:
-        stream_printf(out, "int(%li)", value->desc.integer);
-        break;
-      case SAC_REAL:
-        stream_printf(out, "real(%g)", value->desc.real);
-        break;
-      case SAC_LENGTH_EM:
-        stream_printf(out, "em(%g%s)",
-          value->desc.dimension.value.sreal, value->desc.dimension.unit);
-        break;
-      case SAC_LENGTH_EX:
-        stream_printf(out, "ex(%g%s)",
-          value->desc.dimension.value.sreal, value->desc.dimension.unit);
-        break;
-      case SAC_LENGTH_PIXEL:
-        stream_printf(out, "pixel(%g%s)",
-          value->desc.dimension.value.sreal, value->desc.dimension.unit);
-        break;
-      case SAC_LENGTH_INCH:
-        stream_printf(out, "inch(%g%s)",
-          value->desc.dimension.value.sreal, value->desc.dimension.unit);
-        break;
-      case SAC_LENGTH_CENTIMETER:
-        stream_printf(out, "centimeter(%g%s)",
-          value->desc.dimension.value.sreal, value->desc.dimension.unit);
-        break;
-      case SAC_LENGTH_MILLIMETER:
-        stream_printf(out, "millimeter(%g%s)",
-          value->desc.dimension.value.sreal, value->desc.dimension.unit);
-        break;
-      case SAC_LENGTH_POINT:
-        stream_printf(out, "point(%g%s)",
-          value->desc.dimension.value.sreal, value->desc.dimension.unit);
-        break;
-      case SAC_LENGTH_PICA:
-        stream_printf(out, "pica(%g%s)",
-          value->desc.dimension.value.sreal, value->desc.dimension.unit);
-        break;
-      case SAC_PERCENTAGE:
-        stream_printf(out, "percentage(%g%s)",
-          value->desc.dimension.value.sreal, value->desc.dimension.unit);
-        break;
-      case SAC_DEGREE:
-        stream_printf(out, "degree(%g%s)",
-          value->desc.dimension.value.ureal, value->desc.dimension.unit);
-        break;
-      case SAC_GRADIAN:
-        stream_printf(out, "gradian(%g%s)",
-          value->desc.dimension.value.ureal, value->desc.dimension.unit);
-        break;
-      case SAC_RADIAN:
-        stream_printf(out, "radian(%g%s)",
-          value->desc.dimension.value.ureal, value->desc.dimension.unit);
-        break;
-      case SAC_MILLISECOND:
-        stream_printf(out, "msecs(%g%s)",
-          value->desc.dimension.value.ureal, value->desc.dimension.unit);
-        break;
-      case SAC_SECOND:
-        stream_printf(out, "secs(%g%s)",
-          value->desc.dimension.value.ureal, value->desc.dimension.unit);
-        break;
-      case SAC_HERTZ:
-        stream_printf(out, "hertz(%g%s)",
-          value->desc.dimension.value.ureal, value->desc.dimension.unit);
-        break;
-      case SAC_KILOHERTZ:
-        stream_printf(out, "khertz(%g%s)",
-          value->desc.dimension.value.ureal, value->desc.dimension.unit);
-        break;
-      case SAC_URI:
-        stream_printf(out, "uri('%s')", value->desc.uri);
-        break;
-      case SAC_RGBCOLOR:
-      case SAC_FUNCTION:
-        {
-          SAC_LexicalUnit **arg;
-
-          stream_printf(out, "func('%s')", value->desc.function.name);
-          for (arg = value->desc.function.parameters; *arg != NULL; ++arg) {
-            stream_printf(out, " arg(");
-            dump_lexical_unit(out, *arg);
-            stream_printf(out, ")");
-          }
-        }
-        break;
-      case SAC_IDENT:
-        stream_printf(out, "ident('%s')", value->desc.ident);
-        break;
-      case SAC_STRING_VALUE:
-        stream_printf(out, "str('%s')", value->desc.stringValue);
-        break;
-      case SAC_UNICODERANGE:
-        stream_printf(out, "urange('%s')", value->desc.unicodeRange);
-        break;
-      case SAC_SUB_EXPRESSION:
-        {
-          SAC_LexicalUnit **sub;
-
-          for (sub = value->desc.subValues; *sub != NULL; ++sub) {
-            if (sub != value->desc.subValues) stream_printf(out, " ");
-            stream_printf(out, "sub(");
-            dump_lexical_unit(out, *sub);
-            stream_printf(out, ")");
-          }
-        }
-        break;
-      case SAC_OPERATOR_PLUS:
-      case SAC_OPERATOR_MINUS:
-      case SAC_OPERATOR_MULTIPLY:
-      case SAC_OPERATOR_SLASH:
-      case SAC_OPERATOR_MOD:
-      case SAC_OPERATOR_EXP:
-      case SAC_OPERATOR_LT:
-      case SAC_OPERATOR_GT:
-      case SAC_OPERATOR_LE:
-      case SAC_OPERATOR_GE:
-      case SAC_OPERATOR_TILDE:
-      case SAC_COUNTER_FUNCTION:
-      case SAC_COUNTERS_FUNCTION:
-      case SAC_ATTR:
-      case SAC_RECT_FUNCTION:
-      case SAC_DIMENSION:
-        break;
-    };
-  }
-}
-
-
-
 static void dump_condition(stream_t out, const SAC_Condition *condition) {
   switch (condition->conditionType) {
     case SAC_ONE_OF_ATTRIBUTE_CONDITION:
@@ -455,6 +281,180 @@ static void dump_selectors(stream_t out, const SAC_Selector **value) {
 
 
 
+static void start_document(void *userData) {
+  userdata_printf(userData, "doc {\n");
+  userdata_inc_indent(userData);
+}
+
+
+
+static void end_document(void *userData) {
+  userdata_dec_indent(userData);
+  userdata_printf(userData, "doc }\n");
+}
+
+
+
+static void start_style(void *userData, const SAC_Selector *selectors[]) {
+  userdata_printf(userData, "style\n");
+  dump_selectors(USERDATA_STREAM(userData), selectors);
+  userdata_printf(userData, "{\n");
+  userdata_inc_indent(userData);
+}
+
+
+
+static void end_style(
+  void *userData,
+  const SAC_Selector *selectors[] SAC_UNUSED)
+{
+  userdata_dec_indent(userData);
+  userdata_printf(userData, "style }\n");
+}
+
+
+
+static void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
+  if (value == NULL) {
+    stream_printf(out, "NULL");
+  } else {
+    switch (value->lexicalUnitType) {
+      case SAC_OPERATOR_COMMA:
+        stream_printf(out, ",");
+        break;
+      case SAC_INHERIT:
+        stream_printf(out, "inherit");
+        break;
+      case SAC_INTEGER:
+        stream_printf(out, "int(%li)", value->desc.integer);
+        break;
+      case SAC_REAL:
+        stream_printf(out, "real(%g)", value->desc.real);
+        break;
+      case SAC_LENGTH_EM:
+        stream_printf(out, "em(%g%s)",
+          value->desc.dimension.value.sreal, value->desc.dimension.unit);
+        break;
+      case SAC_LENGTH_EX:
+        stream_printf(out, "ex(%g%s)",
+          value->desc.dimension.value.sreal, value->desc.dimension.unit);
+        break;
+      case SAC_LENGTH_PIXEL:
+        stream_printf(out, "pixel(%g%s)",
+          value->desc.dimension.value.sreal, value->desc.dimension.unit);
+        break;
+      case SAC_LENGTH_INCH:
+        stream_printf(out, "inch(%g%s)",
+          value->desc.dimension.value.sreal, value->desc.dimension.unit);
+        break;
+      case SAC_LENGTH_CENTIMETER:
+        stream_printf(out, "centimeter(%g%s)",
+          value->desc.dimension.value.sreal, value->desc.dimension.unit);
+        break;
+      case SAC_LENGTH_MILLIMETER:
+        stream_printf(out, "millimeter(%g%s)",
+          value->desc.dimension.value.sreal, value->desc.dimension.unit);
+        break;
+      case SAC_LENGTH_POINT:
+        stream_printf(out, "point(%g%s)",
+          value->desc.dimension.value.sreal, value->desc.dimension.unit);
+        break;
+      case SAC_LENGTH_PICA:
+        stream_printf(out, "pica(%g%s)",
+          value->desc.dimension.value.sreal, value->desc.dimension.unit);
+        break;
+      case SAC_PERCENTAGE:
+        stream_printf(out, "percentage(%g%s)",
+          value->desc.dimension.value.sreal, value->desc.dimension.unit);
+        break;
+      case SAC_DEGREE:
+        stream_printf(out, "degree(%g%s)",
+          value->desc.dimension.value.ureal, value->desc.dimension.unit);
+        break;
+      case SAC_GRADIAN:
+        stream_printf(out, "gradian(%g%s)",
+          value->desc.dimension.value.ureal, value->desc.dimension.unit);
+        break;
+      case SAC_RADIAN:
+        stream_printf(out, "radian(%g%s)",
+          value->desc.dimension.value.ureal, value->desc.dimension.unit);
+        break;
+      case SAC_MILLISECOND:
+        stream_printf(out, "msecs(%g%s)",
+          value->desc.dimension.value.ureal, value->desc.dimension.unit);
+        break;
+      case SAC_SECOND:
+        stream_printf(out, "secs(%g%s)",
+          value->desc.dimension.value.ureal, value->desc.dimension.unit);
+        break;
+      case SAC_HERTZ:
+        stream_printf(out, "hertz(%g%s)",
+          value->desc.dimension.value.ureal, value->desc.dimension.unit);
+        break;
+      case SAC_KILOHERTZ:
+        stream_printf(out, "khertz(%g%s)",
+          value->desc.dimension.value.ureal, value->desc.dimension.unit);
+        break;
+      case SAC_URI:
+        stream_printf(out, "uri('%s')", value->desc.uri);
+        break;
+      case SAC_RGBCOLOR:
+      case SAC_FUNCTION:
+        {
+          SAC_LexicalUnit **arg;
+
+          stream_printf(out, "func('%s')", value->desc.function.name);
+          for (arg = value->desc.function.parameters; *arg != NULL; ++arg) {
+            stream_printf(out, " arg(");
+            dump_lexical_unit(out, *arg);
+            stream_printf(out, ")");
+          }
+        }
+        break;
+      case SAC_IDENT:
+        stream_printf(out, "ident('%s')", value->desc.ident);
+        break;
+      case SAC_STRING_VALUE:
+        stream_printf(out, "str('%s')", value->desc.stringValue);
+        break;
+      case SAC_UNICODERANGE:
+        stream_printf(out, "urange('%s')", value->desc.unicodeRange);
+        break;
+      case SAC_SUB_EXPRESSION:
+        {
+          SAC_LexicalUnit **sub;
+
+          for (sub = value->desc.subValues; *sub != NULL; ++sub) {
+            if (sub != value->desc.subValues) stream_printf(out, " ");
+            stream_printf(out, "sub(");
+            dump_lexical_unit(out, *sub);
+            stream_printf(out, ")");
+          }
+        }
+        break;
+      case SAC_OPERATOR_PLUS:
+      case SAC_OPERATOR_MINUS:
+      case SAC_OPERATOR_MULTIPLY:
+      case SAC_OPERATOR_SLASH:
+      case SAC_OPERATOR_MOD:
+      case SAC_OPERATOR_EXP:
+      case SAC_OPERATOR_LT:
+      case SAC_OPERATOR_GT:
+      case SAC_OPERATOR_LE:
+      case SAC_OPERATOR_GE:
+      case SAC_OPERATOR_TILDE:
+      case SAC_COUNTER_FUNCTION:
+      case SAC_COUNTERS_FUNCTION:
+      case SAC_ATTR:
+      case SAC_RECT_FUNCTION:
+      case SAC_DIMENSION:
+        break;
+    };
+  }
+}
+
+
+
 static void property(
   void *userData,
   const SAC_STRING propertyName,
@@ -510,6 +510,12 @@ static void parse_styledeclaration(SAC_Parser parser, const char *buffer) {
 
 static const SAC_Selector** parse_selector(SAC_Parser parser, const char *buffer) {
   return SAC_ParseSelectors(parser, buffer, strlen(buffer));
+}
+
+
+
+static void parse_rule(SAC_Parser parser, const char *buffer) {
+  SAC_ParseRule(parser, buffer, strlen(buffer));
 }
 
 
@@ -703,7 +709,37 @@ static void test_parser_selector() {
 
 
 
+static void test_parser_rule() {
+  stream_t parser_stream = stream_open();
+  stream_t css = stream_open();
+  stream_t match_stream = stream_open();
+  SAC_Parser parser = create_parser(parser_stream);
+  
+  stream_printf(css, "element {\n");
+  stream_printf(css, "  prop : ident;\n");
+  stream_printf(css, "}\n");
+  parse_rule(parser, stream_str(css));
+  stream_close(css);
+
+  dispose_parser(parser);
+
+  stream_printf(match_stream, "doc {\n");
+  stream_printf(match_stream, "  style\n");
+  stream_printf(match_stream, "sel_el(NULL, element)\n");
+  stream_printf(match_stream, "  {\n");
+  stream_printf(match_stream, "    prop('prop') ident('ident')\n");
+  stream_printf(match_stream, "  style }\n");
+  stream_printf(match_stream, "doc }\n");
+  assert_equals(stream_str(match_stream), stream_str(parser_stream));
+  stream_close(match_stream);
+
+  stream_close(parser_stream);
+}
+
+
+
 void test_parser() {
   test_parser_styledeclaration();
   test_parser_selector();
+  test_parser_rule();
 }

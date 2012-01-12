@@ -29,7 +29,8 @@ libsacc_la_SOURCES = parser.c \
                      lexical_unit.c \
                      condition.c \
                      selector.c \
-                     declaration.c
+                     declaration.c \
+                     rule.c
 
 libsacc_la_LIBADD = libgrammar.la
 

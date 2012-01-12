@@ -197,3 +197,24 @@ const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
   yylex_destroy(scanner);
   return (const SAC_Selector**)yy_extra.output;
 }
+
+
+
+int SAC_ParseRule(SAC_Parser parser, const char *buffer, int len) {
+  void *scanner;
+  struct yy_extra_t yy_extra;
+
+  parser_clear(parser);
+  yy_extra.mpool = PARSER(parser)->mpool;
+  yy_extra.parser = parser;
+  yy_extra.start_token = START_AS_RULE;
+  yy_extra.output = NULL;
+
+  yylex_init_extra(&yy_extra, &scanner);
+
+  yy_scan_bytes(buffer, len, scanner);
+  yyparse(scanner);
+
+  yylex_destroy(scanner);
+  return 0;
+}

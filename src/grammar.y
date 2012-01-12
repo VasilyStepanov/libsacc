@@ -6,6 +6,7 @@
 #include "list.h"
 #include "vector.h"
 #include "declaration.h"
+#include "rule.h"
 #include "lexical_unit.h"
 #include "condition.h"
 #include "selector.h"
@@ -36,6 +37,7 @@ char ch;
 char *str;
 SAC_LexicalUnit *value;
 declaration_t decl;
+rule_t rule;
 list_t list;
 SAC_Selector *sel;
 SAC_Condition *cond;
@@ -50,6 +52,7 @@ SAC_ConditionType cond_type;
 %token <val> START_AS_STYLE_DECLARATIONS
 %token <val> START_AS_SELECTORS
 %token <val> START_AS_STYLESHEET
+%token <val> START_AS_RULE
 
 %token <real> ANGLE_DEG
 %token <real> ANGLE_RAD
@@ -97,6 +100,7 @@ SAC_ConditionType cond_type;
 %type <value> function;
 %type <value> hexcolor;
 %type <decl> declaration;
+%type <rule> ruleset;
 %type <list> _declarations1;
 %type <list> _selectors1;
 %type <list> expr;
@@ -144,6 +148,22 @@ start
       parser_end_document(YY_SCANNER_PARSER(scanner));
 
       YY_SCANNER_OUTPUT(scanner) = v;
+    }
+  | START_AS_RULE ruleset {
+      list_iter_t lit;
+
+      parser_start_document(YY_SCANNER_PARSER(scanner));
+      parser_start_style_handler(YY_SCANNER_PARSER(scanner), $2->selectors);
+      for (lit = list_head($2->declarations);
+           lit != NULL;
+           lit = list_next(lit))
+      {
+        declaration_t declaration = *lit;
+        parser_property_handler(YY_SCANNER_PARSER(scanner),
+          declaration->property, declaration->value, declaration->important);
+      }
+      parser_end_style_handler(YY_SCANNER_PARSER(scanner), $2->selectors);
+      parser_end_document(YY_SCANNER_PARSER(scanner));
     }
   | START_AS_STYLESHEET stylesheet
   ;
@@ -291,7 +311,24 @@ property
   : IDENT _spaces0 { $$ = $1; }
   ;
 ruleset
-  : _selectors1 '{' _spaces0 _declarations1 '}' _spaces0
+  : _selectors1 '{' _spaces0 _declarations1 '}' _spaces0 {
+      list_iter_t lit;
+      vector_t vector;
+      vector_iter_t vit;
+
+      vector = vector_open(YY_SCANNER_MPOOL(scanner), list_size($1));
+      for (lit = list_head($1),
+           vit = vector_head(vector);
+           lit != NULL;
+           lit = list_next(lit),
+           ++vit)
+      {
+        *vit = *lit;
+      }
+
+      
+      $$ = rule_alloc(YY_SCANNER_MPOOL(scanner), vector, $4);
+    }
   ;
 selector
   : simple_selector {
