@@ -37,7 +37,7 @@ char ch;
 char *str;
 SAC_LexicalUnit *value;
 SAC_Declaration *decl;
-rule_t rule;
+SAC_Rule *rule;
 list_t list;
 SAC_Selector *sel;
 SAC_Condition *cond;
