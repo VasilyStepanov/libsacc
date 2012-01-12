@@ -9,7 +9,7 @@
 
 
 
-void test_list_basics() {
+static void test_list_basics() {
   mpool_t mpool;
   list_t list;
   list_iter_t it;
@@ -45,7 +45,7 @@ void test_list_basics() {
 
 
 
-void test_list_push_front() {
+static void test_list_push_front() {
   mpool_t mpool;
   list_t list;
   list_iter_t it;

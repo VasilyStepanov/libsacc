@@ -23,7 +23,7 @@ struct userdata_t {
 
 
 
-void* userdata_open(stream_t stream) {
+static void* userdata_open(stream_t stream) {
   void *ret =
     (struct userdata_t*)malloc(sizeof(struct userdata_t));
 
@@ -36,14 +36,14 @@ void* userdata_open(stream_t stream) {
 
 
 
-void userdata_close(void *userdata) {
+static void userdata_close(void *userdata) {
   free(USERDATA_INDENT(userdata));
   free(userdata);
 }
 
 
 
-void userdata_inc_indent(void *userdata) {
+static void userdata_inc_indent(void *userdata) {
   size_t len;
   char *indent;
 
@@ -57,7 +57,7 @@ void userdata_inc_indent(void *userdata) {
 
 
 
-void userdata_dec_indent(void *userdata) {
+static void userdata_dec_indent(void *userdata) {
   size_t len;
   char *indent;
 
@@ -69,7 +69,7 @@ void userdata_dec_indent(void *userdata) {
 
 
 
-void userdata_printf(void *userdata, const char *fmt, ...) {
+static void userdata_printf(void *userdata, const char *fmt, ...) {
   va_list args;
 
   stream_printf(USERDATA_STREAM(userdata), "%s", USERDATA_INDENT(userdata));
@@ -80,35 +80,40 @@ void userdata_printf(void *userdata, const char *fmt, ...) {
 
 
 
-void start_document(void *userData) {
+static void start_document(void *userData) {
   userdata_printf(userData, "doc {\n");
   userdata_inc_indent(userData);
 }
 
 
 
-void end_document(void *userData) {
+static void end_document(void *userData) {
   userdata_dec_indent(userData);
   userdata_printf(userData, "doc }\n");
 }
 
 
 
-void start_style(void *userData, const SAC_Selector *selectors[] SAC_UNUSED) {
+static void start_style(
+  void *userData,
+  const SAC_Selector *selectors[] SAC_UNUSED) {
   userdata_printf(userData, "style {\n");
   userdata_inc_indent(userData);
 }
 
 
 
-void end_style(void *userData, const SAC_Selector *selectors[] SAC_UNUSED) {
+static void end_style(
+  void *userData,
+  const SAC_Selector *selectors[] SAC_UNUSED)
+{
   userdata_dec_indent(userData);
   userdata_printf(userData, "style }\n");
 }
 
 
 
-void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
+static void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
   if (value == NULL) {
     stream_printf(out, "NULL");
   } else {
@@ -249,7 +254,7 @@ void dump_lexical_unit(stream_t out, const SAC_LexicalUnit *value) {
 
 
 
-void dump_condition(stream_t out, const SAC_Condition *condition) {
+static void dump_condition(stream_t out, const SAC_Condition *condition) {
   switch (condition->conditionType) {
     case SAC_ONE_OF_ATTRIBUTE_CONDITION:
     case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
@@ -329,7 +334,7 @@ void dump_condition(stream_t out, const SAC_Condition *condition) {
 
 
 
-void dump_node_type(stream_t out, SAC_nodeType type) {
+static void dump_node_type(stream_t out, SAC_nodeType type) {
   switch (type) {
     case ELEMENT_NODE:
       stream_printf(out, "ELEMENT");
@@ -360,7 +365,7 @@ void dump_node_type(stream_t out, SAC_nodeType type) {
 
 
 
-void dump_selector(stream_t out, const SAC_Selector *selector) {
+static void dump_selector(stream_t out, const SAC_Selector *selector) {
   switch (selector->selectorType) {
     case SAC_CONDITIONAL_SELECTOR:
       stream_printf(out, "sel_cond(");
@@ -434,7 +439,7 @@ void dump_selector(stream_t out, const SAC_Selector *selector) {
 
 
 
-void dump_selectors(stream_t out, const SAC_Selector **value) {
+static void dump_selectors(stream_t out, const SAC_Selector **value) {
   const SAC_Selector **it;
 
   if (value == NULL) {
@@ -450,7 +455,7 @@ void dump_selectors(stream_t out, const SAC_Selector **value) {
 
 
 
-void property(
+static void property(
   void *userData,
   const SAC_STRING propertyName,
   const SAC_LexicalUnit *value,
@@ -465,7 +470,7 @@ void property(
 
 
 
-SAC_Parser create_parser(stream_t stream) {
+static SAC_Parser create_parser(stream_t stream) {
   struct userdata_t *userData;
   SAC_Parser parser;
   
@@ -482,32 +487,34 @@ SAC_Parser create_parser(stream_t stream) {
 
 
 
-void dispose_parser(SAC_Parser parser) {
+static void dispose_parser(SAC_Parser parser) {
   userdata_close(SAC_GetUserData(parser));
   SAC_DisposeParser(parser);
 }
 
 
 
-void parse_stylesheet(SAC_Parser parser, const char *buffer) {
+/*
+static void parse_stylesheet(SAC_Parser parser, const char *buffer) {
   SAC_ParseStyleSheet(parser, buffer, strlen(buffer));
 }
+*/
 
 
 
-void parse_styledeclaration(SAC_Parser parser, const char *buffer) {
+static void parse_styledeclaration(SAC_Parser parser, const char *buffer) {
   SAC_ParseStyleDeclaration(parser, buffer, strlen(buffer));
 }
 
 
 
-const SAC_Selector** parse_selector(SAC_Parser parser, const char *buffer) {
+static const SAC_Selector** parse_selector(SAC_Parser parser, const char *buffer) {
   return SAC_ParseSelectors(parser, buffer, strlen(buffer));
 }
 
 
 
-void test_parser_styledeclaration() {
+static void test_parser_styledeclaration() {
   stream_t parser_stream = stream_open();
   stream_t css = stream_open();
   stream_t match_stream = stream_open();
@@ -595,7 +602,7 @@ void test_parser_styledeclaration() {
 
 
 
-void test_parser_selector() {
+static void test_parser_selector() {
   const SAC_Selector **selectors;
   stream_t parser_stream = stream_open();
   stream_t css = stream_open();

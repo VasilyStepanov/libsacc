@@ -35,7 +35,7 @@ struct mobj_s {
 
 
 
-struct mpage_s* mpage_open(struct mpage_s *prev, size_t size) {
+static struct mpage_s* mpage_open(struct mpage_s *prev, size_t size) {
   struct mpage_s *ret = malloc(sizeof(struct mpage_s));
 
   size = MALLIGN(size + sizeof(struct mobj_s));
@@ -49,21 +49,21 @@ struct mpage_s* mpage_open(struct mpage_s *prev, size_t size) {
 
 
 
-void mpage_close(struct mpage_s *mpage) {
+static void mpage_close(struct mpage_s *mpage) {
   free(mpage->data);
   free(mpage);
 }
 
 
 
-void mpage_close_all(struct mpage_s *mpage) {
+static void mpage_close_all(struct mpage_s *mpage) {
   if (mpage->prev != NULL) mpage_close_all(mpage->prev);
   mpage_close(mpage);
 }
 
 
 
-void* mpage_alloc(struct mpage_s *mpage, size_t size) {
+static void* mpage_alloc(struct mpage_s *mpage, size_t size) {
   void *ret;
 
   size = MALLIGN(size + sizeof(struct mobj_s));

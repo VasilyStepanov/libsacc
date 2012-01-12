@@ -9,7 +9,7 @@
 
 
 
-void test_selector_alloc() {
+static void test_selector_alloc() {
   mpool_t mpool;
   SAC_Selector *selector;
 

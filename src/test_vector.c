@@ -9,7 +9,7 @@
 
 
 
-void test_vector_basics() {
+static void test_vector_basics() {
   mpool_t mpool;
   vector_t vector;
   vector_iter_t it;
@@ -46,7 +46,7 @@ void test_vector_basics() {
 
 
 
-void test_vector_cpy() {
+static void test_vector_cpy() {
   mpool_t mpool;
   vector_t vector1, vector2;
   int a = 1, b = 2, c = 3;

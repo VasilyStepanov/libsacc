@@ -9,7 +9,7 @@
 
 
 
-void test_mpool_basics() {
+static void test_mpool_basics() {
   size_t pages;
   mpool_t mpool;
   
@@ -28,7 +28,7 @@ void test_mpool_basics() {
 
 
 
-void test_mpool_freepage() {
+static void test_mpool_freepage() {
   size_t pages;
   mpool_t mpool;
   void *p1, *p2, *p3, *p4, *p5, *p6;
@@ -62,7 +62,7 @@ void test_mpool_freepage() {
 
 
 
-void test_mpool_realloc() {
+static void test_mpool_realloc() {
   mpool_t mpool;
   void *p1, *p2, *p3, *p4, *p5;
 
@@ -85,7 +85,7 @@ void test_mpool_realloc() {
 
 
 
-void test_mpool_strdup() {
+static void test_mpool_strdup() {
   mpool_t mpool;
   void *s;
   mpool = mpool_open(256);
@@ -97,7 +97,7 @@ void test_mpool_strdup() {
 
 
 
-void test_mpool_strndup() {
+static void test_mpool_strndup() {
   mpool_t mpool;
   void *s;
   mpool = mpool_open(256);

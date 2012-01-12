@@ -9,7 +9,7 @@
 
 
 
-void test_lexical_unit_alloc() {
+static void test_lexical_unit_alloc() {
   mpool_t mpool;
   SAC_LexicalUnit *value;
 
@@ -23,7 +23,7 @@ void test_lexical_unit_alloc() {
 
 
 
-void test_lexical_unit_vector_from_list() {
+static void test_lexical_unit_vector_from_list() {
   mpool_t mpool;
   SAC_LexicalUnit *a, *b, *c;
   list_t list;
@@ -60,7 +60,7 @@ void test_lexical_unit_vector_from_list() {
 
 
 
-void test_lexical_unit_from_list() {
+static void test_lexical_unit_from_list() {
   mpool_t mpool;
   SAC_LexicalUnit *a, *b, *c;
   list_t list;
@@ -99,5 +99,6 @@ void test_lexical_unit_from_list() {
 
 void test_lexical_unit() {
   test_lexical_unit_alloc();
+  test_lexical_unit_vector_from_list();
   test_lexical_unit_from_list();
 }

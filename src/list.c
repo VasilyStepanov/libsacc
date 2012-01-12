@@ -15,7 +15,7 @@ struct list_item_s {
 
 
 
-struct list_item_s* list_item_open(mpool_t mpool, void *obj) {
+static struct list_item_s* list_item_open(mpool_t mpool, void *obj) {
   struct list_item_s *ret =
     (struct list_item_s*)mpool_alloc(mpool, sizeof(struct list_item_s));
 
@@ -26,15 +26,15 @@ struct list_item_s* list_item_open(mpool_t mpool, void *obj) {
 
 
 
-void list_item_close(struct list_item_s *item, mpool_t mpool) {
+static void list_item_close(struct list_item_s *item, mpool_t mpool) {
   mpool_free(mpool, item);
 }
 
 
 
-void list_item_close_all(struct list_item_s *item, mpool_t mpool) {
+static void list_item_close_all(struct list_item_s *item, mpool_t mpool) {
   if (item->next != NULL) list_item_close_all(item->next, mpool);
-  mpool_free(mpool, item);
+  list_item_close(item, mpool);
 }
 
 

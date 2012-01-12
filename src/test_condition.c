@@ -9,7 +9,7 @@
 
 
 
-void test_condition_alloc() {
+static void test_condition_alloc() {
   mpool_t mpool;
   SAC_Condition *condition;
 

@@ -75,7 +75,7 @@ void parser_property_handler(
 
 
 
-void parser_clear(SAC_Parser parser) {
+static void parser_clear(SAC_Parser parser) {
   mpool_close(PARSER(parser)->mpool);
   PARSER(parser)->mpool = mpool_open(16384);
 }
