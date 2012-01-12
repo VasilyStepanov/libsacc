@@ -1,5 +1,5 @@
-#ifndef RULE_H
-#define RULE_H
+#ifndef STYLE_UNIT_H
+#define STYLE_UNIT_H
 
 #include "mpool.h"
 #include "vector.h"
@@ -7,16 +7,16 @@
 
 
 
-struct _SAC_Rule {
+struct _SAC_StyleUnit {
   SAC_Vector selectors;
   SAC_List declarations;
 };
 
-typedef struct _SAC_Rule SAC_Rule;
+typedef struct _SAC_StyleUnit SAC_StyleUnit;
 
 
 
-SAC_Rule* SAC_rule_alloc(SAC_MPool mpool,
+SAC_StyleUnit* SAC_style_unit_alloc(SAC_MPool mpool,
   SAC_Vector selectors, SAC_List declarations);
 
 

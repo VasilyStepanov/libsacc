@@ -30,7 +30,7 @@ libsacc_la_SOURCES = parser.c \
                      condition.c \
                      selector.c \
                      declaration.c \
-                     rule.c
+                     style_unit.c
 
 libsacc_la_LIBADD = libgrammar.la
 

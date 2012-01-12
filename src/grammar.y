@@ -6,7 +6,7 @@
 #include "list.h"
 #include "vector.h"
 #include "declaration.h"
-#include "rule.h"
+#include "style_unit.h"
 #include "lexical_unit.h"
 #include "condition.h"
 #include "selector.h"
@@ -37,7 +37,7 @@ char ch;
 char *str;
 SAC_LexicalUnit *value;
 SAC_Declaration *decl;
-SAC_Rule *rule;
+SAC_StyleUnit *style;
 SAC_List list;
 SAC_Selector *sel;
 SAC_Condition *cond;
@@ -100,7 +100,7 @@ SAC_ConditionType cond_type;
 %type <value> function;
 %type <value> hexcolor;
 %type <decl> declaration;
-%type <rule> ruleset;
+%type <style> ruleset;
 %type <list> declarations;
 %type <list> selectors;
 %type <list> expr;
@@ -178,9 +178,9 @@ maybe_comments
   | maybe_comments CDO
   | maybe_comments CDC
   ;
-maybe_stylesheet_values
+maybe_style_units
   :
-  | maybe_stylesheet_values stylesheet_value
+  | maybe_style_units style_unit
   ;
 maybe_imports
   :
@@ -237,7 +237,7 @@ attribute_conditions
     }
   ;
 stylesheet
-  : maybe_charset maybe_imports maybe_namespaces maybe_stylesheet_values 
+  : maybe_charset maybe_imports maybe_namespaces maybe_style_units
   ;
 maybe_charset
   :
@@ -246,7 +246,7 @@ maybe_charset
 charset
   : CHARSET_SYM maybe_spaces STRING maybe_spaces ';' maybe_comments
   ;
-stylesheet_value
+style_unit
   : ruleset maybe_comments
   | media maybe_comments
   | page maybe_comments
@@ -328,7 +328,7 @@ ruleset
       }
 
       
-      $$ = SAC_rule_alloc(YY_SCANNER_MPOOL(scanner), vector, $4);
+      $$ = SAC_style_unit_alloc(YY_SCANNER_MPOOL(scanner), vector, $4);
     }
   ;
 selector
