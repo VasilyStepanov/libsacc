@@ -1,5 +1,5 @@
-#ifndef VECTOR_H
-#define VECTOR_H
+#ifndef TEST_VECTOR_H
+#define TEST_VECTOR_H
 
 
 

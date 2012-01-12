@@ -15,8 +15,8 @@ SAC_LexicalUnit* lexical_unit_alloc(
 
 
 SAC_LexicalUnit** lexical_unit_vector_from_list(list_t list, mpool_t mpool) {
-  vector_t vector;
-  vector_iter_t vit;
+  SAC_Vector vector;
+  SAC_VectorIter vit;
   list_iter_t lit;
 
   vector = vector_open(mpool, list_size(list));
@@ -40,8 +40,8 @@ SAC_LexicalUnit* lexical_unit_from_list(list_t list, mpool_t mpool) {
   if (size == 1) {
     value = *list_head(list);
   } else {
-    vector_t vector;
-    vector_iter_t vit;
+    SAC_Vector vector;
+    SAC_VectorIter vit;
     list_iter_t lit;
 
     value = lexical_unit_alloc(mpool, SAC_SUB_EXPRESSION);

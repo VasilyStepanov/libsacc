@@ -1,5 +1,5 @@
-#ifndef ARRAY_H
-#define ARRAY_H
+#ifndef VECTOR_H
+#define VECTOR_H
 
 #include "mpool.h"
 
@@ -7,23 +7,23 @@
 
 
 
-typedef void* vector_t;
+typedef void* SAC_Vector;
 
-typedef void** vector_iter_t;
+typedef void** SAC_VectorIter;
 
 
 
-vector_t vector_open(mpool_t mpool, size_t size);
+SAC_Vector vector_open(mpool_t mpool, size_t size);
 
-void vector_close(vector_t vector, mpool_t mpool);
+void vector_close(SAC_Vector vector, mpool_t mpool);
 
-size_t vector_size(vector_t vector);
+size_t vector_size(SAC_Vector vector);
 
-vector_iter_t vector_head(vector_t vector);
+SAC_VectorIter vector_head(SAC_Vector vector);
 
-vector_iter_t vector_next(vector_iter_t iter);
+SAC_VectorIter vector_next(SAC_VectorIter iter);
 
-void vector_cpy(vector_iter_t dest, vector_iter_t src);
+void vector_cpy(SAC_VectorIter dest, SAC_VectorIter src);
 
 
 

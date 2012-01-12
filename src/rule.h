@@ -8,7 +8,7 @@
 
 
 struct _SAC_Rule {
-  vector_t selectors;
+  SAC_Vector selectors;
   list_t declarations;
 };
 
@@ -16,7 +16,7 @@ typedef struct _SAC_Rule SAC_Rule;
 
 
 
-SAC_Rule* rule_alloc(mpool_t mpool, vector_t selectors, list_t declarations);
+SAC_Rule* rule_alloc(mpool_t mpool, SAC_Vector selectors, list_t declarations);
 
 
 

@@ -132,9 +132,9 @@ start
       parser_end_document(YY_SCANNER_PARSER(scanner));
     }
   | START_AS_SELECTORS selectors {
-      vector_t v;
+      SAC_Vector v;
       list_iter_t lit;
-      vector_iter_t vit;
+      SAC_VectorIter vit;
 
       parser_start_document(YY_SCANNER_PARSER(scanner));
       v = vector_open(YY_SCANNER_MPOOL(scanner), list_size($2));
@@ -312,8 +312,8 @@ property
 ruleset
   : selectors '{' maybe_spaces declarations '}' {
       list_iter_t lit;
-      vector_t vector;
-      vector_iter_t vit;
+      SAC_Vector vector;
+      SAC_VectorIter vit;
 
       vector = vector_open(YY_SCANNER_MPOOL(scanner), list_size($1));
       for (lit = list_head($1),

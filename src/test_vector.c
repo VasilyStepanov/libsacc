@@ -11,8 +11,8 @@
 
 static void test_vector_basics() {
   mpool_t mpool;
-  vector_t vector;
-  vector_iter_t it;
+  SAC_Vector vector;
+  SAC_VectorIter it;
   int a = 1, b = 2, c = 3;
   
   mpool = mpool_open(256);
@@ -48,7 +48,7 @@ static void test_vector_basics() {
 
 static void test_vector_cpy() {
   mpool_t mpool;
-  vector_t vector1, vector2;
+  SAC_Vector vector1, vector2;
   int a = 1, b = 2, c = 3;
   
   mpool = mpool_open(256);

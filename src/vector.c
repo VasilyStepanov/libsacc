@@ -2,22 +2,22 @@
 
 
 #define VECTOR_WRAP(vector) \
-  ((vector_t*)((char*)(vector) + sizeof(struct vector_s)))
+  ((SAC_Vector)((char*)(vector) + sizeof(struct _SAC_Vector)))
 
 #define VECTOR_UNWRAP(vector) \
-  ((struct vector_s*)((char*)(vector) - sizeof(struct vector_s)))
+  ((struct _SAC_Vector*)((char*)(vector) - sizeof(struct _SAC_Vector)))
 
 #define VECTOR_UNWRAP_SIZE(vector) VECTOR_UNWRAP(vector)->size
 
-struct vector_s {
+struct _SAC_Vector {
   size_t size;
 };
 
 
 
-vector_t vector_open(mpool_t mpool, size_t size) {
-  vector_t ret = VECTOR_WRAP(mpool_alloc(mpool,
-    sizeof(struct vector_s) + sizeof(void*) * (size + 1)));
+SAC_Vector vector_open(mpool_t mpool, size_t size) {
+  SAC_Vector ret = VECTOR_WRAP(mpool_alloc(mpool,
+    sizeof(struct _SAC_Vector) + sizeof(void*) * (size + 1)));
   ((void**)ret)[size] = NULL;
   VECTOR_UNWRAP_SIZE(ret) = size;
   return ret;
@@ -25,31 +25,31 @@ vector_t vector_open(mpool_t mpool, size_t size) {
 
 
 
-vector_iter_t vector_head(vector_t vector) {
-  return (vector_iter_t)vector;
+SAC_VectorIter vector_head(SAC_Vector vector) {
+  return (SAC_VectorIter)vector;
 }
 
 
 
-vector_iter_t vector_next(vector_iter_t iter) {
+SAC_VectorIter vector_next(SAC_VectorIter iter) {
   return iter + 1;
 }
 
 
 
-size_t vector_size(vector_t vector) {
+size_t vector_size(SAC_Vector vector) {
   return VECTOR_UNWRAP_SIZE(vector);
 }
 
 
 
-void vector_close(vector_t vector, mpool_t mpool) {
+void vector_close(SAC_Vector vector, mpool_t mpool) {
   mpool_free(mpool, VECTOR_UNWRAP(vector));
 }
 
 
 
-void vector_cpy(vector_iter_t dest, vector_iter_t src) {
+void vector_cpy(SAC_VectorIter dest, SAC_VectorIter src) {
   for (; *src != NULL; ++src, ++dest) *dest = *src;
   *(++dest) = NULL;
 }
