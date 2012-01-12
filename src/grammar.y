@@ -93,7 +93,7 @@ SAC_ConditionType cond_type;
 %token <str> UNICODERANGE
 
 %type <str> property;
-%type <str> _attrib_value;
+%type <str> attrib_value;
 %type <ch> unary_operator;
 %type <value> term;
 %type <value> operator;
@@ -101,24 +101,24 @@ SAC_ConditionType cond_type;
 %type <value> hexcolor;
 %type <decl> declaration;
 %type <rule> ruleset;
-%type <list> _declarations1;
-%type <list> _selectors1;
+%type <list> declarations;
+%type <list> selectors;
 %type <list> expr;
 %type <sel> selector;
 %type <sel> simple_selector;
 %type <sel> element_name;
-%type <cond> _attribute_condition;
-%type <cond> _attribute_conditions0;
-%type <cond> _attribute_conditions1;
+%type <cond> attribute_condition;
+%type <cond> attribute_conditions;
+%type <cond> maybe_attribute_conditions;
 %type <cond> class;
 %type <cond> attrib;
 %type <cond> pseudo;
-%type <cond_type> _attrib_match;
+%type <cond_type> attrib_match;
 
 %%
 
 start
-  : START_AS_STYLE_DECLARATIONS _declarations1 {
+  : START_AS_STYLE_DECLARATIONS declarations {
       list_iter_t it;
 
       parser_start_document(YY_SCANNER_PARSER(scanner));
@@ -131,7 +131,7 @@ start
       }
       parser_end_document(YY_SCANNER_PARSER(scanner));
     }
-  | START_AS_SELECTORS _selectors1 {
+  | START_AS_SELECTORS selectors {
       vector_t v;
       list_iter_t lit;
       vector_iter_t vit;
@@ -149,7 +149,7 @@ start
 
       YY_SCANNER_OUTPUT(scanner) = v;
     }
-  | START_AS_RULE ruleset {
+  | START_AS_RULE ruleset maybe_spaces {
       list_iter_t lit;
 
       parser_start_document(YY_SCANNER_PARSER(scanner));
@@ -168,100 +168,99 @@ start
   | START_AS_STYLESHEET stylesheet
   ;
 
-_spaces0
+maybe_spaces
   :
-  | _spaces0 S
+  | maybe_spaces S
   ;
-_comments0
+maybe_comments
   :
-  | _comments0 S
-  | _comments0 CDO
-  | _comments0 CDC
+  | maybe_comments S
+  | maybe_comments CDO
+  | maybe_comments CDC
   ;
-_stylesheet_values0
+maybe_stylesheet_values
   :
-  | _stylesheet_values0 _comments0 _stylesheet_value
+  | maybe_stylesheet_values stylesheet_value maybe_comments
   ;
-_imports0
+maybe_imports
   :
-  | _imports0 _comments0 import
+  | maybe_imports import maybe_comments
   ;
-_namespaces0
+maybe_namespaces
   :
-  | _namespaces0 _comments0 namespace
+  | maybe_namespaces namespace maybe_comments
   ;
-_mediums1
+mediums
   : medium
-  | _mediums1 ',' _spaces0 medium
+  | mediums ',' maybe_spaces medium
   ;
-_rulesets0
+maybe_rulesets
   :
-  | _rulesets0 ruleset
+  | maybe_rulesets ruleset maybe_spaces
   ;
-_selectors1
+selectors
   : selector {
       $$ = list_open(YY_SCANNER_MPOOL(scanner));
       list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
     }
-  | _selectors1 ',' _spaces0 selector {
+  | selectors ',' maybe_spaces selector {
       $$ = $1;
       list_push_back($$, YY_SCANNER_MPOOL(scanner), $4);
     }
   ;
-_declarations1
+declarations
   : declaration {
       $$ = list_open(YY_SCANNER_MPOOL(scanner));
       if ($1 != NULL) list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
     }
-  | _declarations1 ';' _spaces0 declaration {
+  | declarations ';' maybe_spaces declaration {
       $$ = $1;
       if ($4 != NULL) list_push_back($$, YY_SCANNER_MPOOL(scanner), $4);
     }
   ;
-_attribute_conditions0
+maybe_attribute_conditions
   : /* empty */ {
       $$ = NULL;
     }
-  | _attribute_conditions0 _attribute_condition {
-      if ($1 == NULL) {
-        $$ = $2;
-      } else {
-        $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_AND_CONDITION);
-        $$->desc.combinator.firstCondition = $1;
-        $$->desc.combinator.secondCondition = $2;
-      }
-    }
-  ;
-_attribute_conditions1
-  : _attribute_condition {
+  | attribute_conditions {
       $$ = $1;
     }
-  | _attribute_conditions1 _attribute_condition {
+  ;
+attribute_conditions
+  : attribute_condition {
+      $$ = $1;
+    }
+  | attribute_conditions attribute_condition {
       $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_AND_CONDITION);
       $$->desc.combinator.firstCondition = $1;
       $$->desc.combinator.secondCondition = $2;
     }
   ;
-
 stylesheet
-  : _comments0 _imports0 _namespaces0 _stylesheet_values0
-  | CHARSET_SYM _spaces0 STRING _spaces0 ';' _comments0 _imports0 _namespaces0 _stylesheet_values0
+  : maybe_charset maybe_comments maybe_imports maybe_namespaces maybe_stylesheet_values 
   ;
-_stylesheet_value
+maybe_charset
+  :
+  | charset
+  ;
+charset
+  : CHARSET_SYM maybe_spaces STRING maybe_spaces ';'
+  ;
+stylesheet_value
   : ruleset
   | media
   | page
   | font_face
   ;
 import
-  : IMPORT_SYM _spaces0 _string_or_uri _spaces0 ';' _spaces0
-  | IMPORT_SYM _spaces0 _string_or_uri _spaces0 _mediums1 ';' _spaces0
+  : IMPORT_SYM maybe_spaces string_or_uri maybe_spaces ';'
+  | IMPORT_SYM maybe_spaces string_or_uri maybe_spaces mediums ';'
   ;
 namespace
-  : NAMESPACE_SYM _spaces0 _string_or_uri _spaces0 ';' _spaces0
-  | NAMESPACE_SYM _spaces0 namespace_prefix _spaces0 _string_or_uri _spaces0 ';' _spaces0
+  : NAMESPACE_SYM maybe_spaces string_or_uri maybe_spaces ';'
+  | NAMESPACE_SYM maybe_spaces namespace_prefix maybe_spaces string_or_uri maybe_spaces ';'
   ;
-_string_or_uri
+string_or_uri
   : STRING
   | URI
   ;
@@ -269,19 +268,19 @@ namespace_prefix
   : IDENT
   ;
 media
-  : MEDIA_SYM _spaces0 _mediums1 '{' _spaces0 _rulesets0 '}' _spaces0
+  : MEDIA_SYM maybe_spaces mediums '{' maybe_spaces maybe_rulesets '}'
   ;
 medium
-  : IDENT _spaces0
+  : IDENT maybe_spaces
   ;
 page
-  : PAGE_SYM _spaces0 _ident_or_space _pseudo_page_or_space _spaces0 '{' _spaces0 _declarations1 '}' _spaces0
+  : PAGE_SYM maybe_spaces maybe_indent maybe_pseudo_page maybe_spaces '{' maybe_spaces declarations '}'
   ;
-_ident_or_space
+maybe_indent
   :
   | IDENT
   ;
-_pseudo_page_or_space
+maybe_pseudo_page
   :
   | pseudo_page
   ;
@@ -289,13 +288,13 @@ pseudo_page
   : ':' IDENT
   ;
 font_face
-  : FONT_FACE_SYM _spaces0 '{' _spaces0 _declarations1 '}' _spaces0
+  : FONT_FACE_SYM maybe_spaces '{' maybe_spaces declarations '}'
   ;
 operator
-  : '/' _spaces0 {
+  : '/' maybe_spaces {
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_SLASH);
     }
-  | ',' _spaces0 {
+  | ',' maybe_spaces {
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_COMMA);
     }
   | /* empty */ {
@@ -308,10 +307,10 @@ unary_operator
   | /* empty */ { $$ = '+'; }
   ;
 property
-  : IDENT _spaces0 { $$ = $1; }
+  : IDENT maybe_spaces { $$ = $1; }
   ;
 ruleset
-  : _selectors1 '{' _spaces0 _declarations1 '}' _spaces0 {
+  : selectors '{' maybe_spaces declarations '}' {
       list_iter_t lit;
       vector_t vector;
       vector_iter_t vit;
@@ -334,32 +333,32 @@ selector
   : simple_selector {
       $$ = $1;
     }
-  | selector '+' _spaces0 simple_selector {
+  | selector '+' maybe_spaces simple_selector {
       $$ = selector_alloc(
         YY_SCANNER_MPOOL(scanner), SAC_DIRECT_ADJACENT_SELECTOR);
       $$->desc.sibling.nodeType = ANY_NODE;
       $$->desc.sibling.firstSelector = $1;
       $$->desc.sibling.secondSelector = $4;
     }
-  | selector '>' _spaces0 simple_selector {
+  | selector '>' maybe_spaces simple_selector {
       $$ = selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_CHILD_SELECTOR);
       $$->desc.descendant.descendantSelector = $1;
       $$->desc.descendant.simpleSelector = $4;
     }
-  | selector _spaces0 simple_selector {
+  | selector maybe_spaces simple_selector {
       $$ = selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_DESCENDANT_SELECTOR);
       $$->desc.descendant.descendantSelector = $1;
       $$->desc.descendant.simpleSelector = $3;
     }
   ;
 simple_selector
-  : _attribute_conditions1 _spaces0 {
+  : attribute_conditions maybe_spaces {
       $$ = selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_CONDITIONAL_SELECTOR);
       $$->desc.conditional.simpleSelector = selector_alloc(
         YY_SCANNER_MPOOL(scanner), SAC_ANY_NODE_SELECTOR);
       $$->desc.conditional.condition = $1;
     }
-  | element_name _attribute_conditions0 _spaces0 {
+  | element_name maybe_attribute_conditions maybe_spaces {
       if ($2 == NULL) {
         $$ = $1;
       } else {
@@ -370,7 +369,7 @@ simple_selector
       }
     }
   ;
-_attribute_condition
+attribute_condition
   : HASH {
       $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_ID_CONDITION);
       $$->desc.attribute.namespaceURI = NULL;
@@ -408,15 +407,15 @@ element_name
     }
   ;
 attrib
-  : '[' _spaces0 IDENT _spaces0 ']' {
+  : '[' maybe_spaces IDENT maybe_spaces ']' {
       $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_ATTRIBUTE_CONDITION);
       $$->desc.attribute.namespaceURI = NULL;
       $$->desc.attribute.localName = $3;
       $$->desc.attribute.specified = SAC_FALSE;
       $$->desc.attribute.value = NULL;
     }
-  | '[' _spaces0 IDENT _spaces0 _attrib_match
-    _spaces0 _attrib_value _spaces0 ']'
+  | '[' maybe_spaces IDENT maybe_spaces attrib_match
+    maybe_spaces attrib_value maybe_spaces ']'
     {
       $$ = condition_alloc(YY_SCANNER_MPOOL(scanner), $5);
       $$->desc.attribute.namespaceURI = NULL;
@@ -425,7 +424,7 @@ attrib
       $$->desc.attribute.value = $7;
     }
   ;
-_attrib_match
+attrib_match
   : '=' {
       $$ = SAC_ATTRIBUTE_CONDITION;
     }
@@ -436,7 +435,7 @@ _attrib_match
       $$ = SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION;
     }
   ;
-_attrib_value
+attrib_value
   : IDENT {
       $$ = $1;
     }
@@ -454,16 +453,16 @@ pseudo
       $$->desc.attribute.value = NULL;
     }
 /*
-  | ':' FUNCTION _spaces0 IDENT _spaces0 ')'
+  | ':' FUNCTION maybe_spaces IDENT maybe_spaces ')'
 */
   ;
 declaration
-  : property ':' _spaces0 expr {
+  : property ':' maybe_spaces expr {
       $$ = declaration_alloc(
         YY_SCANNER_MPOOL(scanner), $1,
         lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner)), SAC_FALSE);
     }
-  | property ':' _spaces0 expr prio {
+  | property ':' maybe_spaces expr prio {
       $$ = declaration_alloc(
         YY_SCANNER_MPOOL(scanner), $1,
         lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner)), SAC_TRUE);
@@ -473,25 +472,25 @@ declaration
     }
   ;
 prio
-  : IMPORTANT_SYM _spaces0
+  : IMPORTANT_SYM maybe_spaces
   ;
 expr
-  : term {
+  : term maybe_spaces {
       $$ = list_open(YY_SCANNER_MPOOL(scanner));
       list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
     }
-  | expr operator term {
+  | expr operator term maybe_spaces {
       $$ = $1;
       if ($2 != NULL) list_push_back($$, YY_SCANNER_MPOOL(scanner), $2);
       list_push_back($$, YY_SCANNER_MPOOL(scanner), $3);
     }
   ;
 term
-  : STRING _spaces0 {
+  : STRING {
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
       $$->desc.stringValue = $1;
     }
-  | IDENT _spaces0 {
+  | IDENT {
       if (strcmp($1, "inherit") != 0) {
         $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_IDENT);
         $$->desc.ident = $1;
@@ -499,108 +498,108 @@ term
         $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INHERIT);
       }
     }
-  | URI _spaces0 {
+  | URI {
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_URI);
       $$->desc.uri = $1;
     }
-  | UNICODERANGE _spaces0 {
+  | UNICODERANGE {
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_UNICODERANGE);
       $$->desc.unicodeRange = $1;
     }
-  | FREQ_HZ _spaces0 {
+  | FREQ_HZ {
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_HERTZ);
       $$->desc.dimension.unit = "Hz";
       $$->desc.dimension.value.ureal = $1;
     }
-  | FREQ_KHZ _spaces0 {
+  | FREQ_KHZ {
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_KILOHERTZ);
       $$->desc.stringValue = "kHz";
       $$->desc.dimension.value.ureal = $1;
     }
-  | unary_operator INT _spaces0 {
+  | unary_operator INT {
       if ($1 == '-') $2 = -$2;
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
       $$->desc.integer = $2;
     }
-  | unary_operator REAL _spaces0 {
+  | unary_operator REAL {
       if ($1 == '-') $2 = -$2;
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_REAL);
       $$->desc.real = $2;
     }
-  | unary_operator PERCENTAGE _spaces0 {
+  | unary_operator PERCENTAGE {
       if ($1 == '-') $2 = -$2;
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_PERCENTAGE);
       $$->desc.dimension.unit = "%";
       $$->desc.dimension.value.sreal = $2;
     }
-  | TIME_MS _spaces0 {
+  | TIME_MS {
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_MILLISECOND);
       $$->desc.dimension.unit = "ms";
       $$->desc.dimension.value.ureal = $1;
     }
-  | TIME_S _spaces0 {
+  | TIME_S {
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_SECOND);
       $$->desc.dimension.unit = "s";
       $$->desc.dimension.value.ureal = $1;
     }
-  | ANGLE_DEG _spaces0 {
+  | ANGLE_DEG {
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_DEGREE);
       $$->desc.dimension.unit = "deg";
       $$->desc.dimension.value.ureal = $1;
     }
-  | ANGLE_RAD _spaces0 {
+  | ANGLE_RAD {
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_RADIAN);
       $$->desc.dimension.unit = "rad";
       $$->desc.dimension.value.ureal = $1;
     }
-  | ANGLE_GRAD _spaces0 {
+  | ANGLE_GRAD {
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_GRADIAN);
       $$->desc.dimension.unit = "grad";
       $$->desc.dimension.value.ureal = $1;
     }
-  | unary_operator LENGTH_EM _spaces0 {
+  | unary_operator LENGTH_EM {
       if ($1 == '-') $2 = -$2;
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_EM);
       $$->desc.dimension.unit = "em";
       $$->desc.dimension.value.sreal = $2;
     }
-  | unary_operator LENGTH_EX _spaces0 {
+  | unary_operator LENGTH_EX {
       if ($1 == '-') $2 = -$2;
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_EX);
       $$->desc.dimension.unit = "ex";
       $$->desc.dimension.value.sreal = $2;
     }
-  | unary_operator LENGTH_PIXEL _spaces0 {
+  | unary_operator LENGTH_PIXEL {
       if ($1 == '-') $2 = -$2;
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_PIXEL);
       $$->desc.dimension.unit = "px";
       $$->desc.dimension.value.sreal = $2;
     }
-  | unary_operator LENGTH_INCH _spaces0 {
+  | unary_operator LENGTH_INCH {
       if ($1 == '-') $2 = -$2;
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_INCH);
       $$->desc.dimension.unit = "in";
       $$->desc.dimension.value.sreal = $2;
     }
-  | unary_operator LENGTH_CENTIMETER _spaces0 {
+  | unary_operator LENGTH_CENTIMETER {
       if ($1 == '-') $2 = -$2;
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_CENTIMETER);
       $$->desc.dimension.unit = "cm";
       $$->desc.dimension.value.sreal = $2;
     }
-  | unary_operator LENGTH_MILLIMETER _spaces0 {
+  | unary_operator LENGTH_MILLIMETER {
       if ($1 == '-') $2 = -$2;
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_MILLIMETER);
       $$->desc.dimension.unit = "mm";
       $$->desc.dimension.value.sreal = $2;
     }
-  | unary_operator LENGTH_POINT _spaces0 {
+  | unary_operator LENGTH_POINT {
       if ($1 == '-') $2 = -$2;
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_POINT);
       $$->desc.dimension.unit = "pt";
       $$->desc.dimension.value.sreal = $2;
     }
-  | unary_operator LENGTH_PICA _spaces0 {
+  | unary_operator LENGTH_PICA {
       if ($1 == '-') $2 = -$2;
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_PICA);
       $$->desc.dimension.unit = "pc";
@@ -610,7 +609,7 @@ term
   | hexcolor { $$ = $1; }
   ;
 function
-  : FUNCTION _spaces0 expr ')' _spaces0 {
+  : FUNCTION maybe_spaces expr ')' {
       $$ = lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_FUNCTION);
       $$->desc.function.name = $1;
 
@@ -624,7 +623,7 @@ function
  * after the "#"; e.g., "#000" is OK, but "#abcd" is not.
  */
 hexcolor
-  : HASH _spaces0 {
+  : HASH {
       unsigned int r, g, b;
       int ok;
       size_t len;
