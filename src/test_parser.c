@@ -508,7 +508,9 @@ static void parse_styledeclaration(SAC_Parser parser, const char *buffer) {
 
 
 
-static const SAC_Selector** parse_selector(SAC_Parser parser, const char *buffer) {
+static const SAC_Selector** parse_selector(SAC_Parser parser,
+  const char *buffer)
+{
   return SAC_ParseSelectors(parser, buffer, strlen(buffer));
 }
 
