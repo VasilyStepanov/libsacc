@@ -102,6 +102,7 @@ SAC_ConditionType cond_type;
 %type <list> expr;
 %type <list> mediums;
 %type <vector> sac_ruleset_selectors;
+%type <vector> sac_media_mediums;
 %type <sel> selector;
 %type <sel> simple_selector;
 %type <sel> element_name;
@@ -193,9 +194,9 @@ mediums
       SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4);
     }
   ;
-maybe_rulesets
+sac_maybe_rulesets
   :
-  | maybe_rulesets sac_ruleset maybe_spaces
+  | sac_maybe_rulesets sac_ruleset maybe_spaces
   ;
 selectors
   : selector {
@@ -248,9 +249,10 @@ sac_style_unit
 sac_import
   : IMPORT_SYM maybe_spaces string_or_uri maybe_spaces ';' maybe_comments
   | IMPORT_SYM maybe_spaces string_or_uri maybe_spaces mediums ';' maybe_comments {
-      SAC_Vector vector;
-      vector = SAC_vector_from_list($5, YY_SCANNER_MPOOL(scanner));
-      SAC_parser_import_handler(YY_SCANNER_PARSER(scanner), $3, vector, NULL);
+      SAC_Vector mediums;
+
+      mediums = SAC_vector_from_list($5, YY_SCANNER_MPOOL(scanner));
+      SAC_parser_import_handler(YY_SCANNER_PARSER(scanner), $3, mediums, NULL);
     }
   ;
 namespace
@@ -269,7 +271,20 @@ namespace_prefix
   : IDENT
   ;
 media
-  : MEDIA_SYM maybe_spaces mediums '{' maybe_spaces maybe_rulesets '}'
+  : MEDIA_SYM maybe_spaces sac_media_mediums
+    '{' maybe_spaces sac_maybe_rulesets '}'
+    {
+      SAC_parser_end_media_handler(YY_SCANNER_PARSER(scanner), $3);
+    }
+  ;
+sac_media_mediums
+  : mediums {
+      SAC_Vector mediums;
+
+      mediums = SAC_vector_from_list($1, YY_SCANNER_MPOOL(scanner));
+      SAC_parser_start_media_handler(YY_SCANNER_PARSER(scanner), mediums);
+      $$ = mediums;
+    }
   ;
 medium
   : IDENT maybe_spaces {

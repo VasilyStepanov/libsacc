@@ -420,6 +420,31 @@ typedef void (*SAC_ImportHandler)(void *userData,
   const SAC_STRING defaultNamepaceURI);
 
 /**
+ * Receive notification of the beginning of a media rule.
+ *
+ * The SAC Parser will invoke this method at the beginning of every media rule
+ * in the CSS document. There will be a corresponding SAC_EndMediaHandler event
+ * for every SAC_StartMediaHandler event. All rules inside the rule will be
+ * reported, in order, before the corresponding SAC_EndMediaHandler event.
+ *
+ * media - It is an array of all media for the media rule.
+ *         It terminated by NULL.
+ */
+typedef void (*SAC_StartMediaHandler)(void *userData, const SAC_STRING media[]);
+
+/**
+ * Receive notification of the end of a media rule.
+ *
+ * The SAC Parser will invoke this method at the end of every media rule in the
+ * CSS document. There will be a corresponding SAC_StartMediaHandler event for
+ * every SAC_EndMediaHandler event.
+ *
+ * media - It is an array of all media for the media rule.
+ *         It terminated by NULL.
+ */
+typedef void (*SAC_EndMediaHandler)(void *userData, const SAC_STRING media[]);
+
+/**
  * Receive notification of the beginning of a style rule.
  *
  * The SAC Parser will invoke this method at the beginning of every style rule
@@ -470,6 +495,9 @@ void SAC_SetDocumentHandler(SAC_Parser parser,
   SAC_StartDocumentHandler start, SAC_EndDocumentHandler end);
 
 void SAC_SetImportHandler(SAC_Parser parser, SAC_ImportHandler handler);
+
+void SAC_SetMediaHandler(SAC_Parser parser,
+  SAC_StartMediaHandler start, SAC_EndMediaHandler end);
 
 void SAC_SetStyleHandler(SAC_Parser parser,
   SAC_StartStyleHandler start, SAC_EndStyleHandler end);

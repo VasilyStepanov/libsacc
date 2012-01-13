@@ -47,5 +47,12 @@ void SAC_parser_import_handler(SAC_Parser parser,
   const SAC_STRING media[],
   const SAC_STRING defaultNamepaceURI);
 
+void SAC_parser_start_media_handler(SAC_Parser parser,
+  const SAC_STRING media[]);
+
+void SAC_parser_end_media_handler(SAC_Parser parser,
+  const SAC_STRING media[]);
+
+
 
 #endif

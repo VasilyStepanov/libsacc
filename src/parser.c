@@ -22,6 +22,8 @@ struct _SAC_Parser {
   SAC_StartDocumentHandler start_document_handler;
   SAC_EndDocumentHandler end_document_handler;
   SAC_ImportHandler import_handler;
+  SAC_StartMediaHandler start_media_handler;
+  SAC_EndMediaHandler end_media_handler;
   SAC_StartStyleHandler start_style_handler;
   SAC_EndStyleHandler end_style_handler;
   SAC_PropertyHandler property_handler;
@@ -96,6 +98,24 @@ void SAC_parser_import_handler(SAC_Parser parser,
 
 
 
+void SAC_parser_start_media_handler(SAC_Parser parser,
+  const SAC_STRING media[])
+{
+  if (PARSER(parser)->start_media_handler != NULL)
+    PARSER(parser)->start_media_handler(PARSER(parser)->user_data, media);
+}
+
+
+
+void SAC_parser_end_media_handler(SAC_Parser parser,
+  const SAC_STRING media[])
+{
+  if (PARSER(parser)->end_media_handler != NULL)
+    PARSER(parser)->end_media_handler(PARSER(parser)->user_data, media);
+}
+
+
+
 void SAC_SetDocumentHandler(SAC_Parser parser,
   SAC_StartDocumentHandler start,
   SAC_EndDocumentHandler end)
@@ -108,6 +128,15 @@ void SAC_SetDocumentHandler(SAC_Parser parser,
 
 void SAC_SetImportHandler(SAC_Parser parser, SAC_ImportHandler handler) {
   PARSER(parser)->import_handler = handler;
+}
+
+
+
+void SAC_SetMediaHandler(SAC_Parser parser,
+  SAC_StartMediaHandler start, SAC_EndMediaHandler end)
+{
+  PARSER(parser)->start_media_handler = start;
+  PARSER(parser)->end_media_handler = end;
 }
 
 

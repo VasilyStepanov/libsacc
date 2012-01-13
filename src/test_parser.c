@@ -473,14 +473,23 @@ static void property(
 
 
 
+void dump_media(stream_t out, const SAC_STRING media[]) {
+  const SAC_STRING *m;
+
+  for (m = media; *m != NULL; ++m) {
+    if (m != media) stream_printf(out, ", ");
+    stream_printf(out, "medium('%s')", *m);
+  }
+}
+
+
+
 void import(void *userData,
   const SAC_STRING base,
   const SAC_STRING uri,
   const SAC_STRING media[],
   const SAC_STRING defaultNamepaceURI)
 {
-  const SAC_STRING *m;
-
   userdata_printf(userData, "import(");
 
   if (base != NULL) {
@@ -505,12 +514,29 @@ void import(void *userData,
     stream_printf(USERDATA_STREAM(userData), "NULL");
   }
 
-  stream_printf(USERDATA_STREAM(userData), ")");
+  stream_printf(USERDATA_STREAM(userData), ") ");
 
-  for (m = media; *m != NULL; ++m)
-    stream_printf(USERDATA_STREAM(userData), " media('%s')", *m);
+  dump_media(USERDATA_STREAM(userData), media);
 
   stream_printf(USERDATA_STREAM(userData), "\n");
+}
+
+
+
+void start_media(void *userData, const SAC_STRING media[]) {
+  userdata_printf(userData, "media(");
+  dump_media(USERDATA_STREAM(userData), media);
+  stream_printf(USERDATA_STREAM(userData), ") {\n");
+  userdata_inc_indent(userData);
+}
+
+
+
+void end_media(void *userData, const SAC_STRING media[]) {
+  userdata_dec_indent(userData);
+  userdata_printf(userData, "media(");
+  dump_media(USERDATA_STREAM(userData), media);
+  stream_printf(USERDATA_STREAM(userData), ") }\n");
 }
 
 
@@ -525,6 +551,7 @@ static SAC_Parser create_parser(stream_t stream) {
   
   SAC_SetDocumentHandler(parser, start_document, end_document);
   SAC_SetImportHandler(parser, import);
+  SAC_SetMediaHandler(parser, start_media, end_media);
   SAC_SetStyleHandler(parser, start_style, end_style);
   SAC_SetPropertyHandler(parser, property);
   SAC_SetUserData(parser, userData);
@@ -800,6 +827,11 @@ static void test_parser_stylesheet() {
   stream_printf(css, "element {\n");
   stream_printf(css, "  prop : ident;\n");
   stream_printf(css, "}\n");
+  stream_printf(css, "@media screen, print {\n");
+  stream_printf(css, "  body {\n");
+  stream_printf(css, "    line-height: 1.2\n");
+  stream_printf(css, "  }\n");
+  stream_printf(css, "}\n");
   parse_stylesheet(parser, stream_str(css));
   stream_close(css);
 
@@ -808,7 +840,7 @@ static void test_parser_stylesheet() {
   stream_printf(match_stream, "doc {\n");
   stream_printf(match_stream,
     "  import('http://example.com/', 'bluish.css', NULL) "
-      "media('projection') media('tv')\n");
+      "medium('projection'), medium('tv')\n");
   stream_printf(match_stream, "  style\n");
   stream_printf(match_stream, "sel_el(NULL, element)\n");
   stream_printf(match_stream, "  {\n");
@@ -816,6 +848,15 @@ static void test_parser_stylesheet() {
   stream_printf(match_stream, "  style\n");
   stream_printf(match_stream, "sel_el(NULL, element)\n");
   stream_printf(match_stream, "  }\n");
+  stream_printf(match_stream, "  media(medium('screen'), medium('print')) {\n");
+  stream_printf(match_stream, "    style\n");
+  stream_printf(match_stream, "sel_el(NULL, body)\n");
+  stream_printf(match_stream, "    {\n");
+  stream_printf(match_stream, "      prop('line-height') real(1.2)\n");
+  stream_printf(match_stream, "    style\n");
+  stream_printf(match_stream, "sel_el(NULL, body)\n");
+  stream_printf(match_stream, "    }\n");
+  stream_printf(match_stream, "  media(medium('screen'), medium('print')) }\n");
   stream_printf(match_stream, "doc }\n");
   assert_equals(stream_str(match_stream), stream_str(parser_stream));
   stream_close(match_stream);
