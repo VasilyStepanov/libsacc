@@ -307,10 +307,12 @@ static void start_style(void *userData, const SAC_Selector *selectors[]) {
 
 static void end_style(
   void *userData,
-  const SAC_Selector *selectors[] SAC_UNUSED)
+  const SAC_Selector *selectors[])
 {
   userdata_dec_indent(userData);
-  userdata_printf(userData, "style }\n");
+  userdata_printf(userData, "style\n");
+  dump_selectors(USERDATA_STREAM(userData), selectors);
+  userdata_printf(userData, "}\n");
 }
 
 
@@ -772,7 +774,9 @@ static void test_parser_rule() {
   stream_printf(match_stream, "sel_el(NULL, element)\n");
   stream_printf(match_stream, "  {\n");
   stream_printf(match_stream, "    prop('prop') ident('ident')\n");
-  stream_printf(match_stream, "  style }\n");
+  stream_printf(match_stream, "  style\n");
+  stream_printf(match_stream, "sel_el(NULL, element)\n");
+  stream_printf(match_stream, "  }\n");
   stream_printf(match_stream, "doc }\n");
   assert_equals(stream_str(match_stream), stream_str(parser_stream));
   stream_close(match_stream);
@@ -809,7 +813,9 @@ static void test_parser_stylesheet() {
   stream_printf(match_stream, "sel_el(NULL, element)\n");
   stream_printf(match_stream, "  {\n");
   stream_printf(match_stream, "    prop('prop') ident('ident')\n");
-  stream_printf(match_stream, "  style }\n");
+  stream_printf(match_stream, "  style\n");
+  stream_printf(match_stream, "sel_el(NULL, element)\n");
+  stream_printf(match_stream, "  }\n");
   stream_printf(match_stream, "doc }\n");
   assert_equals(stream_str(match_stream), stream_str(parser_stream));
   stream_close(match_stream);
