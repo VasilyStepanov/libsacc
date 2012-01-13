@@ -1,11 +1,6 @@
-.deps/
-.libs/
-*.o
-*.lo
 libgrammar.la
 libsacc.la
 grammar.c
 grammar.h
 lexis.c
 sacc.pc
-test_suite

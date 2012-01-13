@@ -1,6 +1,10 @@
-SUBDIRS = src
+SUBDIRS = src \
+          tests
 
 ACLOCAL_AMFLAGS = -I m4
 
-test:
-	make -C src test
+test: all
+	make -C tests test
+
+.PHONY: test
+

@@ -17,3 +17,8 @@ ltmain.sh
 missing
 stamp-h1
 ylwrap
+
+.deps/
+.libs/
+*.o
+*.lo

@@ -1,7 +1,5 @@
 lib_LTLIBRARIES = libsacc.la
 
-noinst_PROGRAMS = test_suite
-
 noinst_LTLIBRARIES = libgrammar.la
 
 GENERIC_CFLAGS = -Wall -Wextra -ansi -pedantic -D_XOPEN_SOURCE=700 \
@@ -41,23 +39,6 @@ libgrammar_la_CFLAGS = $(GENERIC_CFLAGS) -Wno-unused-parameter -Werror
 
 
 
-test_suite_SOURCES = test_utils.c \
-                     test_mpool.c \
-                     test_list.c \
-                     test_vector.c \
-                     test_lexical_unit.c \
-                     test_condition.c \
-                     test_selector.c \
-                     test_parser.c \
-                     test_suite.c
-
-test_suite_LDADD = libsacc.la
-
-
-
-test: test_suite
-	./test_suite
-
 pkgconfigdir = $(libdir)/pkgconfig
 
 pkgconfig_DATA = sacc.pc
@@ -65,5 +46,10 @@ pkgconfig_DATA = sacc.pc
 clean-local:
 	rm -rf lexis.c
 	rm -rf grammar.c grammar.h
+
+
+
+test: all
+	make -C $(top_srcdir)/tests test
 
 .PHONY: test
