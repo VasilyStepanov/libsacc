@@ -90,6 +90,7 @@ static void test_vector_from_list() {
   assert(SAC_vector_head(vector)[0] == &a);
   assert(SAC_vector_head(vector)[1] == &b);
   assert(SAC_vector_head(vector)[2] == &c);
+  assert(SAC_vector_head(vector)[3] == NULL);
 
   SAC_list_close(list, mpool);
   SAC_vector_close(vector, mpool);
