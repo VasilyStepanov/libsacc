@@ -59,6 +59,8 @@ SAC_ConditionType cond_type;
 %token <val> CHARSET_SYM
 %token <val> DASHMATCH
 %token <val> DIMEN
+%token <val> BAD_STRING
+%token <val> BAD_URI
 %token <real> LENGTH_EM
 %token <real> LENGTH_EX
 %token <val> FONT_FACE_SYM
