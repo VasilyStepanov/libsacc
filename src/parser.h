@@ -42,6 +42,9 @@ void SAC_parser_start_style_handler(SAC_Parser parser,
 void SAC_parser_end_style_handler(SAC_Parser parser,
   const SAC_Selector *selectors[]);
 
+void SAC_parser_namespace_declaration_handler(SAC_Parser parser,
+  const SAC_STRING prefix, const SAC_STRING uri);
+
 void SAC_parser_import_handler(SAC_Parser parser,
   const SAC_STRING uri,
   const SAC_STRING media[],

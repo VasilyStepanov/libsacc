@@ -405,6 +405,13 @@ typedef void (*SAC_StartDocumentHandler)(void *userData);
 typedef void (*SAC_EndDocumentHandler)(void *userData);
 
 /**
+ * Receive notification of a namespace declaration and the default namespace
+ * if any (prefix will be NULL in that case). uri can never be NULL.
+ */
+typedef void (*SAC_NamespaceDeclarationHandler)(void *userData,
+  const SAC_STRING prefix, const SAC_STRING uri);
+
+/**
  * Receive notification of an import statement.
  * base  - The base argument is whatever was set by SAC_SetBase.
  * uri   - The unresolved URI of the imported style sheet.
@@ -493,6 +500,9 @@ typedef void (*SAC_PropertyHandler)(void *userData,
 
 void SAC_SetDocumentHandler(SAC_Parser parser,
   SAC_StartDocumentHandler start, SAC_EndDocumentHandler end);
+
+void SAC_SetNamespaceDeclarationHandler(SAC_Parser parser,
+  SAC_NamespaceDeclarationHandler handler);
 
 void SAC_SetImportHandler(SAC_Parser parser, SAC_ImportHandler handler);
 

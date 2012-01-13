@@ -523,6 +523,29 @@ void import(void *userData,
 
 
 
+void namespace_declaration(void *userData,
+  const SAC_STRING prefix, const SAC_STRING uri)
+{
+  userdata_printf(userData, "namespace(");
+
+  if (prefix != NULL) {
+    stream_printf(USERDATA_STREAM(userData), "'%s'", prefix);
+  } else {
+    stream_printf(USERDATA_STREAM(userData), "NULL");
+  }
+
+  stream_printf(USERDATA_STREAM(userData), ", ");
+
+  if (uri != NULL) {
+    stream_printf(USERDATA_STREAM(userData), "'%s'", uri);
+  } else {
+    stream_printf(USERDATA_STREAM(userData), "NULL");
+  }
+  stream_printf(USERDATA_STREAM(userData), ")\n");
+}
+
+
+
 void start_media(void *userData, const SAC_STRING media[]) {
   userdata_printf(userData, "media(");
   dump_media(USERDATA_STREAM(userData), media);
@@ -550,6 +573,7 @@ static SAC_Parser create_parser(stream_t stream) {
   parser = SAC_CreateParser();
   
   SAC_SetDocumentHandler(parser, start_document, end_document);
+  SAC_SetNamespaceDeclarationHandler(parser, namespace_declaration);
   SAC_SetImportHandler(parser, import);
   SAC_SetMediaHandler(parser, start_media, end_media);
   SAC_SetStyleHandler(parser, start_style, end_style);
@@ -825,6 +849,8 @@ static void test_parser_stylesheet() {
   
   stream_printf(css, "@import url(\"all.css\");\n");
   stream_printf(css, "@import url(\"bluish.css\") projection, tv;\n");
+  stream_printf(css, "@namespace \"\";\n");
+  stream_printf(css, "@namespace svg url('http://www.w3.org/2000/svg');\n");
   stream_printf(css, "element {\n");
   stream_printf(css, "  prop : ident;\n");
   stream_printf(css, "}\n");
@@ -844,6 +870,10 @@ static void test_parser_stylesheet() {
   stream_printf(match_stream,
     "  import('http://example.com/', 'bluish.css', NULL) "
       "medium('projection'), medium('tv')\n");
+  stream_printf(match_stream, "  namespace(NULL, '')\n");
+  stream_printf(match_stream,
+    "  namespace('svg', 'http://www.w3.org/2000/svg')\n");
+
   stream_printf(match_stream, "  style\n");
   stream_printf(match_stream, "sel_el(NULL, element)\n");
   stream_printf(match_stream, "  {\n");

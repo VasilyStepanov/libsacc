@@ -21,6 +21,7 @@ struct _SAC_Parser {
   SAC_STRING base;
   SAC_StartDocumentHandler start_document_handler;
   SAC_EndDocumentHandler end_document_handler;
+  SAC_NamespaceDeclarationHandler namespace_declaration_handler;
   SAC_ImportHandler import_handler;
   SAC_StartMediaHandler start_media_handler;
   SAC_EndMediaHandler end_media_handler;
@@ -86,6 +87,16 @@ static void SAC_parser_clear(SAC_Parser parser) {
 
 
 
+void SAC_parser_namespace_declaration_handler(SAC_Parser parser,
+  const SAC_STRING prefix, const SAC_STRING uri)
+{
+  if (PARSER(parser)->namespace_declaration_handler != NULL)
+    PARSER(parser)->namespace_declaration_handler(PARSER(parser)->user_data,
+      prefix, uri);
+}
+
+
+
 void SAC_parser_import_handler(SAC_Parser parser,
   const SAC_STRING uri,
   const SAC_STRING media[],
@@ -122,6 +133,14 @@ void SAC_SetDocumentHandler(SAC_Parser parser,
 {
   PARSER(parser)->start_document_handler = start;
   PARSER(parser)->end_document_handler = end;
+}
+
+
+
+void SAC_SetNamespaceDeclarationHandler(SAC_Parser parser,
+  SAC_NamespaceDeclarationHandler handler)
+{
+  PARSER(parser)->namespace_declaration_handler = handler;
 }
 
 

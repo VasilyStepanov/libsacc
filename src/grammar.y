@@ -93,6 +93,7 @@ SAC_ConditionType cond_type;
 %type <str> attrib_value;
 %type <str> string_or_uri;
 %type <str> medium;
+%type <str> maybe_namespace_prefix;
 %type <ch> unary_operator;
 %type <value> term;
 %type <value> operator;
@@ -170,9 +171,9 @@ sac_maybe_imports
   :
   | sac_maybe_imports sac_import
   ;
-maybe_namespaces
+sac_maybe_namespaces
   :
-  | maybe_namespaces namespace
+  | sac_maybe_namespaces sac_namespace
   ;
 mediums
   : medium {
@@ -229,7 +230,7 @@ attribute_conditions
     }
   ;
 sac_stylesheet
-  : maybe_charset sac_maybe_imports maybe_namespaces sac_maybe_style_units
+  : maybe_charset sac_maybe_imports sac_maybe_namespaces sac_maybe_style_units
   ;
 maybe_charset
   :
@@ -254,9 +255,13 @@ sac_import
       SAC_parser_import_handler(YY_SCANNER_PARSER(scanner), $3, mediums, NULL);
     }
   ;
-namespace
-  : NAMESPACE_SYM maybe_spaces string_or_uri maybe_spaces ';' maybe_comments
-  | NAMESPACE_SYM maybe_spaces namespace_prefix maybe_spaces string_or_uri maybe_spaces ';' maybe_comments
+sac_namespace
+  : NAMESPACE_SYM maybe_spaces maybe_namespace_prefix string_or_uri
+    maybe_spaces ';' maybe_comments
+    {
+      SAC_parser_namespace_declaration_handler(YY_SCANNER_PARSER(scanner),
+        $3, $4);
+    }
   ;
 string_or_uri
   : STRING {
@@ -266,8 +271,13 @@ string_or_uri
       $$ = $1;
     }
   ;
-namespace_prefix
-  : IDENT
+maybe_namespace_prefix
+  : /* empty */ {
+      $$ = NULL;
+    }
+  | IDENT maybe_spaces {
+      $$ = $1;
+    }
   ;
 media
   : sac_media_start '{' maybe_spaces sac_maybe_rulesets '}' {
