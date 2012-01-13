@@ -101,8 +101,9 @@ SAC_ConditionType cond_type;
 %type <list> selectors;
 %type <list> expr;
 %type <list> mediums;
-%type <vector> sac_ruleset_selectors;
-%type <vector> sac_media_mediums;
+%type <list> maybe_mediums;
+%type <vector> sac_style_start;
+%type <vector> sac_media_start;
 %type <sel> selector;
 %type <sel> simple_selector;
 %type <sel> element_name;
@@ -117,46 +118,35 @@ SAC_ConditionType cond_type;
 %%
 
 start
-  : sac_start_as_style_declarations sac_declarations {
+  : sac_style_declarations_start sac_declarations {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
     }
   | START_AS_SELECTORS selectors {
-      SAC_Vector v;
-      SAC_ListIter lit;
-      SAC_VectorIter vit;
-
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
-      v = SAC_vector_open(YY_SCANNER_MPOOL(scanner), SAC_list_size($2));
-
-      for (lit = SAC_list_head($2), vit = SAC_vector_head(v);
-           lit != NULL;
-           lit = SAC_list_next(lit), ++vit)
-      {
-        *vit = *lit;
-      }
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
 
-      YY_SCANNER_OUTPUT(scanner) = v;
+      YY_SCANNER_OUTPUT(scanner) = SAC_vector_from_list(
+        $2, YY_SCANNER_MPOOL(scanner));
     }
-  | sac_start_as_rule sac_ruleset maybe_spaces {
+  | sac_rule_start sac_ruleset maybe_spaces {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
     }
-  | sac_start_as_stylesheet sac_stylesheet {
+  | sac_stylesheet_start sac_stylesheet {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
     }
   ;
 
-sac_start_as_style_declarations
+sac_style_declarations_start
   : START_AS_STYLE_DECLARATIONS {
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
     }
   ;
-sac_start_as_rule
+sac_rule_start
   : START_AS_RULE {
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
     }
   ;
-sac_start_as_stylesheet
+sac_stylesheet_start
   : START_AS_STYLESHEET {
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
     }
@@ -192,6 +182,14 @@ mediums
   | mediums ',' maybe_spaces medium {
       $$ = $1;
       SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4);
+    }
+  ;
+maybe_mediums
+  : /* empty */ {
+      $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
+    }
+  | mediums {
+      $$ = $1;
     }
   ;
 sac_maybe_rulesets
@@ -247,8 +245,9 @@ sac_style_unit
   | font_face maybe_comments
   ;
 sac_import
-  : IMPORT_SYM maybe_spaces string_or_uri maybe_spaces ';' maybe_comments
-  | IMPORT_SYM maybe_spaces string_or_uri maybe_spaces mediums ';' maybe_comments {
+  : IMPORT_SYM maybe_spaces string_or_uri maybe_spaces maybe_mediums ';'
+    maybe_comments
+    {
       SAC_Vector mediums;
 
       mediums = SAC_vector_from_list($5, YY_SCANNER_MPOOL(scanner));
@@ -271,17 +270,15 @@ namespace_prefix
   : IDENT
   ;
 media
-  : MEDIA_SYM maybe_spaces sac_media_mediums
-    '{' maybe_spaces sac_maybe_rulesets '}'
-    {
-      SAC_parser_end_media_handler(YY_SCANNER_PARSER(scanner), $3);
+  : sac_media_start '{' maybe_spaces sac_maybe_rulesets '}' {
+      SAC_parser_end_media_handler(YY_SCANNER_PARSER(scanner), $1);
     }
   ;
-sac_media_mediums
-  : mediums {
+sac_media_start
+  : MEDIA_SYM maybe_spaces mediums {
       SAC_Vector mediums;
 
-      mediums = SAC_vector_from_list($1, YY_SCANNER_MPOOL(scanner));
+      mediums = SAC_vector_from_list($3, YY_SCANNER_MPOOL(scanner));
       SAC_parser_start_media_handler(YY_SCANNER_PARSER(scanner), mediums);
       $$ = mediums;
     }
@@ -330,11 +327,11 @@ property
   : IDENT maybe_spaces { $$ = $1; }
   ;
 sac_ruleset
-  : sac_ruleset_selectors '{' maybe_spaces sac_declarations '}' {
+  : sac_style_start '{' maybe_spaces sac_declarations '}' {
       SAC_parser_end_style_handler(YY_SCANNER_PARSER(scanner), $1);
     }
   ;
-sac_ruleset_selectors
+sac_style_start
   : selectors {
       SAC_Vector vector;
       
