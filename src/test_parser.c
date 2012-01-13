@@ -805,10 +805,10 @@ static void test_parser_stylesheet() {
 
   dispose_parser(parser);
 
-  stream_printf(match_stream,
-    "import('http://example.com/', 'bluish.css', NULL) "
-      "media('projection') media('tv')\n");
   stream_printf(match_stream, "doc {\n");
+  stream_printf(match_stream,
+    "  import('http://example.com/', 'bluish.css', NULL) "
+      "media('projection') media('tv')\n");
   stream_printf(match_stream, "  style\n");
   stream_printf(match_stream, "sel_el(NULL, element)\n");
   stream_printf(match_stream, "  {\n");

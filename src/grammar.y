@@ -5,8 +5,6 @@
 %code requires {
 #include "list.h"
 #include "vector.h"
-#include "declaration.h"
-#include "style_unit.h"
 #include "lexical_unit.h"
 #include "condition.h"
 #include "selector.h"
@@ -36,9 +34,8 @@ double real;
 char ch;
 char *str;
 SAC_LexicalUnit *value;
-SAC_Declaration *decl;
-SAC_StyleUnit *style;
 SAC_List list;
+SAC_Vector vector;
 SAC_Selector *sel;
 SAC_Condition *cond;
 SAC_ConditionType cond_type;
@@ -101,15 +98,10 @@ SAC_ConditionType cond_type;
 %type <value> operator;
 %type <value> function;
 %type <value> hexcolor;
-%type <decl> declaration;
-%type <style> ruleset;
-%type <style> style_unit;
-%type <list> declarations;
 %type <list> selectors;
 %type <list> expr;
-%type <list> stylesheet;
-%type <list> maybe_style_units;
 %type <list> mediums;
+%type <vector> sac_ruleset_selectors;
 %type <sel> selector;
 %type <sel> simple_selector;
 %type <sel> element_name;
@@ -124,17 +116,7 @@ SAC_ConditionType cond_type;
 %%
 
 start
-  : START_AS_STYLE_DECLARATIONS declarations {
-      SAC_ListIter it;
-
-      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
-      for (it = SAC_list_head($2); it != NULL; it = SAC_list_next(it)) {
-        SAC_Declaration *decl = *it;
-
-        SAC_parser_property_handler(
-          YY_SCANNER_PARSER(scanner),
-          decl->property, decl->value, decl->important);
-      }
+  : sac_start_as_style_declarations sac_declarations {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
     }
   | START_AS_SELECTORS selectors {
@@ -155,18 +137,27 @@ start
 
       YY_SCANNER_OUTPUT(scanner) = v;
     }
-  | START_AS_RULE ruleset maybe_spaces {
-      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
-      SAC_parser_style_unit_handler(YY_SCANNER_PARSER(scanner), $2);
+  | sac_start_as_rule sac_ruleset maybe_spaces {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
     }
-  | START_AS_STYLESHEET stylesheet {
-      SAC_ListIter lit;
-
-      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
-      for (lit = SAC_list_head($2); lit != NULL; lit = SAC_list_next(lit))
-        SAC_parser_style_unit_handler(YY_SCANNER_PARSER(scanner), *lit);
+  | sac_start_as_stylesheet sac_stylesheet {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+    }
+  ;
+
+sac_start_as_style_declarations
+  : START_AS_STYLE_DECLARATIONS {
+      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+    }
+  ;
+sac_start_as_rule
+  : START_AS_RULE {
+      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+    }
+  ;
+sac_start_as_stylesheet
+  : START_AS_STYLESHEET {
+      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
     }
   ;
 
@@ -180,14 +171,9 @@ maybe_comments
   | maybe_comments CDO
   | maybe_comments CDC
   ;
-maybe_style_units
-  : /* empty */ {
-      $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
-    }
-  | maybe_style_units style_unit {
-      $$ = $1;
-      SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $2);
-    }
+sac_maybe_style_units
+  : /* empty */
+  | sac_maybe_style_units sac_style_unit
   ;
 sac_maybe_imports
   :
@@ -209,7 +195,7 @@ mediums
   ;
 maybe_rulesets
   :
-  | maybe_rulesets ruleset maybe_spaces
+  | maybe_rulesets sac_ruleset maybe_spaces
   ;
 selectors
   : selector {
@@ -221,15 +207,9 @@ selectors
       SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4);
     }
   ;
-declarations
-  : declaration {
-      $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
-      if ($1 != NULL) SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
-    }
-  | declarations ';' maybe_spaces declaration {
-      $$ = $1;
-      if ($4 != NULL) SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4);
-    }
+sac_declarations
+  : sac_declaration
+  | sac_declarations ';' maybe_spaces sac_declaration
   ;
 maybe_attribute_conditions
   : /* empty */ {
@@ -249,10 +229,8 @@ attribute_conditions
       $$->desc.combinator.secondCondition = $2;
     }
   ;
-stylesheet
-  : maybe_charset sac_maybe_imports maybe_namespaces maybe_style_units {
-      $$ = $4;
-    }
+sac_stylesheet
+  : maybe_charset sac_maybe_imports maybe_namespaces sac_maybe_style_units
   ;
 maybe_charset
   :
@@ -261,10 +239,8 @@ maybe_charset
 charset
   : CHARSET_SYM maybe_spaces STRING maybe_spaces ';' maybe_comments
   ;
-style_unit
-  : ruleset maybe_comments {
-      $$ = $1;
-    }
+sac_style_unit
+  : sac_ruleset maybe_comments
   | media maybe_comments
   | page maybe_comments
   | font_face maybe_comments
@@ -301,7 +277,7 @@ medium
     }
   ;
 page
-  : PAGE_SYM maybe_spaces maybe_indent maybe_pseudo_page maybe_spaces '{' maybe_spaces declarations '}'
+  : PAGE_SYM maybe_spaces maybe_indent maybe_pseudo_page maybe_spaces '{' maybe_spaces sac_declarations '}'
   ;
 maybe_indent
   :
@@ -315,7 +291,7 @@ pseudo_page
   : ':' IDENT
   ;
 font_face
-  : FONT_FACE_SYM maybe_spaces '{' maybe_spaces declarations '}'
+  : FONT_FACE_SYM maybe_spaces '{' maybe_spaces sac_declarations '}'
   ;
 operator
   : '/' maybe_spaces {
@@ -338,26 +314,18 @@ unary_operator
 property
   : IDENT maybe_spaces { $$ = $1; }
   ;
-ruleset
-  : selectors '{' maybe_spaces declarations '}' {
-      SAC_ListIter lit;
+sac_ruleset
+  : sac_ruleset_selectors '{' maybe_spaces sac_declarations '}' {
+      SAC_parser_end_style_handler(YY_SCANNER_PARSER(scanner), $1);
+    }
+  ;
+sac_ruleset_selectors
+  : selectors {
       SAC_Vector vector;
-      SAC_VectorIter vit;
-
-      vector = SAC_vector_open(YY_SCANNER_MPOOL(scanner), SAC_list_size($1));
-      for (lit = SAC_list_head($1),
-           vit = SAC_vector_head(vector);
-           lit != NULL;
-           lit = SAC_list_next(lit),
-           ++vit)
-      {
-        *vit = *lit;
-      }
-
       
-      $$ = SAC_style_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STYLE_RULESET);
-      $$->desc.ruleset.selectors = vector;
-      $$->desc.ruleset.declarations = $4;
+      vector = SAC_vector_from_list($1, YY_SCANNER_MPOOL(scanner));
+      SAC_parser_start_style_handler(YY_SCANNER_PARSER(scanner), vector);
+      $$ = vector;
     }
   ;
 selector
@@ -491,20 +459,20 @@ pseudo
   | ':' FUNCTION maybe_spaces IDENT maybe_spaces ')'
 */
   ;
-declaration
+sac_declaration
   : property ':' maybe_spaces expr {
-      $$ = SAC_declaration_alloc(
-        YY_SCANNER_MPOOL(scanner), $1,
-        SAC_lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner)), SAC_FALSE);
+      SAC_parser_property_handler(YY_SCANNER_PARSER(scanner),
+        $1,
+        SAC_lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner)),
+        SAC_FALSE);
     }
   | property ':' maybe_spaces expr prio {
-      $$ = SAC_declaration_alloc(
-        YY_SCANNER_MPOOL(scanner), $1,
-        SAC_lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner)), SAC_TRUE);
+      SAC_parser_property_handler(YY_SCANNER_PARSER(scanner),
+        $1,
+        SAC_lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner)),
+        SAC_TRUE);
     }
-  | /* empty */ {
-      $$ = NULL;
-    }
+  | /* empty */
   ;
 prio
   : IMPORTANT_SYM maybe_spaces
