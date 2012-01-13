@@ -823,6 +823,7 @@ static void test_parser_stylesheet() {
   SAC_SetBase(parser, "http://example.com/");
   assert_equals("http://example.com/", SAC_GetBase(parser));
   
+  stream_printf(css, "@import url(\"all.css\");\n");
   stream_printf(css, "@import url(\"bluish.css\") projection, tv;\n");
   stream_printf(css, "element {\n");
   stream_printf(css, "  prop : ident;\n");
@@ -838,6 +839,8 @@ static void test_parser_stylesheet() {
   dispose_parser(parser);
 
   stream_printf(match_stream, "doc {\n");
+  stream_printf(match_stream,
+    "  import('http://example.com/', 'all.css', NULL) \n");
   stream_printf(match_stream,
     "  import('http://example.com/', 'bluish.css', NULL) "
       "medium('projection'), medium('tv')\n");
