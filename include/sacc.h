@@ -405,6 +405,21 @@ typedef void (*SAC_StartDocumentHandler)(void *userData);
 typedef void (*SAC_EndDocumentHandler)(void *userData);
 
 /**
+ * Receive notification of an import statement.
+ * base  - The base argument is whatever was set by SAC_SetBase.
+ * uri   - The unresolved URI of the imported style sheet.
+ *         It can never be NULL.
+ * media - It is an array of all media for the imported style sheet.
+ *         It terminated by NULL.
+ * defaultNamepaceURI - The default namespace URI for the imported style sheet.
+ */
+typedef void (*SAC_ImportHandler)(void *userData,
+  const SAC_STRING base,
+  const SAC_STRING uri,
+  const SAC_STRING media[],
+  const SAC_STRING defaultNamepaceURI);
+
+/**
  * Receive notification of the beginning of a style rule.
  *
  * The SAC Parser will invoke this method at the beginning of every style rule
@@ -452,15 +467,14 @@ typedef void (*SAC_PropertyHandler)(void *userData,
  */
 
 void SAC_SetDocumentHandler(SAC_Parser parser,
-  SAC_StartDocumentHandler start,
-  SAC_EndDocumentHandler end);
+  SAC_StartDocumentHandler start, SAC_EndDocumentHandler end);
+
+void SAC_SetImportHandler(SAC_Parser parser, SAC_ImportHandler handler);
 
 void SAC_SetStyleHandler(SAC_Parser parser,
-  SAC_StartStyleHandler start,
-  SAC_EndStyleHandler end);
+  SAC_StartStyleHandler start, SAC_EndStyleHandler end);
 
-void SAC_SetPropertyHandler(SAC_Parser parser,
-  SAC_PropertyHandler handler);
+void SAC_SetPropertyHandler(SAC_Parser parser, SAC_PropertyHandler handler);
 
 /**
  * This value is passed as the userData argument to callbacks.
@@ -473,6 +487,17 @@ void SAC_SetUserData(SAC_Parser parser, void *userData);
  * Returns the last value set by SAC_SetUserData or NULL.
  */
 void* SAC_GetUserData(SAC_Parser parser);
+
+/**
+ * Sets the base to be used for resolving relative URIs in system identifiers
+ * in declarations.  Resolving relative identifiers is left to the application:
+ * this value will be passed through as the base argument to the
+ * SAC_ImportHandler. The base argument will be copied. Returns zero if out of
+ * memory, non-zero otherwise.
+ */
+int SAC_SetBase(SAC_Parser parser, const SAC_STRING base);
+
+const SAC_STRING SAC_GetBase(SAC_Parser parser);
 
 int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len);
 

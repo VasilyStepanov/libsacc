@@ -18,8 +18,10 @@ extern void yyparse();
 
 struct _SAC_Parser {
   SAC_MPool mpool;
+  SAC_STRING base;
   SAC_StartDocumentHandler start_document_handler;
   SAC_EndDocumentHandler end_document_handler;
+  SAC_ImportHandler import_handler;
   SAC_StartStyleHandler start_style_handler;
   SAC_EndStyleHandler end_style_handler;
   SAC_PropertyHandler property_handler;
@@ -82,12 +84,55 @@ static void SAC_parser_clear(SAC_Parser parser) {
 
 
 
+void SAC_parser_style_unit_handler(SAC_Parser parser, SAC_StyleUnit *unit) {
+  SAC_ListIter lit;
+
+  switch (unit->type) {
+    case SAC_STYLE_RULESET:
+      SAC_parser_start_style_handler(parser, unit->desc.ruleset.selectors);
+      for (lit = SAC_list_head(unit->desc.ruleset.declarations);
+           lit != NULL;
+           lit = SAC_list_next(lit))
+      {
+        SAC_Declaration *declaration = *lit;
+        SAC_parser_property_handler(parser,
+          declaration->property, declaration->value, declaration->important);
+      }
+      SAC_parser_end_style_handler(parser, unit->desc.ruleset.selectors);
+    break;
+    case SAC_STYLE_IMPORT:
+      SAC_parser_import_handler(parser,
+        unit->desc.import.uri, unit->desc.import.media, NULL);
+    break;
+  }
+}
+
+
+
+void SAC_parser_import_handler(SAC_Parser parser,
+  const SAC_STRING uri,
+  const SAC_STRING media[],
+  const SAC_STRING defaultNamepaceURI)
+{
+  if (PARSER(parser)->import_handler != NULL)
+    PARSER(parser)->import_handler(PARSER(parser)->user_data,
+      PARSER(parser)->base, uri, media, defaultNamepaceURI);
+}
+
+
+
 void SAC_SetDocumentHandler(SAC_Parser parser,
   SAC_StartDocumentHandler start,
   SAC_EndDocumentHandler end)
 {
   PARSER(parser)->start_document_handler = start;
   PARSER(parser)->end_document_handler = end;
+}
+
+
+
+void SAC_SetImportHandler(SAC_Parser parser, SAC_ImportHandler handler) {
+  PARSER(parser)->import_handler = handler;
 }
 
 
@@ -131,6 +176,7 @@ SAC_Parser SAC_CreateParser() {
 
 void SAC_DisposeParser(SAC_Parser parser) {
   SAC_mpool_close(PARSER(parser)->mpool);
+  free(PARSER(parser)->base);
   free(parser);
 }
 
@@ -222,21 +268,14 @@ int SAC_ParseRule(SAC_Parser parser, const char *buffer, int len) {
 
 
 
-void SAC_parser_style_unit_handler(SAC_Parser parser, SAC_StyleUnit *unit) {
-  SAC_ListIter lit;
+int SAC_SetBase(SAC_Parser parser, const SAC_STRING base) {
+  free(PARSER(parser)->base);
+  PARSER(parser)->base = strdup(base);
+  return 1;
+}
 
-  switch (unit->type) {
-    case SAC_RULESET:
-      SAC_parser_start_style_handler(parser, unit->desc.ruleset.selectors);
-      for (lit = SAC_list_head(unit->desc.ruleset.declarations);
-           lit != NULL;
-           lit = SAC_list_next(lit))
-      {
-        SAC_Declaration *declaration = *lit;
-        SAC_parser_property_handler(parser,
-          declaration->property, declaration->value, declaration->important);
-      }
-      SAC_parser_end_style_handler(parser, unit->desc.ruleset.selectors);
-    break;
-  }
+
+
+const SAC_STRING SAC_GetBase(SAC_Parser parser) {
+  return PARSER(parser)->base;
 }

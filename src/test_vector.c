@@ -72,7 +72,34 @@ static void test_vector_cpy() {
 
 
 
+static void test_vector_from_list() {
+  SAC_MPool mpool;
+  SAC_List list;
+  SAC_Vector vector;
+  int a = 1, b = 2, c = 3;
+  
+  mpool = SAC_mpool_open(256);
+  list = SAC_list_open(mpool);
+
+  SAC_list_push_back(list, mpool, &a);
+  SAC_list_push_back(list, mpool, &b);
+  SAC_list_push_back(list, mpool, &c);
+
+  vector = SAC_vector_from_list(list, mpool);
+
+  assert(SAC_vector_head(vector)[0] == &a);
+  assert(SAC_vector_head(vector)[1] == &b);
+  assert(SAC_vector_head(vector)[2] == &c);
+
+  SAC_list_close(list, mpool);
+  SAC_vector_close(vector, mpool);
+  SAC_mpool_close(mpool);
+}
+
+
+
 void test_vector() {
   test_vector_basics();
   test_vector_cpy();
+  test_vector_from_list();
 }

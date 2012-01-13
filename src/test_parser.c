@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include <assert.h>
 
 
 
@@ -470,6 +471,48 @@ static void property(
 
 
 
+void import(void *userData,
+  const SAC_STRING base,
+  const SAC_STRING uri,
+  const SAC_STRING media[],
+  const SAC_STRING defaultNamepaceURI)
+{
+  const SAC_STRING *m;
+
+  userdata_printf(userData, "import(");
+
+  if (base != NULL) {
+    stream_printf(USERDATA_STREAM(userData), "'%s'", base);
+  } else {
+    stream_printf(USERDATA_STREAM(userData), "NULL");
+  }
+
+  stream_printf(USERDATA_STREAM(userData), ", ");
+
+  if (uri != NULL) {
+    stream_printf(USERDATA_STREAM(userData), "'%s'", uri);
+  } else {
+    stream_printf(USERDATA_STREAM(userData), "NULL");
+  }
+
+  stream_printf(USERDATA_STREAM(userData), ", ");
+
+  if (defaultNamepaceURI != NULL) {
+    stream_printf(USERDATA_STREAM(userData), "'%s'", defaultNamepaceURI);
+  } else {
+    stream_printf(USERDATA_STREAM(userData), "NULL");
+  }
+
+  stream_printf(USERDATA_STREAM(userData), ")");
+
+  for (m = media; *m != NULL; ++m)
+    stream_printf(USERDATA_STREAM(userData), " media('%s')", *m);
+
+  stream_printf(USERDATA_STREAM(userData), "\n");
+}
+
+
+
 static SAC_Parser create_parser(stream_t stream) {
   struct userdata_t *userData;
   SAC_Parser parser;
@@ -479,6 +522,7 @@ static SAC_Parser create_parser(stream_t stream) {
   parser = SAC_CreateParser();
   
   SAC_SetDocumentHandler(parser, start_document, end_document);
+  SAC_SetImportHandler(parser, import);
   SAC_SetStyleHandler(parser, start_style, end_style);
   SAC_SetPropertyHandler(parser, property);
   SAC_SetUserData(parser, userData);
@@ -743,7 +787,12 @@ static void test_parser_stylesheet() {
   stream_t css = stream_open();
   stream_t match_stream = stream_open();
   SAC_Parser parser = create_parser(parser_stream);
+
+  assert(SAC_GetBase(parser) == NULL);
+  SAC_SetBase(parser, "http://example.com/");
+  assert_equals("http://example.com/", SAC_GetBase(parser));
   
+  stream_printf(css, "@import url(\"bluish.css\") projection, tv;\n");
   stream_printf(css, "element {\n");
   stream_printf(css, "  prop : ident;\n");
   stream_printf(css, "}\n");
@@ -752,6 +801,9 @@ static void test_parser_stylesheet() {
 
   dispose_parser(parser);
 
+  stream_printf(match_stream,
+    "import('http://example.com/', 'bluish.css', NULL) "
+      "media('projection') media('tv')\n");
   stream_printf(match_stream, "doc {\n");
   stream_printf(match_stream, "  style\n");
   stream_printf(match_stream, "sel_el(NULL, element)\n");

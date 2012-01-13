@@ -14,26 +14,6 @@ SAC_LexicalUnit* SAC_lexical_unit_alloc(
 
 
 
-SAC_LexicalUnit** SAC_lexical_unit_vector_from_list(
-  SAC_List list, SAC_MPool mpool)
-{
-  SAC_Vector vector;
-  SAC_VectorIter vit;
-  SAC_ListIter lit;
-
-  vector = SAC_vector_open(mpool, SAC_list_size(list));
-  for (lit = SAC_list_head(list), vit = SAC_vector_head(vector);
-       lit != NULL;
-       lit = SAC_list_next(lit), ++vit)
-  {
-    *vit = *lit;
-  }
-
-  return (SAC_LexicalUnit**)vector;
-}
-
-
-
 SAC_LexicalUnit* SAC_lexical_unit_from_list(SAC_List list, SAC_MPool mpool) {
   size_t size;
   SAC_LexicalUnit *value;

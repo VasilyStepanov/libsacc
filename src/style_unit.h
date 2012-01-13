@@ -7,18 +7,25 @@
 
 
 typedef enum {
-  SAC_RULESET
+  SAC_STYLE_RULESET,
+  SAC_STYLE_IMPORT
 } SAC_StyleUnitType;
 
 struct _SAC_StyleUnit {
   SAC_StyleUnitType type;
 
   union {
-    /* SAC_RULESET */
+    /* SAC_STYLE_RULESET */
     struct {
       SAC_Vector selectors;
       SAC_List declarations;
     } ruleset;
+
+    /* SAC_STYLE_IMPORT */
+    struct {
+      SAC_STRING uri;
+      const SAC_STRING *media;
+    } import;
   } desc;
 };
 

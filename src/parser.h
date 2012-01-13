@@ -45,6 +45,10 @@ void SAC_parser_end_style_handler(SAC_Parser parser,
 
 void SAC_parser_style_unit_handler(SAC_Parser parser, SAC_StyleUnit *unit);
 
+void SAC_parser_import_handler(SAC_Parser parser,
+  const SAC_STRING uri,
+  const SAC_STRING media[],
+  const SAC_STRING defaultNamepaceURI);
 
 
 #endif

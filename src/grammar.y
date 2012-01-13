@@ -94,6 +94,8 @@ SAC_ConditionType cond_type;
 
 %type <str> property;
 %type <str> attrib_value;
+%type <str> string_or_uri;
+%type <str> medium;
 %type <ch> unary_operator;
 %type <value> term;
 %type <value> operator;
@@ -107,6 +109,7 @@ SAC_ConditionType cond_type;
 %type <list> expr;
 %type <list> stylesheet;
 %type <list> maybe_style_units;
+%type <list> mediums;
 %type <sel> selector;
 %type <sel> simple_selector;
 %type <sel> element_name;
@@ -186,17 +189,23 @@ maybe_style_units
       SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $2);
     }
   ;
-maybe_imports
+sac_maybe_imports
   :
-  | maybe_imports import
+  | sac_maybe_imports sac_import
   ;
 maybe_namespaces
   :
   | maybe_namespaces namespace
   ;
 mediums
-  : medium
-  | mediums ',' maybe_spaces medium
+  : medium {
+      $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
+      SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
+    }
+  | mediums ',' maybe_spaces medium {
+      $$ = $1;
+      SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4);
+    }
   ;
 maybe_rulesets
   :
@@ -241,7 +250,7 @@ attribute_conditions
     }
   ;
 stylesheet
-  : maybe_charset maybe_imports maybe_namespaces maybe_style_units {
+  : maybe_charset sac_maybe_imports maybe_namespaces maybe_style_units {
       $$ = $4;
     }
   ;
@@ -260,17 +269,25 @@ style_unit
   | page maybe_comments
   | font_face maybe_comments
   ;
-import
+sac_import
   : IMPORT_SYM maybe_spaces string_or_uri maybe_spaces ';' maybe_comments
-  | IMPORT_SYM maybe_spaces string_or_uri maybe_spaces mediums ';' maybe_comments
+  | IMPORT_SYM maybe_spaces string_or_uri maybe_spaces mediums ';' maybe_comments {
+      SAC_Vector vector;
+      vector = SAC_vector_from_list($5, YY_SCANNER_MPOOL(scanner));
+      SAC_parser_import_handler(YY_SCANNER_PARSER(scanner), $3, vector, NULL);
+    }
   ;
 namespace
   : NAMESPACE_SYM maybe_spaces string_or_uri maybe_spaces ';' maybe_comments
   | NAMESPACE_SYM maybe_spaces namespace_prefix maybe_spaces string_or_uri maybe_spaces ';' maybe_comments
   ;
 string_or_uri
-  : STRING
-  | URI
+  : STRING {
+      $$ = $1;
+    }
+  | URI {
+      $$ = $1;
+    }
   ;
 namespace_prefix
   : IDENT
@@ -279,7 +296,9 @@ media
   : MEDIA_SYM maybe_spaces mediums '{' maybe_spaces maybe_rulesets '}'
   ;
 medium
-  : IDENT maybe_spaces
+  : IDENT maybe_spaces {
+      $$ = $1;
+    }
   ;
 page
   : PAGE_SYM maybe_spaces maybe_indent maybe_pseudo_page maybe_spaces '{' maybe_spaces declarations '}'
@@ -336,7 +355,7 @@ ruleset
       }
 
       
-      $$ = SAC_style_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_RULESET);
+      $$ = SAC_style_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STYLE_RULESET);
       $$->desc.ruleset.selectors = vector;
       $$->desc.ruleset.declarations = $4;
     }
@@ -631,7 +650,7 @@ function
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_FUNCTION);
       $$->desc.function.name = $1;
 
-      $$->desc.function.parameters = SAC_lexical_unit_vector_from_list(
+      $$->desc.function.parameters = SAC_vector_from_list(
         $3, YY_SCANNER_MPOOL(scanner));
     }
   ;

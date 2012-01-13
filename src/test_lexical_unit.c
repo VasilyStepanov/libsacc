@@ -23,43 +23,6 @@ static void test_lexical_unit_alloc() {
 
 
 
-static void test_lexical_unit_vector_from_list() {
-  SAC_MPool mpool;
-  SAC_LexicalUnit *a, *b, *c;
-  SAC_List list;
-  SAC_LexicalUnit **vector;
-
-  mpool = SAC_mpool_open(256);
-
-  a = SAC_lexical_unit_alloc(mpool, SAC_INTEGER);
-  b = SAC_lexical_unit_alloc(mpool, SAC_INTEGER);
-  c = SAC_lexical_unit_alloc(mpool, SAC_INTEGER);
-
-  list = SAC_list_open(mpool);
-  SAC_list_push_back(list, mpool, a);
-  SAC_list_push_back(list, mpool, b);
-  SAC_list_push_back(list, mpool, c);
-  vector = SAC_lexical_unit_vector_from_list(list, mpool);
-
-  assert(vector[0] == a);
-  assert(vector[1] == b);
-  assert(vector[2] == c);
-  assert(vector[3] == NULL);
-
-  SAC_list_close(list, mpool);
-
-  list = SAC_list_open(mpool);
-  SAC_list_push_back(list, mpool, a);
-  vector = SAC_lexical_unit_vector_from_list(list, mpool);
-
-  assert(vector[0] == a);
-  assert(vector[1] == NULL);
-
-  SAC_mpool_close(mpool);
-}
-
-
-
 static void test_lexical_unit_from_list() {
   SAC_MPool mpool;
   SAC_LexicalUnit *a, *b, *c;
@@ -99,6 +62,5 @@ static void test_lexical_unit_from_list() {
 
 void test_lexical_unit() {
   test_lexical_unit_alloc();
-  test_lexical_unit_vector_from_list();
   test_lexical_unit_from_list();
 }
