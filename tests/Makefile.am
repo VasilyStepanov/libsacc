@@ -4,6 +4,7 @@ noinst_PROGRAMS = test_suite \
 AM_CFLAGS = -Wall -Wextra -Werror -ansi -pedantic -D_XOPEN_SOURCE=700 \
             -I$(top_srcdir)/include -I$(top_srcdir)/src
 
+XML_FORMAT =xmllint --format
 
 
 test_suite_SOURCES = test_utils.c \
@@ -29,12 +30,12 @@ sacc_LDADD = $(top_srcdir)/src/libsacc.la
 test: test_suite sacc
 	./test_suite
 	@for css in data/*_*.css; do \
-	  type=`expr match "$$css" 'data/.*_\(.*\)_'`; \
+	  type=`expr match "$$css" 'data/.*_\(.*\)\.css'`; \
 	  echo "$$css"; \
 	  xml=$${css/%css/xml}; \
-	  xmllint --format $$xml > expected.xml; \
+	  $(XML_FORMAT) $$xml > expected.xml; \
 	  cat "$$css" | ./sacc -t $$type > received.xml; \
-		xmllint --format received.xml > received.fmt.xml; \
+		$(XML_FORMAT) received.xml > received.fmt.xml; \
 	  RES=$$?; \
 	  if test $$RES != 0; then \
 	    exit 1; \
