@@ -1,6 +1,7 @@
 /*
  * References:
  *  - http://www.w3.org/TR/CSS21/grammar.html#grammar
+ *  - http://www.w3.org/TR/css3-namespace/#syntax
  */
 %code requires {
 #include "list.h"

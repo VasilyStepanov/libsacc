@@ -128,7 +128,7 @@ range        \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h}
 @{M}{E}{D}{I}{A}        {return MEDIA_SYM;}
 "@font-face"            {return FONT_FACE_SYM;}
 "@charset "             {return CHARSET_SYM;}
-"@namespace"            {return NAMESPACE_SYM;}
+@{N}{A}{M}{E}{S}{P}{A}{C}{E}  {return NAMESPACE_SYM;}
 
 "!"({w}|{comment})*{I}{M}{P}{O}{R}{T}{A}{N}{T}  {return IMPORTANT_SYM;}
 
