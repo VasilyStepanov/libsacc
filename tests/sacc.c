@@ -9,7 +9,7 @@
 
 
 static void usage() {
-  printf("USAGE: sacc -t [declarations|selectors|rule|stylesheet]");
+  printf("USAGE: sacc -t [declarations|selectors|rule|stylesheet]\n");
 }
 
 
