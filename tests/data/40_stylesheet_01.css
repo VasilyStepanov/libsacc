@@ -1,0 +1,12 @@
+@import url("all.css");
+@import url("bluish.css") projection, tv;
+@namespace "";
+@namespace svg url('http://www.w3.org/2000/svg');
+element {
+  prop : ident;
+}
+@media screen, print {
+  body {
+    line-height: 1.2
+  }
+}

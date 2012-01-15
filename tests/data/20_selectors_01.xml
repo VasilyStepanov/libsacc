@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<selectors>
+  <document/>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="id" localName="id" specified="true" value="some-id"/>
+  </selector>
+  <selector type="conditional">
+    <selector type="element_node" localName="div"/>
+    <condition type="class" localName="class" specified="true" value="some-class"/>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="class" localName="class" specified="true" value="some-class"/>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="and">
+      <condition type="and">
+        <condition type="class" localName="class" specified="true" value="class1"/>
+        <condition type="id" localName="id" specified="true" value="some-id"/>
+      </condition>
+      <condition type="class" localName="class" specified="true" value="class2"/>
+    </condition>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="and">
+      <condition type="and">
+        <condition type="and">
+          <condition type="and">
+            <condition type="attr" localName="attr" specified="false"/>
+            <condition type="attr" localName="iattr" specified="true" value="ident"/>
+          </condition>
+          <condition type="attr" localName="sattr" specified="true" value="str"/>
+        </condition>
+        <condition type="one_of" localName="oneof" specified="true" value="inc"/>
+      </condition>
+      <condition type="begin_hypen" localName="hypen" specified="true" value="dash"/>
+    </condition>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_class" localName="pseudo-class" specified="false"/>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="and">
+      <condition type="class" localName="class" specified="true" value="foo"/>
+      <condition type="pseudo_class" localName="bar" specified="false"/>
+    </condition>
+  </selector>
+  <selector type="descendant">
+    <selector type="descendant">
+      <selector type="element_node" localName="a"/>
+      <selector type="element_node" localName="b"/>
+    </selector>
+    <selector type="element_node" localName="c"/>
+  </selector>
+  <selector type="sibling" nodeType="ANY">
+    <selector type="sibling" nodeType="ANY">
+      <selector type="element_node" localName="a"/>
+      <selector type="element_node" localName="b"/>
+    </selector>
+    <selector type="element_node" localName="c"/>
+  </selector>
+  <selector type="child">
+    <selector type="child">
+      <selector type="element_node" localName="a"/>
+      <selector type="element_node" localName="b"/>
+    </selector>
+    <selector type="element_node" localName="c"/>
+  </selector>
+</selectors>

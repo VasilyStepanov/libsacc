@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<document>
+  <import uri="all.css"/>
+  <import uri="bluish.css">
+    <medium>projection</medium>
+    <medium>tv</medium>
+  </import>
+  <namespace uri=""/>
+  <namespace prefix="svg" uri="http://www.w3.org/2000/svg"/>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="element"/>
+    </start_selectors>
+    <property name="prop">
+      <ident>ident</ident>
+    </property>
+    <end_selectors>
+      <selector type="element_node" localName="element"/>
+    </end_selectors>
+  </style>
+  <media>
+    <start_mediums>
+      <medium>screen</medium>
+      <medium>print</medium>
+    </start_mediums>
+    <style>
+      <start_selectors>
+        <selector type="element_node" localName="body"/>
+      </start_selectors>
+      <property name="line-height">
+        <real>1.2</real>
+      </property>
+      <end_selectors>
+        <selector type="element_node" localName="body"/>
+      </end_selectors>
+    </style>
+    <end_mediums>
+      <medium>screen</medium>
+      <medium>print</medium>
+    </end_mediums>
+  </media>
+</document>

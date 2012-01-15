@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<document>
+  <property name="prop-inherit">
+    <inherit/>
+  </property>
+  <property name="prop-string">
+    <sub>
+      <str>string</str>
+    </sub>
+    <sub>
+      <str>string</str>
+    </sub>
+  </property>
+  <property name="prop-uri1">
+    <uri>uri</uri>
+  </property>
+  <property name="prop-uri2">
+    <uri>http://example.com/</uri>
+  </property>
+  <property name="prop-unicode">
+    <sub>
+      <urange>U+A5</urange>
+    </sub>
+    <sub>
+      <comma/>
+    </sub>
+    <sub>
+      <urange>U+0-7F</urange>
+    </sub>
+    <sub>
+      <comma/>
+    </sub>
+    <sub>
+      <urange>U+590-5ff</urange>
+    </sub>
+    <sub>
+      <comma/>
+    </sub>
+    <sub>
+      <urange>U+4E00-9FFF</urange>
+    </sub>
+    <sub>
+      <comma/>
+    </sub>
+    <sub>
+      <urange>U+30??</urange>
+    </sub>
+  </property>
+  <property name="prop-int">
+    <sub>
+      <int>149</int>
+    </sub>
+    <sub>
+      <int>-148</int>
+    </sub>
+  </property>
+  <property name="prop-real">
+    <sub>
+      <real>3.14</real>
+    </sub>
+    <sub>
+      <real>-2.71</real>
+    </sub>
+  </property>
+  <property name="prop-percentage">
+    <sub>
+      <percentage dimension="%">149</percentage>
+    </sub>
+    <sub>
+      <percentage dimension="%">-148</percentage>
+    </sub>
+  </property>
+  <property name="prop-freq">
+    <sub>
+      <hertz dimension="Hz">50.1</hertz>
+    </sub>
+    <sub>
+      <khertz dimension="kHz">5.1</khertz>
+    </sub>
+  </property>
+  <property name="prop-time">
+    <sub>
+      <secs dimension="s">25.1</secs>
+    </sub>
+    <sub>
+      <msecs dimension="ms">50.2</msecs>
+    </sub>
+  </property>
+  <property name="prop-angle">
+    <sub>
+      <degree dimension="deg">90</degree>
+    </sub>
+    <sub>
+      <radian dimension="rad">1.57</radian>
+    </sub>
+    <sub>
+      <gradian dimension="grad">100</gradian>
+    </sub>
+  </property>
+  <property name="prop-em">
+    <em dimension="em">1.1</em>
+  </property>
+  <property name="prop-ex">
+    <ex dimension="ex">1.2</ex>
+  </property>
+  <property name="prop-px">
+    <pixel dimension="px">1.3</pixel>
+  </property>
+  <property name="prop-cm">
+    <centimeter dimension="cm">1.4</centimeter>
+  </property>
+  <property name="prop-mm">
+    <millimeter dimension="mm">1.5</millimeter>
+  </property>
+  <property name="prop-in">
+    <inch dimension="in">1.6</inch>
+  </property>
+  <property name="prop-pt">
+    <point dimension="pt">1.7</point>
+  </property>
+  <property name="prop-pc">
+    <pica dimension="pc">1.8</pica>
+  </property>
+  <property name="prop-func">
+    <sub>
+      <func name="foo">
+        <arg>
+          <str>arg</str>
+        </arg>
+      </func>
+    </sub>
+    <sub>
+      <func name="bar">
+        <arg>
+          <str>arg1</str>
+        </arg>
+        <arg>
+          <comma/>
+        </arg>
+        <arg>
+          <int>2</int>
+        </arg>
+      </func>
+    </sub>
+  </property>
+  <property name="prop-color">
+    <sub>
+      <func name="rgb"/>
+    </sub>
+    <sub>
+      <func name="rgb">
+        <arg>
+          <int>10</int>
+        </arg>
+        <arg>
+          <comma/>
+        </arg>
+        <arg>
+          <int>11</int>
+        </arg>
+        <arg>
+          <comma/>
+        </arg>
+        <arg>
+          <int>12</int>
+        </arg>
+      </func>
+    </sub>
+    <sub>
+      <func name="rgb"/>
+    </sub>
+    <sub>
+      <func name="rgb">
+        <arg>
+          <int>171</int>
+        </arg>
+        <arg>
+          <comma/>
+        </arg>
+        <arg>
+          <int>205</int>
+        </arg>
+        <arg>
+          <comma/>
+        </arg>
+        <arg>
+          <int>239</int>
+        </arg>
+      </func>
+    </sub>
+  </property>
+</document>

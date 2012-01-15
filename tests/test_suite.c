@@ -4,7 +4,6 @@
 #include "test_lexical_unit.h"
 #include "test_condition.h"
 #include "test_selector.h"
-#include "test_parser.h"
 
 #include <stdlib.h>
 
@@ -17,6 +16,5 @@ int main() {
   test_lexical_unit();
   test_condition();
   test_selector();
-  test_parser();
   return EXIT_SUCCESS;
 }
