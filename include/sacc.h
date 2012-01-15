@@ -452,6 +452,33 @@ typedef void (*SAC_StartMediaHandler)(void *userData, const SAC_STRING media[]);
 typedef void (*SAC_EndMediaHandler)(void *userData, const SAC_STRING media[]);
 
 /**
+ * Receive notification of the beginning of a page rule.
+ *
+ * The SAC Parser will invoke this method at the beginning of every page rule in
+ * the CSS document. There will be a corresponding SAC_EndPageHandler event for
+ * every SAC_StartPageHandler event. All properties inside the rule will be
+ * reported, in order, before the corresponding SAC_EndPageHandler event.
+ *
+ * name         - The name of the page if any.
+ * pseudoPseudo - The pseudo page associated to the page.
+ */
+typedef void (*SAC_StartPageHandler)(void *userData,
+  const SAC_STRING name, const SAC_STRING pseudoPage);
+
+/**
+ * Receive notification of the end of a page rule.
+ *
+ * The SAC Parser will invoke this method at the end of every page rule in the
+ * CSS document. There will be a corresponding SAC_StartPageHandler event for
+ * every SAC_EndPageHandler event.
+ *
+ * name       - The name of the page if any.
+ * pseudoPage - The pseudo page associated to the page.
+ */
+typedef void (*SAC_EndPageHandler)(void *userData,
+  const SAC_STRING name, const SAC_STRING pseudoPage);
+
+/**
  * Receive notification of the beginning of a style rule.
  *
  * The SAC Parser will invoke this method at the beginning of every style rule
@@ -460,7 +487,7 @@ typedef void (*SAC_EndMediaHandler)(void *userData, const SAC_STRING media[]);
  * reported, in order, before the corresponding SAC_EndStyleHandler event.
  *
  * selectors - It is an array of all selectors for the style rule.
-*/
+ */
 typedef void (*SAC_StartStyleHandler)(void *userData,
   const SAC_Selector *selectors[]);
 
@@ -472,7 +499,7 @@ typedef void (*SAC_StartStyleHandler)(void *userData,
  * every SAC_EndStyleHandler event.
  *
  * selectors - It is an array of all selectors for the style rule.
-*/
+ */
 typedef void (*SAC_EndStyleHandler)(void *userData,
   const SAC_Selector *selectors[]);
 
@@ -505,6 +532,9 @@ void SAC_SetNamespaceDeclarationHandler(SAC_Parser parser,
   SAC_NamespaceDeclarationHandler handler);
 
 void SAC_SetImportHandler(SAC_Parser parser, SAC_ImportHandler handler);
+
+void SAC_SetPageHandler(SAC_Parser parser,
+  SAC_StartPageHandler start, SAC_EndPageHandler end);
 
 void SAC_SetMediaHandler(SAC_Parser parser,
   SAC_StartMediaHandler start, SAC_EndMediaHandler end);

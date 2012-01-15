@@ -21,6 +21,8 @@ struct _SAC_Parser {
   SAC_STRING base;
   SAC_StartDocumentHandler start_document_handler;
   SAC_EndDocumentHandler end_document_handler;
+  SAC_StartPageHandler start_page_handler;
+  SAC_EndPageHandler end_page_handler;
   SAC_NamespaceDeclarationHandler namespace_declaration_handler;
   SAC_ImportHandler import_handler;
   SAC_StartMediaHandler start_media_handler;
@@ -87,6 +89,26 @@ static void SAC_parser_clear(SAC_Parser parser) {
 
 
 
+void SAC_parser_start_page_handler(SAC_Parser parser,
+  const SAC_STRING name, const SAC_STRING pseudoPage)
+{
+  if (PARSER(parser)->start_page_handler != NULL)
+    PARSER(parser)->start_page_handler(PARSER(parser)->user_data,
+      name, pseudoPage);
+}
+
+
+
+void SAC_parser_end_page_handler(SAC_Parser parser,
+  const SAC_STRING name, const SAC_STRING pseudoPage)
+{
+  if (PARSER(parser)->end_page_handler != NULL)
+    PARSER(parser)->end_page_handler(PARSER(parser)->user_data,
+      name, pseudoPage);
+}
+
+
+
 void SAC_parser_namespace_declaration_handler(SAC_Parser parser,
   const SAC_STRING prefix, const SAC_STRING uri)
 {
@@ -141,6 +163,15 @@ void SAC_SetNamespaceDeclarationHandler(SAC_Parser parser,
   SAC_NamespaceDeclarationHandler handler)
 {
   PARSER(parser)->namespace_declaration_handler = handler;
+}
+
+
+
+void SAC_SetPageHandler(SAC_Parser parser,
+  SAC_StartPageHandler start, SAC_EndPageHandler end)
+{
+  PARSER(parser)->start_page_handler = start;
+  PARSER(parser)->end_page_handler = end;
 }
 
 

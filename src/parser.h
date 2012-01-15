@@ -31,6 +31,12 @@ void SAC_parser_start_document(SAC_Parser parser);
 
 void SAC_parser_end_document(SAC_Parser parser);
 
+void SAC_parser_start_page_handler(SAC_Parser parser,
+  const SAC_STRING name, const SAC_STRING pseudoPage);
+
+void SAC_parser_end_page_handler(SAC_Parser parser,
+  const SAC_STRING name, const SAC_STRING pseudoPage);
+
 void SAC_parser_property_handler(SAC_Parser parser,
   const SAC_STRING propertyName,
   const SAC_LexicalUnit *value,

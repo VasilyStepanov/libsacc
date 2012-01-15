@@ -9,6 +9,7 @@
 #include "condition.h"
 #include "selector.h"
 #include "mpool.h"
+#include "pair.h"
 }
 
 %{
@@ -25,6 +26,7 @@
 
 void yyerror(const char *msg) { printf("ERROR: %s\n", msg); }
 extern int yylex();
+
 %}
 
 %union {
@@ -40,6 +42,7 @@ SAC_Selector *sel;
 SAC_Condition *cond;
 SAC_ConditionType cond_type;
 SAC_Boolean boolean;
+SAC_Pair pair;
 }
 
 %locations
@@ -97,6 +100,8 @@ SAC_Boolean boolean;
 %type <str> string_or_uri;
 %type <str> medium;
 %type <str> maybe_namespace_prefix;
+%type <str> maybe_indent;
+%type <str> maybe_pseudo_page;
 %type <ch> unary_operator;
 %type <value> term;
 %type <value> maybe_operator;
@@ -119,6 +124,7 @@ SAC_Boolean boolean;
 %type <cond> pseudo;
 %type <cond_type> attrib_match;
 %type <boolean> maybe_prio;
+%type <pair> sac_page_start;
 
 %%
 
@@ -301,18 +307,33 @@ medium
     }
   ;
 page
-  : PAGE_SYM maybe_spaces maybe_indent maybe_pseudo_page '{' maybe_spaces sac_maybe_declarations '}'
+  : sac_page_start '{' maybe_spaces sac_maybe_declarations '}' {
+      SAC_parser_end_page_handler(YY_SCANNER_PARSER(scanner),
+        $1.first, $1.second);
+    }
+  ;
+sac_page_start
+  : PAGE_SYM maybe_spaces maybe_indent maybe_pseudo_page {
+      SAC_parser_start_page_handler(YY_SCANNER_PARSER(scanner), $3, $4);
+      $$.first = $3;
+      $$.second = $4;
+    }
   ;
 maybe_indent
-  :
-  | IDENT maybe_spaces
+  : /* empty */ {
+      $$ = NULL;
+    }
+  | IDENT maybe_spaces {
+      $$ = $1;
+    }
   ;
 maybe_pseudo_page
-  :
-  | pseudo_page
-  ;
-pseudo_page
-  : ':' IDENT maybe_spaces 
+  : /* empty */ {
+      $$ = NULL;
+    }
+  | ':' IDENT maybe_spaces {
+      $$ = $2;
+    }
   ;
 font_face
   : FONT_FACE_SYM maybe_spaces '{' maybe_spaces sac_maybe_declarations '}'

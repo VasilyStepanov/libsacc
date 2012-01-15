@@ -40,6 +40,34 @@ static void dump_media(FILE *out, const SAC_STRING media[]) {
 
 
 
+static void start_page(void *userData,
+  const SAC_STRING name, const SAC_STRING pseudoPage)
+{
+  fprintf(USERDATA_FILE(userData), "<page>");
+  fprintf(USERDATA_FILE(userData), "<start_page");
+  if (name != NULL)
+    fprintf(USERDATA_FILE(userData), " name=\"%s\"", name);
+  if (pseudoPage != NULL)
+    fprintf(USERDATA_FILE(userData), " pseudoPage=\"%s\"", pseudoPage);
+  fprintf(USERDATA_FILE(userData), " />");
+}
+
+
+
+static void end_page(void *userData,
+  const SAC_STRING name, const SAC_STRING pseudoPage)
+{
+  fprintf(USERDATA_FILE(userData), "<end_page");
+  if (name != NULL)
+    fprintf(USERDATA_FILE(userData), " name=\"%s\"", name);
+  if (pseudoPage != NULL)
+    fprintf(USERDATA_FILE(userData), " pseudoPage=\"%s\"", pseudoPage);
+  fprintf(USERDATA_FILE(userData), " />");
+  fprintf(USERDATA_FILE(userData), "</page>");
+}
+
+
+
 static void import(void *userData,
   const SAC_STRING base,
   const SAC_STRING uri,
@@ -436,6 +464,7 @@ SAC_Parser create_parser(FILE *out) {
   
   SAC_SetDocumentHandler(parser, start_document, end_document);
   SAC_SetNamespaceDeclarationHandler(parser, namespace_declaration);
+  SAC_SetPageHandler(parser, start_page, end_page);
   SAC_SetImportHandler(parser, import);
   SAC_SetMediaHandler(parser, start_media, end_media);
   SAC_SetStyleHandler(parser, start_style, end_style);

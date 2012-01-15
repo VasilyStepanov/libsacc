@@ -10,3 +10,6 @@ element {
     line-height: 1.2
   }
 }
+@page page_name:first {
+  prop : ident;
+}
