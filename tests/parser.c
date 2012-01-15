@@ -144,7 +144,8 @@ static void dump_condition(FILE *out, const SAC_Condition *condition) {
     case SAC_ONLY_CHILD_CONDITION:
     case SAC_ONLY_TYPE_CONDITION:
     case SAC_CONTENT_CONDITION:
-      fprintf(out, "cond(unknown %d)", condition->conditionType);
+      fprintf(out,
+        "<condition type=\"unknown_%d\"/>", condition->conditionType);
       break;
   }
 }
@@ -402,6 +403,8 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_ATTR:
       case SAC_RECT_FUNCTION:
       case SAC_DIMENSION:
+        fprintf(out,
+          "<value type=\"unknown_%d\"/>", value->lexicalUnitType);
         break;
     };
   }
