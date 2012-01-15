@@ -9,7 +9,7 @@
 
 
 static void usage() {
-  printf("USAGE: sacc -t [declarations|selectors|rule|stylesheet]\n");
+  printf("USAGE: sacc -t [declarations|selectors|property|rule|stylesheet]\n");
 }
 
 
@@ -17,6 +17,7 @@ static void usage() {
 typedef enum {
   DECLARATIONS,
   SELECTORS,
+  PROPERTY,
   RULE,
   STYLESHEET,
   UNKNOWN
@@ -27,6 +28,7 @@ typedef enum {
 static InputType parse_type_arg(const char *arg) {
   if (strcmp(arg, "declarations") == 0) return DECLARATIONS;
   if (strcmp(arg, "selectors") == 0) return SELECTORS;
+  if (strcmp(arg, "property") == 0) return PROPERTY;
   if (strcmp(arg, "rule") == 0) return RULE;
   if (strcmp(arg, "stylesheet") == 0) return STYLESHEET;
   return UNKNOWN;
@@ -89,6 +91,9 @@ int main(int argc, char **argv) {
       break;
     case SELECTORS:
       parse_selectors(parser, css);
+      break;
+    case PROPERTY:
+      parse_property_value(parser, css);
       break;
     case RULE:
       parse_rule(parser, css);

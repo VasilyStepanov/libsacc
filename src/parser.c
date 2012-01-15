@@ -326,6 +326,29 @@ const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
 
 
 
+const SAC_LexicalUnit* SAC_ParsePropertyValue(SAC_Parser parser,
+  const char *buffer, int len)
+{
+  void *scanner;
+  SAC_YYExtra yy_extra;
+
+  SAC_parser_clear(parser);
+  yy_extra.mpool = PARSER(parser)->mpool;
+  yy_extra.parser = parser;
+  yy_extra.start_token = START_AS_PROPERTY_VALUE;
+  yy_extra.output = NULL;
+
+  yylex_init_extra(&yy_extra, &scanner);
+
+  yy_scan_bytes(buffer, len, scanner);
+  yyparse(scanner);
+
+  yylex_destroy(scanner);
+  return (const SAC_LexicalUnit*)yy_extra.output;
+}
+
+
+
 int SAC_ParseRule(SAC_Parser parser, const char *buffer, int len) {
   void *scanner;
   SAC_YYExtra yy_extra;

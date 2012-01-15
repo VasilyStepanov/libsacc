@@ -517,6 +517,18 @@ void parse_selectors(SAC_Parser parser, const char *buffer) {
 
 
 
+void parse_property_value(SAC_Parser parser, const char *buffer) {
+  FILE *out;
+
+  out = USERDATA_FILE(SAC_GetUserData(parser));
+  fprintf(out, "<property>\n");
+  dump_lexical_unit(out,
+    SAC_ParsePropertyValue(parser, buffer, strlen(buffer)));
+  fprintf(out, "</property>\n");
+}
+
+
+
 void parse_rule(SAC_Parser parser, const char *buffer) {
   SAC_ParseRule(parser, buffer, strlen(buffer));
 }

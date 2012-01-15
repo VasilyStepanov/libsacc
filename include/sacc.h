@@ -597,7 +597,10 @@ int SAC_ParseStyleDeclaration(SAC_Parser parser, const char *buffer, int len);
 int SAC_ParseRule(SAC_Parser parser, const char *buffer, int len);
 
 const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
-  const char * buffer, int len);
+  const char *buffer, int len);
+
+const SAC_LexicalUnit* SAC_ParsePropertyValue(SAC_Parser parser, 
+  const char *buffer, int len);
 
 SAC_Parser SAC_CreateParser();
 

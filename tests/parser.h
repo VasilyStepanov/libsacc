@@ -17,6 +17,8 @@ void parse_styledeclaration(SAC_Parser parser, const char *buffer);
 
 void parse_selectors(SAC_Parser parser, const char *buffer);
 
+void parse_property_value(SAC_Parser parser, const char *buffer);
+
 void parse_rule(SAC_Parser parser, const char *buffer);
 
 #endif

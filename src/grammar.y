@@ -57,6 +57,7 @@ SAC_Pair pair;
 %token <val> START_AS_SELECTORS
 %token <val> START_AS_STYLESHEET
 %token <val> START_AS_RULE
+%token <val> START_AS_PROPERTY_VALUE
 
 %token <real> ANGLE_DEG
 %token <real> ANGLE_RAD
@@ -132,7 +133,14 @@ SAC_Pair pair;
 %%
 
 start
-  : sac_style_declarations_start sac_maybe_declarations {
+  : START_AS_PROPERTY_VALUE expr {
+      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+
+      YY_SCANNER_OUTPUT(scanner) = SAC_lexical_unit_from_list(
+        $2, YY_SCANNER_MPOOL(scanner));
+    }
+  | sac_style_declarations_start sac_maybe_declarations {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
     }
   | START_AS_SELECTORS selectors {
