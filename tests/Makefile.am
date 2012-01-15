@@ -6,9 +6,7 @@ AM_CFLAGS = -Wall -Wextra -Werror -ansi -pedantic -D_XOPEN_SOURCE=700 \
 
 
 
-test_suite_SOURCES = stream.c \
-                     parser.c \
-                     test_utils.c \
+test_suite_SOURCES = test_utils.c \
                      test_mpool.c \
                      test_list.c \
                      test_vector.c \
@@ -22,7 +20,6 @@ test_suite_LDADD = $(top_srcdir)/src/libsacc.la
 
 
 sacc_SOURCES = sacc.c \
-               stream.c \
                parser.c
 
 sacc_LDADD = $(top_srcdir)/src/libsacc.la

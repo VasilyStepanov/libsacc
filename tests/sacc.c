@@ -1,7 +1,5 @@
 #include "parser.h"
 
-#include "stream.h"
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -62,7 +60,6 @@ int main(int argc, char **argv) {
   char *type_arg;
   InputType type;
   char *css;
-  SAC_Stream parser_stream;
   SAC_Parser parser;
   int i;
 
@@ -85,16 +82,13 @@ int main(int argc, char **argv) {
   }
  
   css = read_all(stdin);
-  parser_stream = SAC_stream_open();
-  parser = create_parser(parser_stream);
+  parser = create_parser(stdout);
   switch (type) {
     case DECLARATIONS:
       parse_styledeclaration(parser, css);
       break;
     case SELECTORS:
-      SAC_stream_printf(parser_stream, "<selectors>\n");
-      dump_selectors(parser_stream, parse_selectors(parser, css));
-      SAC_stream_printf(parser_stream, "</selectors>\n");
+      parse_selectors(parser, css);
       break;
     case RULE:
       parse_rule(parser, css);
@@ -105,7 +99,6 @@ int main(int argc, char **argv) {
     case UNKNOWN:
       break;
   }
-  printf("%s", SAC_stream_str(parser_stream));
   dispose_parser(parser);
   free(css);
 
