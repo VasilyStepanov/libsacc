@@ -27,6 +27,8 @@ struct _SAC_Parser {
   SAC_ImportHandler import_handler;
   SAC_StartMediaHandler start_media_handler;
   SAC_EndMediaHandler end_media_handler;
+  SAC_StartFontFaceHandler start_font_face_handler;
+  SAC_EndFontFaceHandler end_font_face_handler;
   SAC_StartStyleHandler start_style_handler;
   SAC_EndStyleHandler end_style_handler;
   SAC_PropertyHandler property_handler;
@@ -45,6 +47,20 @@ void SAC_parser_start_document(SAC_Parser parser) {
 void SAC_parser_end_document(SAC_Parser parser) {
   if (PARSER(parser)->end_document_handler != NULL)
     PARSER(parser)->end_document_handler(PARSER(parser)->user_data);
+}
+
+
+
+void SAC_parser_start_font_face_handler(SAC_Parser parser) {
+  if (PARSER(parser)->start_font_face_handler != NULL)
+    PARSER(parser)->start_font_face_handler(PARSER(parser)->user_data);
+}
+
+
+
+void SAC_parser_end_font_face_handler(SAC_Parser parser) {
+  if (PARSER(parser)->end_font_face_handler != NULL)
+    PARSER(parser)->end_font_face_handler(PARSER(parser)->user_data);
 }
 
 
@@ -178,6 +194,15 @@ void SAC_SetPageHandler(SAC_Parser parser,
 
 void SAC_SetImportHandler(SAC_Parser parser, SAC_ImportHandler handler) {
   PARSER(parser)->import_handler = handler;
+}
+
+
+
+void SAC_SetFontFaceHandler(SAC_Parser parser,
+  SAC_StartFontFaceHandler start, SAC_EndFontFaceHandler end)
+{
+  PARSER(parser)->start_font_face_handler = start;
+  PARSER(parser)->end_font_face_handler = end;
 }
 
 

@@ -46,4 +46,12 @@
     </property>
     <end_page name="page_name" pseudoPage="first"/>
   </page>
+  <font_face>
+    <property name="font-family">
+      <ident>Gentium</ident>
+    </property>
+    <property name="src">
+      <uri>http://example.com/fonts/Gentium.ttf</uri>
+    </property>
+  </font_face>
 </document>

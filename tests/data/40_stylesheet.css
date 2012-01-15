@@ -13,3 +13,7 @@ element {
 @page page_name:first {
   prop : ident;
 }
+@font-face {
+  font-family: Gentium;
+  src: url(http://example.com/fonts/Gentium.ttf);
+}

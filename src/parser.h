@@ -42,6 +42,10 @@ void SAC_parser_property_handler(SAC_Parser parser,
   const SAC_LexicalUnit *value,
   SAC_Boolean important);
 
+void SAC_parser_start_font_face_handler(SAC_Parser parser);
+
+void SAC_parser_end_font_face_handler(SAC_Parser parser);
+
 void SAC_parser_start_style_handler(SAC_Parser parser,
   const SAC_Selector *selectors[]);
 

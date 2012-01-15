@@ -479,6 +479,26 @@ typedef void (*SAC_EndPageHandler)(void *userData,
   const SAC_STRING name, const SAC_STRING pseudoPage);
 
 /**
+ * Receive notification of a beginning of font-face rule.
+ *
+ * The SAC Parser will invoke this method at the beginning of every font-face
+ * rule in the CSS document. There will be a corresponding
+ * SAC_EndFontFaceHandler event for every SAC_StartFontFaceHandler event. All
+ * properties inside the rule will be reported, in order, before the
+ * corresponding SAC_EndFontFaceHandler event.
+ */
+typedef void (*SAC_StartFontFaceHandler)(void *userData);
+
+/**
+ * Receive notification of the end of a font-face rule.
+ *
+ * The SAC Parser will invoke this method at the end of every font-face rule in
+ * the CSS document. There will be a corresponding SAC_StartFontFaceHandler
+ * event for every SAC_EndFontFaceHandler event.
+ */
+typedef void (*SAC_EndFontFaceHandler)(void *userData);
+
+/**
  * Receive notification of the beginning of a style rule.
  *
  * The SAC Parser will invoke this method at the beginning of every style rule
@@ -535,6 +555,9 @@ void SAC_SetImportHandler(SAC_Parser parser, SAC_ImportHandler handler);
 
 void SAC_SetPageHandler(SAC_Parser parser,
   SAC_StartPageHandler start, SAC_EndPageHandler end);
+
+void SAC_SetFontFaceHandler(SAC_Parser parser,
+  SAC_StartFontFaceHandler start, SAC_EndFontFaceHandler end);
 
 void SAC_SetMediaHandler(SAC_Parser parser,
   SAC_StartMediaHandler start, SAC_EndMediaHandler end);

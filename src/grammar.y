@@ -2,6 +2,8 @@
  * References:
  *  - http://www.w3.org/TR/CSS21/grammar.html#grammar
  *  - http://www.w3.org/TR/css3-namespace/#syntax
+ *
+ *  - http://www.w3.org/TR/css3-fonts/
  */
 %code requires {
 #include "list.h"
@@ -252,9 +254,9 @@ charset
   ;
 sac_style_unit
   : sac_ruleset maybe_comments
-  | media maybe_comments
-  | page maybe_comments
-  | font_face maybe_comments
+  | sac_media maybe_comments
+  | sac_page maybe_comments
+  | sac_font_face maybe_comments
   ;
 sac_import
   : IMPORT_SYM maybe_spaces string_or_uri maybe_mediums ';' maybe_comments {
@@ -288,7 +290,7 @@ maybe_namespace_prefix
       $$ = $1;
     }
   ;
-media
+sac_media
   : sac_media_start '{' maybe_spaces sac_maybe_rulesets '}' {
       SAC_parser_end_media_handler(YY_SCANNER_PARSER(scanner), $1);
     }
@@ -307,7 +309,7 @@ medium
       $$ = $1;
     }
   ;
-page
+sac_page
   : sac_page_start '{' maybe_spaces sac_maybe_declarations '}' {
       SAC_parser_end_page_handler(YY_SCANNER_PARSER(scanner),
         $1.first, $1.second);
@@ -336,8 +338,15 @@ maybe_pseudo_page
       $$ = $2;
     }
   ;
-font_face
-  : FONT_FACE_SYM maybe_spaces '{' maybe_spaces sac_maybe_declarations '}'
+sac_font_face
+  : sac_font_face_start '{' maybe_spaces sac_maybe_declarations '}' {
+      SAC_parser_end_font_face_handler(YY_SCANNER_PARSER(scanner));
+    }
+  ;
+sac_font_face_start
+  : FONT_FACE_SYM maybe_spaces {
+      SAC_parser_start_font_face_handler(YY_SCANNER_PARSER(scanner));
+    }
   ;
 maybe_operator
   : '/' maybe_spaces {

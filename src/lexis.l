@@ -5,6 +5,8 @@
  *  - http://www.w3.org/TR/css3-mediaqueries/#syntax
  *  - http://www.w3.org/TR/css3-namespace/#syntax
  *  - http://www.w3.org/TR/css3-selectors/#lex
+ *
+ *  - http://www.w3.org/TR/css3-fonts/
  */
 %option case-insensitive
 %option bison-bridge bison-locations

@@ -275,6 +275,18 @@ static void dump_selectors(FILE *out, const SAC_Selector **value) {
 
 
 
+static void start_font_face(void *userData) {
+  fprintf(USERDATA_FILE(userData), "<font_face>");
+}
+
+
+
+static void end_font_face(void *userData) {
+  fprintf(USERDATA_FILE(userData), "</font_face>");
+}
+
+
+
 static void start_style(void *userData, const SAC_Selector *selectors[]) {
   fprintf(USERDATA_FILE(userData), "<style>");
   fprintf(USERDATA_FILE(userData), "<start_selectors>");
@@ -467,6 +479,7 @@ SAC_Parser create_parser(FILE *out) {
   SAC_SetPageHandler(parser, start_page, end_page);
   SAC_SetImportHandler(parser, import);
   SAC_SetMediaHandler(parser, start_media, end_media);
+  SAC_SetFontFaceHandler(parser, start_font_face, end_font_face);
   SAC_SetStyleHandler(parser, start_style, end_style);
   SAC_SetPropertyHandler(parser, property);
   SAC_SetUserData(parser, out);
