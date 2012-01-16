@@ -602,6 +602,8 @@ const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
 const SAC_LexicalUnit* SAC_ParsePropertyValue(SAC_Parser parser, 
   const char *buffer, int len);
 
+SAC_Boolean SAC_ParsePriority(SAC_Parser parser, const char *buffer, int len);
+
 SAC_Parser SAC_CreateParser();
 
 void SAC_DisposeParser(SAC_Parser parser);

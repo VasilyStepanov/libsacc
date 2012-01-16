@@ -58,6 +58,7 @@ SAC_Pair pair;
 %token <val> START_AS_STYLESHEET
 %token <val> START_AS_RULE
 %token <val> START_AS_PROPERTY_VALUE
+%token <val> START_AS_PRIORITY
 
 %token <real> ANGLE_DEG
 %token <real> ANGLE_RAD
@@ -133,7 +134,13 @@ SAC_Pair pair;
 %%
 
 start
-  : START_AS_PROPERTY_VALUE expr {
+  : START_AS_PRIORITY maybe_prio {
+      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+
+      YY_SCANNER_OUTPUT(scanner) = (void*)$2;
+    }
+  | START_AS_PROPERTY_VALUE expr {
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
 

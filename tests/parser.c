@@ -529,6 +529,19 @@ void parse_property_value(SAC_Parser parser, const char *buffer) {
 
 
 
+void parse_priority(SAC_Parser parser, const char *buffer) {
+  FILE *out;
+
+  out = USERDATA_FILE(SAC_GetUserData(parser));
+  fprintf(out, "<priority>\n");
+  fprintf(out, "<priority>%s</priority>",
+    SAC_ParsePriority(parser, buffer, strlen(buffer)) == SAC_TRUE ?
+      "TRUE" : "FALSE");
+  fprintf(out, "</priority>\n");
+}
+
+
+
 void parse_rule(SAC_Parser parser, const char *buffer) {
   SAC_ParseRule(parser, buffer, strlen(buffer));
 }
