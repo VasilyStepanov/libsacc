@@ -262,6 +262,7 @@ attribute_conditions
     }
   | attribute_conditions attribute_condition {
       $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_AND_CONDITION);
+      TEST_OBJ($$, @$);
       $$->desc.combinator.firstCondition = $1;
       $$->desc.combinator.secondCondition = $2;
     }
@@ -376,12 +377,12 @@ maybe_operator
   : '/' maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner),
         SAC_OPERATOR_SLASH);
-      TEST_OBJ($$, @1);
+      TEST_OBJ($$, @$);
     }
   | ',' maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner),
         SAC_OPERATOR_COMMA);
-      TEST_OBJ($$, @1);
+      TEST_OBJ($$, @$);
     }
   | /* empty */ {
       $$ = NULL;
@@ -462,6 +463,7 @@ simple_selector
 attribute_condition
   : HASH {
       $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_ID_CONDITION);
+      TEST_OBJ($$, @$);
       $$->desc.attribute.namespaceURI = NULL;
       $$->desc.attribute.localName = "id";
       $$->desc.attribute.specified = SAC_TRUE;
@@ -480,6 +482,7 @@ attribute_condition
 class
   : '.' IDENT {
       $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_CLASS_CONDITION);
+      TEST_OBJ($$, @$);
       $$->desc.attribute.namespaceURI = NULL;
       $$->desc.attribute.localName = "class";
       $$->desc.attribute.specified = SAC_TRUE;
@@ -501,6 +504,7 @@ attrib
   : '[' maybe_spaces IDENT maybe_spaces ']' {
       $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner),
         SAC_ATTRIBUTE_CONDITION);
+      TEST_OBJ($$, @$);
       $$->desc.attribute.namespaceURI = NULL;
       $$->desc.attribute.localName = $3;
       $$->desc.attribute.specified = SAC_FALSE;
@@ -510,6 +514,7 @@ attrib
     maybe_spaces attrib_value maybe_spaces ']'
     {
       $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner), $5);
+      TEST_OBJ($$, @$);
       $$->desc.attribute.namespaceURI = NULL;
       $$->desc.attribute.localName = $3;
       $$->desc.attribute.specified = SAC_TRUE;
@@ -539,6 +544,7 @@ pseudo
   : ':' IDENT {
       $$ = SAC_condition_alloc(
         YY_SCANNER_MPOOL(scanner), SAC_PSEUDO_CLASS_CONDITION);
+      TEST_OBJ($$, @$);
       $$->desc.attribute.namespaceURI = NULL;
       $$->desc.attribute.localName = $2;
       $$->desc.attribute.specified = SAC_FALSE;
@@ -578,33 +584,33 @@ term
   : unary_operator INT maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
-      TEST_OBJ($$, @2);
+      TEST_OBJ($$, @$);
       $$->desc.integer = $2;
     }
   | unary_operator REAL maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_REAL);
-      TEST_OBJ($$, @2);
+      TEST_OBJ($$, @$);
       $$->desc.real = $2;
     }
   | unary_operator PERCENTAGE maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_PERCENTAGE);
-      TEST_OBJ($$, @2);
+      TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "%";
       $$->desc.dimension.value.sreal = $2;
     }
   | unary_operator LENGTH_PIXEL maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_PIXEL);
-      TEST_OBJ($$, @2);
+      TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "px";
       $$->desc.dimension.value.sreal = $2;
     }
   | unary_operator LENGTH_INCH maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_INCH);
-      TEST_OBJ($$, @2);
+      TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "in";
       $$->desc.dimension.value.sreal = $2;
     }
@@ -612,7 +618,7 @@ term
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner),
         SAC_LENGTH_CENTIMETER);
-      TEST_OBJ($$, @2);
+      TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "cm";
       $$->desc.dimension.value.sreal = $2;
     }
@@ -620,98 +626,98 @@ term
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner),
         SAC_LENGTH_MILLIMETER);
-      TEST_OBJ($$, @2);
+      TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "mm";
       $$->desc.dimension.value.sreal = $2;
     }
   | unary_operator LENGTH_POINT maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_POINT);
-      TEST_OBJ($$, @2);
+      TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "pt";
       $$->desc.dimension.value.sreal = $2;
     }
   | unary_operator LENGTH_PICA maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_PICA);
-      TEST_OBJ($$, @2);
+      TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "pc";
       $$->desc.dimension.value.sreal = $2;
     }
   | unary_operator LENGTH_EM maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_EM);
-      TEST_OBJ($$, @2);
+      TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "em";
       $$->desc.dimension.value.sreal = $2;
     }
   | unary_operator LENGTH_EX maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_EX);
-      TEST_OBJ($$, @2);
+      TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "ex";
       $$->desc.dimension.value.sreal = $2;
     }
   | ANGLE_DEG maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_DEGREE);
-      TEST_OBJ($$, @1);
+      TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "deg";
       $$->desc.dimension.value.ureal = $1;
     }
   | ANGLE_RAD maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_RADIAN);
-      TEST_OBJ($$, @1);
+      TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "rad";
       $$->desc.dimension.value.ureal = $1;
     }
   | ANGLE_GRAD maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_GRADIAN);
-      TEST_OBJ($$, @1);
+      TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "grad";
       $$->desc.dimension.value.ureal = $1;
     }
   | TIME_MS maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_MILLISECOND);
-      TEST_OBJ($$, @1);
+      TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "ms";
       $$->desc.dimension.value.ureal = $1;
     }
   | TIME_S maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_SECOND);
-      TEST_OBJ($$, @1);
+      TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "s";
       $$->desc.dimension.value.ureal = $1;
     }
   | FREQ_HZ maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_HERTZ);
-      TEST_OBJ($$, @1);
+      TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "Hz";
       $$->desc.dimension.value.ureal = $1;
     }
   | FREQ_KHZ maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_KILOHERTZ);
-      TEST_OBJ($$, @1);
+      TEST_OBJ($$, @$);
       $$->desc.stringValue = "kHz";
       $$->desc.dimension.value.ureal = $1;
     }
   | STRING maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
-      TEST_OBJ($$, @1);
+      TEST_OBJ($$, @$);
       $$->desc.stringValue = $1;
     }
   | IDENT maybe_spaces {
       if (strcmp($1, "inherit") != 0) {
         $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_IDENT);
-        TEST_OBJ($$, @1);
+        TEST_OBJ($$, @$);
         $$->desc.ident = $1;
       } else {
         $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INHERIT);
-        TEST_OBJ($$, @1);
+        TEST_OBJ($$, @$);
       }
     }
   | URI maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_URI);
-      TEST_OBJ($$, @1);
+      TEST_OBJ($$, @$);
       $$->desc.uri = $1;
     }
   | function {
@@ -722,14 +728,14 @@ term
     }
   | UNICODERANGE maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_UNICODERANGE);
-      TEST_OBJ($$, @1);
+      TEST_OBJ($$, @$);
       $$->desc.unicodeRange = $1;
     }
   ;
 function
   : FUNCTION maybe_spaces expr ')' maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_FUNCTION);
-      TEST_OBJ($$, @1);
+      TEST_OBJ($$, @$);
       $$->desc.function.name = $1;
 
       $$->desc.function.parameters = SAC_vector_from_list(
@@ -748,7 +754,7 @@ hexcolor
       size_t len;
 
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_RGBCOLOR);
-      TEST_OBJ($$, @1);
+      TEST_OBJ($$, @$);
       $$->desc.function.name = "rgb";
 
       len = strlen($1);
@@ -769,23 +775,23 @@ hexcolor
         raw = (SAC_LexicalUnit**)$$->desc.function.parameters;
 
         raw[0] = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
-        TEST_OBJ(raw[0], @1);
+        TEST_OBJ(raw[0], @$);
         raw[0]->desc.integer = r;
 
         raw[1] = SAC_lexical_unit_alloc(
           YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_COMMA);
-        TEST_OBJ(raw[1], @1);
+        TEST_OBJ(raw[1], @$);
 
         raw[2] = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
-        TEST_OBJ(raw[2], @1);
+        TEST_OBJ(raw[2], @$);
         raw[2]->desc.integer = g;
 
         raw[3] = SAC_lexical_unit_alloc(
           YY_SCANNER_MPOOL(scanner), SAC_OPERATOR_COMMA);
-        TEST_OBJ(raw[3], @1);
+        TEST_OBJ(raw[3], @$);
 
         raw[4] = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
-        TEST_OBJ(raw[4], @1);
+        TEST_OBJ(raw[4], @$);
         raw[4]->desc.integer = b;
 
       } else {
