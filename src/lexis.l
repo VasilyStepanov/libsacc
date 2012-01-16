@@ -14,6 +14,7 @@
 %option noinput nounput
 %option reentrant
 %option noyyalloc noyyrealloc noyyfree
+%option yylineno
 %{
 #include <sacc.h>
 
@@ -24,6 +25,17 @@
 #include "parser.h"
 
 #include <stdlib.h>
+
+
+
+#define YY_USER_ACTION \
+  yylloc->first_line = yylloc->last_line = yylineno + 1; \
+  yylloc->first_column = yycolumn; \
+  yylloc->last_column = yycolumn + yyleng - 1; \
+  yycolumn += yyleng;  
+
+
+
 %}
 
 h            [0-9a-f]

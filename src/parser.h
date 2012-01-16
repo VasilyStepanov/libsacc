@@ -66,6 +66,9 @@ void SAC_parser_start_media_handler(SAC_Parser parser,
 void SAC_parser_end_media_handler(SAC_Parser parser,
   const SAC_STRING media[]);
 
+void SAC_parser_fatal_error_handler(SAC_Parser parser,
+  signed int line, signed int column, SAC_FatalErrorCode code);
+
 
 
 #endif

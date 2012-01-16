@@ -53,7 +53,7 @@ static void SAC_default_fatal_error_handler(void *userData SAC_UNUSED,
           fprintf(stderr, "%d:", error->line);
         }
       }
-      fprintf(stderr, " Out of memory\n");
+      fprintf(stderr, " out of memory\n");
     break;
   }
 }
