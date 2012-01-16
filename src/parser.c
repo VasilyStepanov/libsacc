@@ -298,44 +298,42 @@ void SAC_DisposeParser(SAC_Parser parser) {
 
 
 
-int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
+static void* SAC_parse(SAC_Parser parser, int start_token,
+  const char *buffer, int len)
+{
   void *scanner;
   SAC_YYExtra yy_extra;
 
   SAC_parser_clear(parser);
   yy_extra.mpool = PARSER(parser)->mpool;
   yy_extra.parser = parser;
-  yy_extra.start_token = START_AS_STYLESHEET;
+  yy_extra.start_token = start_token;
   yy_extra.output = NULL;
 
   yylex_init_extra(&yy_extra, &scanner);
 
   yy_scan_bytes(buffer, len, scanner);
+
   yyparse(scanner);
 
   yylex_destroy(scanner);
-  return 0;
+
+  return yy_extra.output;
+}
+
+
+
+int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
+
+  return (int)SAC_parse(parser,
+    START_AS_STYLESHEET, buffer, len);
 }
 
 
 
 int SAC_ParseStyleDeclaration(SAC_Parser parser, const char *buffer, int len) {
-  void *scanner;
-  SAC_YYExtra yy_extra;
-
-  SAC_parser_clear(parser);
-  yy_extra.mpool = PARSER(parser)->mpool;
-  yy_extra.parser = parser;
-  yy_extra.start_token = START_AS_STYLE_DECLARATIONS;
-  yy_extra.output = NULL;
-
-  yylex_init_extra(&yy_extra, &scanner);
-
-  yy_scan_bytes(buffer, len, scanner);
-  yyparse(scanner);
-
-  yylex_destroy(scanner);
-  return 0;
+  return (int)SAC_parse(parser,
+    START_AS_STYLE_DECLARATIONS, buffer, len);
 }
 
 
@@ -343,22 +341,8 @@ int SAC_ParseStyleDeclaration(SAC_Parser parser, const char *buffer, int len) {
 const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
   const char *buffer, int len)
 {
-  void *scanner;
-  SAC_YYExtra yy_extra;
-
-  SAC_parser_clear(parser);
-  yy_extra.mpool = PARSER(parser)->mpool;
-  yy_extra.parser = parser;
-  yy_extra.start_token = START_AS_SELECTORS;
-  yy_extra.output = NULL;
-
-  yylex_init_extra(&yy_extra, &scanner);
-
-  yy_scan_bytes(buffer, len, scanner);
-  yyparse(scanner);
-
-  yylex_destroy(scanner);
-  return (const SAC_Selector**)yy_extra.output;
+  return (const SAC_Selector**)SAC_parse(parser,
+    START_AS_SELECTORS, buffer, len);
 }
 
 
@@ -366,64 +350,22 @@ const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
 const SAC_LexicalUnit* SAC_ParsePropertyValue(SAC_Parser parser,
   const char *buffer, int len)
 {
-  void *scanner;
-  SAC_YYExtra yy_extra;
-
-  SAC_parser_clear(parser);
-  yy_extra.mpool = PARSER(parser)->mpool;
-  yy_extra.parser = parser;
-  yy_extra.start_token = START_AS_PROPERTY_VALUE;
-  yy_extra.output = NULL;
-
-  yylex_init_extra(&yy_extra, &scanner);
-
-  yy_scan_bytes(buffer, len, scanner);
-  yyparse(scanner);
-
-  yylex_destroy(scanner);
-  return (const SAC_LexicalUnit*)yy_extra.output;
+  return (const SAC_LexicalUnit*)SAC_parse(parser,
+    START_AS_PROPERTY_VALUE, buffer, len);
 }
 
 
 
 SAC_Boolean SAC_ParsePriority(SAC_Parser parser, const char *buffer, int len) {
-  void *scanner;
-  SAC_YYExtra yy_extra;
-
-  SAC_parser_clear(parser);
-  yy_extra.mpool = PARSER(parser)->mpool;
-  yy_extra.parser = parser;
-  yy_extra.start_token = START_AS_PRIORITY;
-  yy_extra.output = NULL;
-
-  yylex_init_extra(&yy_extra, &scanner);
-
-  yy_scan_bytes(buffer, len, scanner);
-  yyparse(scanner);
-
-  yylex_destroy(scanner);
-  return (SAC_Boolean)yy_extra.output;
+  return (SAC_Boolean)SAC_parse(parser,
+    START_AS_PRIORITY, buffer, len);
 }
 
 
 
 int SAC_ParseRule(SAC_Parser parser, const char *buffer, int len) {
-  void *scanner;
-  SAC_YYExtra yy_extra;
-
-  SAC_parser_clear(parser);
-  yy_extra.mpool = PARSER(parser)->mpool;
-  yy_extra.parser = parser;
-  yy_extra.start_token = START_AS_RULE;
-  yy_extra.output = NULL;
-
-  yylex_init_extra(&yy_extra, &scanner);
-
-  yy_scan_bytes(buffer, len, scanner);
-  yyparse(scanner);
-
-  yylex_destroy(scanner);
-  return 0;
+  return (int)SAC_parse(parser,
+    START_AS_RULE, buffer, len);
 }
 
 
