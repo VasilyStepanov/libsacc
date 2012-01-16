@@ -428,18 +428,21 @@ selector
   | selector '+' maybe_spaces simple_selector {
       $$ = SAC_selector_alloc(
         YY_SCANNER_MPOOL(scanner), SAC_DIRECT_ADJACENT_SELECTOR);
+      TEST_OBJ($$, @$);
       $$->desc.sibling.nodeType = ANY_NODE;
       $$->desc.sibling.firstSelector = $1;
       $$->desc.sibling.secondSelector = $4;
     }
   | selector '>' maybe_spaces simple_selector {
       $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_CHILD_SELECTOR);
+      TEST_OBJ($$, @$);
       $$->desc.descendant.descendantSelector = $1;
       $$->desc.descendant.simpleSelector = $4;
     }
   | selector simple_selector {
       $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner),
         SAC_DESCENDANT_SELECTOR);
+      TEST_OBJ($$, @$);
       $$->desc.descendant.descendantSelector = $1;
       $$->desc.descendant.simpleSelector = $2;
     }
@@ -448,8 +451,10 @@ simple_selector
   : attribute_conditions maybe_spaces {
       $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner),
         SAC_CONDITIONAL_SELECTOR);
+      TEST_OBJ($$, @$);
       $$->desc.conditional.simpleSelector = SAC_selector_alloc(
         YY_SCANNER_MPOOL(scanner), SAC_ANY_NODE_SELECTOR);
+      TEST_OBJ($$->desc.conditional.simpleSelector, @$);
       $$->desc.conditional.condition = $1;
     }
   | element_name maybe_attribute_conditions maybe_spaces {
@@ -458,6 +463,7 @@ simple_selector
       } else {
         $$ = SAC_selector_alloc(
           YY_SCANNER_MPOOL(scanner), SAC_CONDITIONAL_SELECTOR);
+        TEST_OBJ($$, @$);
         $$->desc.conditional.simpleSelector = $1;
         $$->desc.conditional.condition = $2;
       }
@@ -496,11 +502,13 @@ element_name
   : IDENT {
       $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner),
         SAC_ELEMENT_NODE_SELECTOR);
+      TEST_OBJ($$, @$);
       $$->desc.element.namespaceURI = NULL;
       $$->desc.element.localName = $1;
     }
   | '*' {
       $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_ANY_NODE_SELECTOR);
+      TEST_OBJ($$, @$);
     }
   ;
 attrib
