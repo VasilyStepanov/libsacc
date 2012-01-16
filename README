@@ -1,4 +1,4 @@
-SAC implementation written in C.
+Generic event-based CSS parser written in C.
 
 Features:
 
