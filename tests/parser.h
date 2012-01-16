@@ -7,20 +7,19 @@
 
 
 
-SAC_Parser create_parser(FILE *out);
+typedef enum {
+  DECLARATIONS,
+  SELECTORS,
+  PROPERTY,
+  PRIORITY,
+  RULE,
+  STYLESHEET
+} ParserType;
 
-void dispose_parser(SAC_Parser parser);
 
-void parse_stylesheet(SAC_Parser parser, const char *buffer);
 
-void parse_styledeclaration(SAC_Parser parser, const char *buffer);
+void parse(FILE *out, ParserType type, const char *buffer);
 
-void parse_selectors(SAC_Parser parser, const char *buffer);
 
-void parse_property_value(SAC_Parser parser, const char *buffer);
-
-void parse_priority(SAC_Parser parser, const char *buffer);
-
-void parse_rule(SAC_Parser parser, const char *buffer);
 
 #endif

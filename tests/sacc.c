@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 
 #define BUF_SIZE 1024
 
@@ -15,27 +16,16 @@ static void usage() {
 
 
 
-typedef enum {
-  DECLARATIONS,
-  SELECTORS,
-  PROPERTY,
-  PRIORITY,
-  RULE,
-  STYLESHEET,
-  UNKNOWN
-} InputType;
-
-
-
-static InputType parse_type_arg(const char *arg) {
+static ParserType parse_type_arg(const char *arg) {
   if (strcmp(arg, "declarations") == 0) return DECLARATIONS;
   if (strcmp(arg, "selectors") == 0) return SELECTORS;
   if (strcmp(arg, "property") == 0) return PROPERTY;
   if (strcmp(arg, "priority") == 0) return PRIORITY;
   if (strcmp(arg, "rule") == 0) return RULE;
   if (strcmp(arg, "stylesheet") == 0) return STYLESHEET;
-  return UNKNOWN;
- }
+  usage();
+  exit(EXIT_FAILURE);
+}
 
 
 
@@ -48,14 +38,30 @@ static char* read_all(FILE *in) {
   size_t data_size;
 
   out = open_memstream(&data, &data_size);
+  if (out == NULL) {
+    printf("FATAL: open_memstream(): %s\n", strerror(errno));
+    exit(EXIT_FAILURE);
+  }
   data = NULL;
   data_size = 0;
   while (1) {
     rsize = fread(buf, 1, BUF_SIZE, in);
+    if (ferror(in)) {
+      printf("FATAL: fread(): %s\n", strerror(errno));
+      exit(EXIT_FAILURE);
+    }
     if (rsize == 0) break;
     wsize = fwrite(buf, 1, rsize, out);
+    if (wsize != rsize) {
+      printf("FATAL: fwrite(): %s\n", strerror(errno));
+      exit(EXIT_FAILURE);
+    }
+    if (rsize != BUF_SIZE && feof(in)) break;
   }
-  fclose(out);
+  if (fclose(out)) {
+    printf("FATAL: fclose(): %s\n", strerror(errno));
+    exit(EXIT_FAILURE);
+  }
   return data;
 }
 
@@ -63,9 +69,8 @@ static char* read_all(FILE *in) {
 
 int main(int argc, char **argv) {
   char *type_arg;
-  InputType type;
+  ParserType type;
   char *css;
-  SAC_Parser parser;
   int i;
 
   type_arg = NULL;
@@ -81,38 +86,10 @@ int main(int argc, char **argv) {
   }
 
   type = parse_type_arg(type_arg);
-  if (type == UNKNOWN) {
-    usage();
-    return EXIT_FAILURE;
-  }
  
   css = read_all(stdin);
-  parser = create_parser(stdout);
-  switch (type) {
-    case DECLARATIONS:
-      parse_styledeclaration(parser, css);
-      break;
-    case SELECTORS:
-      parse_selectors(parser, css);
-      break;
-    case PROPERTY:
-      parse_property_value(parser, css);
-      break;
-    case PRIORITY:
-      parse_priority(parser, css);
-      break;
-    case RULE:
-      parse_rule(parser, css);
-      break;
-    case STYLESHEET:
-      parse_stylesheet(parser, css);
-      break;
-    case UNKNOWN:
-      break;
-  }
-  dispose_parser(parser);
+  parse(stdout, type, css);
   free(css);
-
 
   return EXIT_SUCCESS;
 }

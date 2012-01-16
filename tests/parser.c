@@ -469,7 +469,7 @@ static void property(
 
 
 
-SAC_Parser create_parser(FILE *out) {
+static SAC_Parser create_parser(FILE *out) {
   SAC_Parser parser;
   
   parser = SAC_CreateParser();
@@ -488,25 +488,25 @@ SAC_Parser create_parser(FILE *out) {
 
 
 
-void dispose_parser(SAC_Parser parser) {
+static void dispose_parser(SAC_Parser parser) {
   SAC_DisposeParser(parser);
 }
 
 
 
-void parse_stylesheet(SAC_Parser parser, const char *buffer) {
+static void parse_stylesheet(SAC_Parser parser, const char *buffer) {
   SAC_ParseStyleSheet(parser, buffer, strlen(buffer));
 }
 
 
 
-void parse_styledeclaration(SAC_Parser parser, const char *buffer) {
+static void parse_styledeclaration(SAC_Parser parser, const char *buffer) {
   SAC_ParseStyleDeclaration(parser, buffer, strlen(buffer));
 }
 
 
 
-void parse_selectors(SAC_Parser parser, const char *buffer) {
+static void parse_selectors(SAC_Parser parser, const char *buffer) {
   FILE *out;
 
   out = USERDATA_FILE(SAC_GetUserData(parser));
@@ -517,7 +517,7 @@ void parse_selectors(SAC_Parser parser, const char *buffer) {
 
 
 
-void parse_property_value(SAC_Parser parser, const char *buffer) {
+static void parse_property_value(SAC_Parser parser, const char *buffer) {
   FILE *out;
 
   out = USERDATA_FILE(SAC_GetUserData(parser));
@@ -529,7 +529,7 @@ void parse_property_value(SAC_Parser parser, const char *buffer) {
 
 
 
-void parse_priority(SAC_Parser parser, const char *buffer) {
+static void parse_priority(SAC_Parser parser, const char *buffer) {
   FILE *out;
 
   out = USERDATA_FILE(SAC_GetUserData(parser));
@@ -542,6 +542,35 @@ void parse_priority(SAC_Parser parser, const char *buffer) {
 
 
 
-void parse_rule(SAC_Parser parser, const char *buffer) {
+static void parse_rule(SAC_Parser parser, const char *buffer) {
   SAC_ParseRule(parser, buffer, strlen(buffer));
+}
+
+
+
+void parse(FILE *out, ParserType type, const char *buffer) {
+  SAC_Parser parser;
+
+  parser = create_parser(out);
+  switch (type) {
+    case DECLARATIONS:
+      parse_styledeclaration(parser, buffer);
+      break;
+    case SELECTORS:
+      parse_selectors(parser, buffer);
+      break;
+    case PROPERTY:
+      parse_property_value(parser, buffer);
+      break;
+    case PRIORITY:
+      parse_priority(parser, buffer);
+      break;
+    case RULE:
+      parse_rule(parser, buffer);
+      break;
+    case STYLESHEET:
+      parse_stylesheet(parser, buffer);
+      break;
+  }
+  dispose_parser(parser);
 }
