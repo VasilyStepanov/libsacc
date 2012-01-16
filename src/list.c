@@ -46,12 +46,16 @@ struct _SAC_List {
 
 
 SAC_List SAC_list_open(SAC_MPool mpool) {
-  struct _SAC_List *list =
-    (struct _SAC_List*)SAC_mpool_alloc(mpool, sizeof(struct _SAC_List));
+  struct _SAC_List *list;
+  struct _SAC_ListItem *item;
 
-  if (list == NULL) return NULL;
+  item = SAC_list_item_alloc(mpool, NULL);
 
-  list->head = SAC_list_item_alloc(mpool, NULL);
+  if (item == NULL) return NULL;
+  
+  list = (struct _SAC_List*)SAC_mpool_alloc(mpool, sizeof(struct _SAC_List));
+
+  list->head = item;
   list->tail = list->head;
   list->size = 0;
 

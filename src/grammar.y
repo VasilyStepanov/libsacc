@@ -215,6 +215,7 @@ sac_maybe_namespaces
 mediums
   : medium {
       $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ($$, @$);
       SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
     }
   | mediums ',' maybe_spaces medium {
@@ -225,6 +226,7 @@ mediums
 maybe_mediums
   : /* empty */ {
       $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ($$, @$);
     }
   | mediums {
       $$ = $1;
@@ -237,6 +239,7 @@ sac_maybe_rulesets
 selectors
   : selector {
       $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ($$, @$);
       SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
     }
   | selectors ',' maybe_spaces selector {
@@ -572,6 +575,7 @@ maybe_prio
 expr
   : term {
       $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ($$, @$);
       SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
     }
   | expr maybe_operator term {
