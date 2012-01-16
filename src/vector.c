@@ -18,6 +18,9 @@ struct _SAC_Vector {
 SAC_Vector SAC_vector_open(SAC_MPool mpool, size_t size) {
   SAC_Vector ret = VECTOR_WRAP(SAC_mpool_alloc(mpool,
     sizeof(struct _SAC_Vector) + sizeof(void*) * (size + 1)));
+
+  if (ret == NULL) return NULL;
+
   ((void**)ret)[size] = NULL;
   VECTOR_UNWRAP_SIZE(ret) = size;
   return ret;
@@ -62,6 +65,9 @@ SAC_Vector SAC_vector_from_list(SAC_List list, SAC_MPool mpool) {
   SAC_ListIter lit;
 
   vector = SAC_vector_open(mpool, SAC_list_size(list));
+
+  if (vector == NULL) return NULL;
+
   for (lit = SAC_list_head(list), vit = SAC_vector_head(vector);
        lit != NULL;
        lit = SAC_list_next(lit), ++vit)
