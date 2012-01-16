@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <document>
-  <property name="prop-inherit">
+  <property name="prop-inherit1">
+    <inherit/>
+  </property>
+  <property name="prop-inherit2">
     <inherit/>
   </property>
   <property name="prop-string">

@@ -6,6 +6,8 @@
  *  - http://www.w3.org/TR/css3-fonts/
  */
 %code requires {
+#include <strings.h>
+
 #include "list.h"
 #include "vector.h"
 #include "vector_extra.h"
@@ -155,6 +157,7 @@ start
 
       YY_SCANNER_OUTPUT(scanner) = SAC_lexical_unit_from_list(
         $2, YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(YY_SCANNER_OUTPUT(scanner), @2);
     }
   | sac_style_declarations_start sac_maybe_declarations {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
@@ -165,6 +168,7 @@ start
 
       YY_SCANNER_OUTPUT(scanner) = SAC_vector_from_list(
         $2, YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(YY_SCANNER_OUTPUT(scanner), @2);
     }
   | sac_rule_start sac_ruleset maybe_spaces {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
@@ -216,11 +220,11 @@ mediums
   : medium {
       $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
       TEST_OBJ($$, @$);
-      SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
+      TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1), @1);
     }
   | mediums ',' maybe_spaces medium {
       $$ = $1;
-      SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4);
+      TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4), @4);
     }
   ;
 maybe_mediums
@@ -240,11 +244,11 @@ selectors
   : selector {
       $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
       TEST_OBJ($$, @$);
-      SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
+      TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1), @1);
     }
   | selectors ',' maybe_spaces selector {
       $$ = $1;
-      SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4);
+      TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4), @4);
     }
   ;
 sac_maybe_declarations
@@ -291,6 +295,7 @@ sac_import
       SAC_Vector mediums;
 
       mediums = SAC_vector_from_list($4, YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(mediums, @4);
       SAC_parser_import_handler(YY_SCANNER_PARSER(scanner), $3, mediums, NULL);
     }
   ;
@@ -328,6 +333,7 @@ sac_media_start
       SAC_Vector mediums;
 
       mediums = SAC_vector_from_list($3, YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(mediums, @3);
       SAC_parser_start_media_handler(YY_SCANNER_PARSER(scanner), mediums);
       $$ = mediums;
     }
@@ -417,6 +423,7 @@ sac_style_start
       SAC_Vector vector;
       
       vector = SAC_vector_from_list($1, YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(vector, @1);
       SAC_parser_start_style_handler(YY_SCANNER_PARSER(scanner), vector);
       $$ = vector;
     }
@@ -565,10 +572,13 @@ pseudo
   ;
 sac_maybe_declaration
   : property ':' maybe_spaces expr maybe_prio {
+      SAC_LexicalUnit *expr;
+      
+      expr = SAC_lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(expr, @4);
+
       SAC_parser_property_handler(YY_SCANNER_PARSER(scanner),
-        $1,
-        SAC_lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner)),
-        $5);
+        $1, expr, $5);
     }
   | /* empty */
   ;
@@ -584,12 +594,13 @@ expr
   : term {
       $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
       TEST_OBJ($$, @$);
-      SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1);
+      TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1), @1);
     }
   | expr maybe_operator term {
       $$ = $1;
-      if ($2 != NULL) SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $2);
-      SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $3);
+      if ($2 != NULL)
+        TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $2), @2);
+      TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $3), @3);
     }
   ;
 term
@@ -718,7 +729,7 @@ term
       $$->desc.stringValue = $1;
     }
   | IDENT maybe_spaces {
-      if (strcmp($1, "inherit") != 0) {
+      if (strcasecmp($1, "inherit") != 0) {
         $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_IDENT);
         TEST_OBJ($$, @$);
         $$->desc.ident = $1;
@@ -752,6 +763,7 @@ function
 
       $$->desc.function.parameters = SAC_vector_from_list(
         $3, YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ($$->desc.function.parameters, @3);
     }
   ;
 /*
@@ -784,6 +796,7 @@ hexcolor
         
         $$->desc.function.parameters = SAC_vector_open(
           YY_SCANNER_MPOOL(scanner), 5);
+        TEST_OBJ($$->desc.function.parameters, @$);
         raw = (SAC_LexicalUnit**)$$->desc.function.parameters;
 
         raw[0] = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INTEGER);
@@ -810,6 +823,7 @@ hexcolor
         $$->desc.function.parameters = SAC_vector_open(
           YY_SCANNER_MPOOL(scanner), 0
         );
+        TEST_OBJ($$->desc.function.parameters, @$);
       }
     }
   ;
