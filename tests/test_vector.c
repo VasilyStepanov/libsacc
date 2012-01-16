@@ -1,6 +1,7 @@
 #include "test_vector.h"
 
 #include "vector.h"
+#include "vector_extra.h"
 #include "mpool.h"
 
 #include <sacc.h>

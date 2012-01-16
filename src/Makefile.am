@@ -20,9 +20,10 @@ libsacc_la_HEADERS = ../include/sacc.h
 libsacc_la_SOURCES = parser.c \
                      mlex.c \
                      mpool.c \
+                     mpool_extra.c \
                      list.c \
                      vector.c \
-                     mpool_extra.c \
+                     vector_extra.c \
                      string_extra.c \
                      lexical_unit.c \
                      condition.c \

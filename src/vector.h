@@ -2,7 +2,6 @@
 #define VECTOR_H
 
 #include "mpool.h"
-#include "list.h"
 
 #include <sacc.h>
 
@@ -23,10 +22,6 @@ size_t SAC_vector_size(SAC_Vector vector);
 SAC_VectorIter SAC_vector_head(SAC_Vector vector);
 
 SAC_VectorIter SAC_vector_next(SAC_VectorIter iter);
-
-void SAC_vector_cpy(SAC_VectorIter dest, SAC_VectorIter src);
-
-SAC_Vector SAC_vector_from_list(SAC_List list, SAC_MPool mpool);
 
 
 

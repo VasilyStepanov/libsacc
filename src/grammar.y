@@ -8,6 +8,7 @@
 %code requires {
 #include "list.h"
 #include "vector.h"
+#include "vector_extra.h"
 #include "lexical_unit.h"
 #include "condition.h"
 #include "selector.h"
