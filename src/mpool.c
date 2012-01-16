@@ -1,5 +1,7 @@
 #include "mpool.h"
 
+#include <sacc.h>
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -37,6 +39,8 @@ struct _SAC_MObj {
 
 static struct _SAC_MPage* mpage_open(struct _SAC_MPage *prev, size_t size) {
   struct _SAC_MPage *ret = malloc(sizeof(struct _SAC_MPage));
+
+  if (ret == NULL) return NULL;
 
   size = MALLIGN(size + sizeof(struct _SAC_MObj));
   ret->prev = prev;
@@ -117,10 +121,14 @@ void* SAC_mpool_alloc(SAC_MPool mpool, size_t size) {
 
   ret = mpage_alloc(MPOOL(mpool)->page, size);
   if (ret == NULL) {
+    struct _SAC_MPage *page;
     size_t page_size=
       size < MPOOL(mpool)->page_size ? MPOOL(mpool)->page_size : size;
 
-    MPOOL(mpool)->page = mpage_open(MPOOL(mpool)->page, page_size);
+    page = mpage_open(MPOOL(mpool)->page, page_size);
+    if (page == NULL) return NULL;
+
+    MPOOL(mpool)->page = page;
     ret = mpage_alloc(MPOOL(mpool)->page, size);
   }
 
@@ -139,6 +147,8 @@ void* SAC_mpool_realloc(SAC_MPool mpool, void *ptr, size_t size) {
 
   if (MOBJ_UNWRAP_SIZE(ptr) < size) {
     void *ret = SAC_mpool_alloc(mpool, size);
+
+    if (ret == NULL) return NULL;
 
     memcpy(ret, ptr, MOBJ_UNWRAP_SIZE(ptr));
     SAC_mpool_free(mpool, ptr);

@@ -5,6 +5,8 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <gcc.h>
 
 extern int yylex_init_extra();
 extern int yy_scan_bytes();
@@ -32,8 +34,29 @@ struct _SAC_Parser {
   SAC_StartStyleHandler start_style_handler;
   SAC_EndStyleHandler end_style_handler;
   SAC_PropertyHandler property_handler;
+  SAC_FatalErrorHandler fatal_error_handler;
   void *user_data;
 };
+
+
+
+static void SAC_default_fatal_error_handler(void *userData SAC_UNUSED,
+  const SAC_FatalError *error)
+{
+  switch (error->code) {
+    case SAC_FATAL_ERROR_NO_MEMORY:
+      fprintf(stderr, "sacc:");
+      if (error->line != -1) {
+        if (error->column != -1) {
+          fprintf(stderr, "%d:%d:", error->line, error->column);
+        } else {
+          fprintf(stderr, "%d:", error->line);
+        }
+      }
+      fprintf(stderr, " Out of memory\n");
+    break;
+  }
+}
 
 
 
@@ -94,6 +117,19 @@ void SAC_parser_property_handler(
   if (PARSER(parser)->property_handler != NULL)
     PARSER(parser)->property_handler(PARSER(parser)->user_data,
       propertyName, value, important);
+}
+
+
+
+void SAC_parser_fatal_error_handler(SAC_Parser parser,
+  signed int line, signed int column, SAC_FatalErrorCode code)
+{
+  SAC_FatalError error;
+  
+  error.line = line;
+  error.column = column;
+  error.code = code;
+  PARSER(parser)->fatal_error_handler(PARSER(parser)->user_data, &error);
 }
 
 
@@ -245,10 +281,11 @@ void* SAC_GetUserData(SAC_Parser parser) {
 
 
 SAC_Parser SAC_CreateParser() {
-  struct _SAC_Parser *ret = (struct _SAC_Parser*)malloc(
+  struct _SAC_Parser *parser = (struct _SAC_Parser*)malloc(
     sizeof(struct _SAC_Parser));
-  memset(ret, 0, sizeof(struct _SAC_Parser));
-  return ret;
+  memset(parser, 0, sizeof(struct _SAC_Parser));
+  parser->fatal_error_handler = SAC_default_fatal_error_handler;
+  return parser;
 }
 
 

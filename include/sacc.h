@@ -608,6 +608,47 @@ SAC_Parser SAC_CreateParser();
 
 void SAC_DisposeParser(SAC_Parser parser);
 
+/**
+ * Error handling.
+ */
+
+typedef enum _SAC_FatalErrorCode {
+  SAC_FATAL_ERROR_NO_MEMORY
+  /* @@CONTINUEME */
+} SAC_FatalErrorCode;
+
+typedef struct _SAC_FatalError {
+  signed int line;   /* -1 if unknown */
+  signed int column; /* -1 if unknown */
+  SAC_FatalErrorCode code;
+} SAC_FatalError;
+
+typedef void (*SAC_FatalErrorHandler)(void *userData,
+  const SAC_FatalError *fatalError);
+
+void SAC_SetFatalErrorHandler(SAC_Parser parser,
+  SAC_FatalErrorHandler handler);
+
+
+typedef enum _SAC_ErrorCode {
+  SAC_UNSPECIFIED_ERR,
+  SAC_NOT_SUPPORTED_ERR,
+  SAC_SYNTAX_ERR
+} SAC_ErrorCode;
+
+typedef struct _SAC_Error {
+  signed int line;   /* -1 if unknown */
+  signed int column; /* -1 if unknown */
+  SAC_ErrorCode   code;
+  SAC_STRING data; /* NULL if it is not relevant */
+} SAC_Error;
+
+typedef void (*SAC_ErrorHandler)(void *userData,
+  const SAC_Error *error);
+
+void SAC_SetErrorHandler(SAC_Parser parser,
+  SAC_ErrorHandler handler);
+
 #ifdef __cplusplus
 }
 #endif
