@@ -134,9 +134,14 @@ void SAC_parser_fatal_error_handler(SAC_Parser parser,
 
 
 
-static void SAC_parser_clear(SAC_Parser parser) {
+static int SAC_parser_clear(SAC_Parser parser) {
   SAC_mpool_close(PARSER(parser)->mpool);
   PARSER(parser)->mpool = SAC_mpool_open(16384);
+  if (PARSER(parser)->mpool == NULL) {
+    SAC_parser_fatal_error_handler(parser, -1, -1, SAC_FATAL_ERROR_NO_MEMORY);
+    return 0;
+  }
+  return 1;
 }
 
 
@@ -309,7 +314,8 @@ static void* SAC_parse(SAC_Parser parser, int start_token,
   void *scanner;
   SAC_YYExtra yy_extra;
 
-  SAC_parser_clear(parser);
+  if (!SAC_parser_clear(parser)) return NULL;
+
   yy_extra.mpool = PARSER(parser)->mpool;
   yy_extra.parser = parser;
   yy_extra.start_token = start_token;

@@ -100,6 +100,9 @@ SAC_MPool SAC_mpool_open(size_t page_size) {
   struct _SAC_MPool *ret;
 
   ret = (struct _SAC_MPool*)malloc(sizeof(struct _SAC_MPool));
+
+  if (ret == NULL) return NULL;
+
   ret->page_size = page_size;
   ret->page = mpage_open(NULL, ret->page_size);
   return ret;
@@ -108,7 +111,9 @@ SAC_MPool SAC_mpool_open(size_t page_size) {
 
 
 void SAC_mpool_close(SAC_MPool mpool) {
-  if (mpool != NULL) mpage_close_all(MPOOL(mpool)->page);
+  if (mpool == NULL) return;
+  
+  mpage_close_all(MPOOL(mpool)->page);
   free(mpool);
 }
 
