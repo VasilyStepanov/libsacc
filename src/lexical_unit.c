@@ -8,6 +8,9 @@ SAC_LexicalUnit* SAC_lexical_unit_alloc(
   SAC_LexicalUnit *value = (SAC_LexicalUnit*)SAC_mpool_alloc(
     mpool, sizeof(SAC_LexicalUnit)
   );
+
+  if (value == NULL) return NULL;
+
   value->lexicalUnitType = type;
   return value;
 }
@@ -27,6 +30,9 @@ SAC_LexicalUnit* SAC_lexical_unit_from_list(SAC_List list, SAC_MPool mpool) {
     SAC_ListIter lit;
 
     value = SAC_lexical_unit_alloc(mpool, SAC_SUB_EXPRESSION);
+
+    if (value == NULL) return NULL;
+
     vector = SAC_vector_open(mpool, size);
     for (lit = SAC_list_head(list), vit = SAC_vector_head(vector);
          lit != NULL;

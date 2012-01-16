@@ -38,17 +38,17 @@ struct _SAC_MObj {
 
 
 static struct _SAC_MPage* mpage_open(struct _SAC_MPage *prev, size_t size) {
-  struct _SAC_MPage *ret = malloc(sizeof(struct _SAC_MPage));
+  struct _SAC_MPage *page = malloc(sizeof(struct _SAC_MPage));
 
-  if (ret == NULL) return NULL;
+  if (page == NULL) return NULL;
 
   size = MALLIGN(size + sizeof(struct _SAC_MObj));
-  ret->prev = prev;
-  ret->data = (char*)malloc(size);
-  ret->ptr = ret->data;
-  ret->free = size;
-  ret->used = 0;
-  return ret;
+  page->prev = prev;
+  page->data = (char*)malloc(size);
+  page->ptr = page->data;
+  page->free = size;
+  page->used = 0;
+  return page;
 }
 
 
@@ -68,21 +68,21 @@ static void mpage_close_all(struct _SAC_MPage *mpage) {
 
 
 static void* mpage_alloc(struct _SAC_MPage *mpage, size_t size) {
-  void *ret;
+  void *ptr;
 
   size = MALLIGN(size + sizeof(struct _SAC_MObj));
 
   if (mpage->free < size) return NULL;
 
-  ret = MOBJ_WRAP(mpage->ptr);
+  ptr = MOBJ_WRAP(mpage->ptr);
   mpage->used += size;
   mpage->free -= size;
   mpage->ptr = (char*)mpage->ptr + size;
 
-  MOBJ_UNWRAP_SIZE(ret) = size - sizeof(struct _SAC_MObj);
-  MOBJ_UNWRAP_MPAGE(ret) = mpage;
+  MOBJ_UNWRAP_SIZE(ptr) = size - sizeof(struct _SAC_MObj);
+  MOBJ_UNWRAP_MPAGE(ptr) = mpage;
 
-  return ret;
+  return ptr;
 }
 
 
@@ -97,15 +97,15 @@ struct _SAC_MPool {
 
 
 SAC_MPool SAC_mpool_open(size_t page_size) {
-  struct _SAC_MPool *ret;
+  struct _SAC_MPool *mpool;
 
-  ret = (struct _SAC_MPool*)malloc(sizeof(struct _SAC_MPool));
+  mpool = (struct _SAC_MPool*)malloc(sizeof(struct _SAC_MPool));
 
-  if (ret == NULL) return NULL;
+  if (mpool == NULL) return NULL;
 
-  ret->page_size = page_size;
-  ret->page = mpage_open(NULL, ret->page_size);
-  return ret;
+  mpool->page_size = page_size;
+  mpool->page = mpage_open(NULL, mpool->page_size);
+  return mpool;
 }
 
 
@@ -120,24 +120,25 @@ void SAC_mpool_close(SAC_MPool mpool) {
 
 
 void* SAC_mpool_alloc(SAC_MPool mpool, size_t size) {
-  void *ret;
+  void *ptr;
 
   if (size == 0) return NULL;
 
-  ret = mpage_alloc(MPOOL(mpool)->page, size);
-  if (ret == NULL) {
+  ptr = mpage_alloc(MPOOL(mpool)->page, size);
+  if (ptr == NULL) {
     struct _SAC_MPage *page;
     size_t page_size=
       size < MPOOL(mpool)->page_size ? MPOOL(mpool)->page_size : size;
 
     page = mpage_open(MPOOL(mpool)->page, page_size);
+
     if (page == NULL) return NULL;
 
     MPOOL(mpool)->page = page;
-    ret = mpage_alloc(MPOOL(mpool)->page, size);
+    ptr = mpage_alloc(MPOOL(mpool)->page, size);
   }
 
-  return ret;
+  return ptr;
 }
 
 
@@ -151,13 +152,13 @@ void* SAC_mpool_realloc(SAC_MPool mpool, void *ptr, size_t size) {
   }
 
   if (MOBJ_UNWRAP_SIZE(ptr) < size) {
-    void *ret = SAC_mpool_alloc(mpool, size);
+    void *dest = SAC_mpool_alloc(mpool, size);
 
-    if (ret == NULL) return NULL;
+    if (dest == NULL) return NULL;
 
-    memcpy(ret, ptr, MOBJ_UNWRAP_SIZE(ptr));
+    memcpy(dest, ptr, MOBJ_UNWRAP_SIZE(ptr));
     SAC_mpool_free(mpool, ptr);
-    return ret;
+    return dest;
   }
   
   return ptr;

@@ -16,12 +16,14 @@ struct _SAC_ListItem {
 
 
 static struct _SAC_ListItem* SAC_list_item_alloc(SAC_MPool mpool, void *obj) {
-  struct _SAC_ListItem *ret =
+  struct _SAC_ListItem *item =
     (struct _SAC_ListItem*)SAC_mpool_alloc(mpool, sizeof(struct _SAC_ListItem));
 
-  ret->obj = obj;
-  ret->next = NULL;
-  return ret;
+  if (item == NULL) return NULL;
+
+  item->obj = obj;
+  item->next = NULL;
+  return item;
 }
 
 
@@ -44,14 +46,16 @@ struct _SAC_List {
 
 
 SAC_List SAC_list_open(SAC_MPool mpool) {
-  struct _SAC_List *ret =
+  struct _SAC_List *list =
     (struct _SAC_List*)SAC_mpool_alloc(mpool, sizeof(struct _SAC_List));
 
-  ret->head = SAC_list_item_alloc(mpool, NULL);
-  ret->tail = ret->head;
-  ret->size = 0;
+  if (list == NULL) return NULL;
 
-  return ret;
+  list->head = SAC_list_item_alloc(mpool, NULL);
+  list->tail = list->head;
+  list->size = 0;
+
+  return list;
 }
 
 

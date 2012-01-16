@@ -16,14 +16,14 @@ struct _SAC_Vector {
 
 
 SAC_Vector SAC_vector_open(SAC_MPool mpool, size_t size) {
-  SAC_Vector ret = VECTOR_WRAP(SAC_mpool_alloc(mpool,
+  SAC_Vector vector = VECTOR_WRAP(SAC_mpool_alloc(mpool,
     sizeof(struct _SAC_Vector) + sizeof(void*) * (size + 1)));
 
-  if (ret == NULL) return NULL;
+  if (vector == NULL) return NULL;
 
-  ((void**)ret)[size] = NULL;
-  VECTOR_UNWRAP_SIZE(ret) = size;
-  return ret;
+  ((void**)vector)[size] = NULL;
+  VECTOR_UNWRAP_SIZE(vector) = size;
+  return vector;
 }
 
 
