@@ -604,8 +604,21 @@ const SAC_LexicalUnit* SAC_ParsePropertyValue(SAC_Parser parser,
 
 SAC_Boolean SAC_ParsePriority(SAC_Parser parser, const char *buffer, int len);
 
+/**
+ * Create the parser.
+ * 
+ * The caller is responsible of disposing the parser by calling
+ * SAC_DisposeParser.
+ *
+ * Returns NULL if out of memory.
+ */
 SAC_Parser SAC_CreateParser();
 
+/**
+ * Dispose the parser.
+ *
+ * NULL argument is valid and will return immediately.
+ */
 void SAC_DisposeParser(SAC_Parser parser);
 
 /**

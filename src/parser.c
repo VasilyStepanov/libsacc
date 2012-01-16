@@ -283,6 +283,9 @@ void* SAC_GetUserData(SAC_Parser parser) {
 SAC_Parser SAC_CreateParser() {
   struct _SAC_Parser *parser = (struct _SAC_Parser*)malloc(
     sizeof(struct _SAC_Parser));
+
+  if (parser == NULL) return NULL;
+
   memset(parser, 0, sizeof(struct _SAC_Parser));
   parser->fatal_error_handler = SAC_default_fatal_error_handler;
   return parser;
@@ -291,6 +294,8 @@ SAC_Parser SAC_CreateParser() {
 
 
 void SAC_DisposeParser(SAC_Parser parser) {
+  if (parser == NULL) return;
+
   SAC_mpool_close(PARSER(parser)->mpool);
   free(PARSER(parser)->base);
   free(parser);
