@@ -130,7 +130,6 @@ SAC_Pair pair;
 %type <vector> sac_style_start;
 %type <vector> sac_media_start;
 %type <sel> selector;
-%type <sel> selector_with_space;
 %type <sel> simple_selector;
 %type <sel> element_name;
 %type <cond> attribute_condition;
@@ -429,24 +428,19 @@ sac_style_start
       $$ = vector;
     }
   ;
-selector_with_space
-  : selector S {
-      $$ = $1;
-    }
-  ;
 selector
   : simple_selector {
       $$ = $1;
     }
-  | selector_with_space {
+  | selector S {
       $$ = $1;
     }
-  | selector_with_space simple_selector {
+  | selector S simple_selector {
       $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner),
         SAC_DESCENDANT_SELECTOR);
       TEST_OBJ($$, @$);
       $$->desc.descendant.descendantSelector = $1;
-      $$->desc.descendant.simpleSelector = $2;
+      $$->desc.descendant.simpleSelector = $3;
     }
   | selector '+' maybe_spaces simple_selector {
       $$ = SAC_selector_alloc(
