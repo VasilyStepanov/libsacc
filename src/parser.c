@@ -440,3 +440,19 @@ int SAC_SetBase(SAC_Parser parser, const SAC_STRING base) {
 const SAC_STRING SAC_GetBase(SAC_Parser parser) {
   return PARSER(parser)->base;
 }
+
+
+
+void SAC_SetFatalErrorHandler(SAC_Parser parser,
+  SAC_FatalErrorHandler handler)
+{
+  PARSER(parser)->fatal_error_handler = handler;
+}
+
+
+
+void SAC_SetErrorHandler(SAC_Parser parser,
+  SAC_ErrorHandler handler)
+{
+  PARSER(parser)->error_handler = handler;
+}

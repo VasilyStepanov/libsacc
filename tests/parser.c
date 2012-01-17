@@ -458,13 +458,37 @@ static void property(
   const SAC_LexicalUnit *value,
   SAC_Boolean important)
 {
-  fprintf(USERDATA_FILE(userData),
-    "<property name=\"%s\"", propertyName);
+  fprintf(USERDATA_FILE(userData), "<property name=\"%s\"", propertyName);
   if (important == SAC_TRUE)
     fprintf(USERDATA_FILE(userData), " important=\"important\"");
   fprintf(USERDATA_FILE(userData), ">");
   dump_lexical_unit(USERDATA_FILE(userData), value);
   fprintf(USERDATA_FILE(userData), "</property>");
+}
+
+
+
+static const char* error_code(SAC_ErrorCode code) {
+  switch (code) {
+    case SAC_ERROR_NOT_SUPPORTED: return "NOT_SUPPORTED";
+    case SAC_ERROR_SYNTAX: return "SYNTAX";
+  }
+  return "UNKNOWN";
+}
+
+
+
+static void error(void *userData, const SAC_Error *error) {
+  fprintf(USERDATA_FILE(userData),
+    "<error type=\"%s\"", error_code(error->code));
+  if (error->line != -1)
+    fprintf(USERDATA_FILE(userData), " line=\"%d\"", error->line);
+  if (error->column != -1)
+    fprintf(USERDATA_FILE(userData), " column=\"%d\"", error->column);
+  fprintf(USERDATA_FILE(userData), ">");
+  if (error->data != NULL)
+    fprintf(USERDATA_FILE(userData), "%s", error->data);
+  fprintf(USERDATA_FILE(userData), "</error>");
 }
 
 
@@ -482,6 +506,7 @@ static SAC_Parser create_parser(FILE *out) {
   SAC_SetFontFaceHandler(parser, start_font_face, end_font_face);
   SAC_SetStyleHandler(parser, start_style, end_style);
   SAC_SetPropertyHandler(parser, property);
+  SAC_SetErrorHandler(parser, error);
   SAC_SetUserData(parser, out);
   return parser;
 }
