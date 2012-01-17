@@ -30,7 +30,7 @@ sacc_LDADD = $(top_srcdir)/src/libsacc.la
 test: test_suite sacc
 	./test_suite
 	@for css in data/*_*.css; do \
-	  type=`expr match "$$css" 'data/.*_\(.*\)\.css'`; \
+	  type=`expr match "$$css" 'data/[0-9]\+_\([a-z]\+\)'`; \
 	  echo "$$css"; \
 	  xml=$${css/%css/xml}; \
 	  $(XML_FORMAT) $$xml > expected.xml; \
