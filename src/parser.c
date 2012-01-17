@@ -35,8 +35,31 @@ struct _SAC_Parser {
   SAC_EndStyleHandler end_style_handler;
   SAC_PropertyHandler property_handler;
   SAC_FatalErrorHandler fatal_error_handler;
+  SAC_ErrorHandler error_handler;
   void *user_data;
 };
+
+
+
+static void SAC_parser_print_error(
+  signed int line, signed int column, const char *msg, const char *data)
+{
+  if (line != -1) {
+    if (column != -1) {
+      if  (data != NULL) {
+        fprintf(stderr, "sacc:%d:%d: %s: %s\n", line, column, msg, data);
+      } else {
+        fprintf(stderr, "sacc:%d:%d: %s\n", line, column, msg);
+      }
+    } else {
+      if  (data != NULL) {
+        fprintf(stderr, "sacc:%d: %s: %s\n", line, msg, data);
+      } else {
+        fprintf(stderr, "sacc:%d: %s\n", line, msg);
+      }
+    }
+  }
+}
 
 
 
@@ -45,16 +68,25 @@ static void SAC_default_fatal_error_handler(void *userData SAC_UNUSED,
 {
   switch (error->code) {
     case SAC_FATAL_ERROR_NO_MEMORY:
-      fprintf(stderr, "sacc:");
-      if (error->line != -1) {
-        if (error->column != -1) {
-          fprintf(stderr, "%d:%d:", error->line, error->column);
-        } else {
-          fprintf(stderr, "%d:", error->line);
-        }
-      }
-      fprintf(stderr, " out of memory\n");
-    break;
+      SAC_parser_print_error(error->line, error->column, "out of memory", NULL);
+      break;
+  }
+}
+
+
+
+static void SAC_default_error_handler(void *userData SAC_UNUSED,
+  const SAC_Error *error)
+{
+  switch (error->code) {
+    case SAC_ERROR_NOT_SUPPORTED:
+      SAC_parser_print_error(error->line, error->column,
+        "unspecified error", error->data);
+      break;
+    case SAC_ERROR_SYNTAX:
+      SAC_parser_print_error(error->line, error->column,
+        "syntax error", error->data);
+      break;
   }
 }
 
@@ -130,6 +162,21 @@ void SAC_parser_fatal_error_handler(SAC_Parser parser,
   error.column = column;
   error.code = code;
   PARSER(parser)->fatal_error_handler(PARSER(parser)->user_data, &error);
+}
+
+
+
+void SAC_parser_error_handler(SAC_Parser parser,
+  signed int line, signed int column,
+  SAC_ErrorCode code, const SAC_STRING data)
+{
+  SAC_Error error;
+  
+  error.line = line;
+  error.column = column;
+  error.code = code;
+  error.data = data;
+  PARSER(parser)->error_handler(PARSER(parser)->user_data, &error);
 }
 
 
@@ -293,6 +340,7 @@ SAC_Parser SAC_CreateParser() {
 
   memset(parser, 0, sizeof(struct _SAC_Parser));
   parser->fatal_error_handler = SAC_default_fatal_error_handler;
+  parser->error_handler = SAC_default_error_handler;
   return parser;
 }
 

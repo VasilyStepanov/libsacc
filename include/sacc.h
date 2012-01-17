@@ -644,16 +644,15 @@ void SAC_SetFatalErrorHandler(SAC_Parser parser,
 
 
 typedef enum _SAC_ErrorCode {
-  SAC_UNSPECIFIED_ERR,
-  SAC_NOT_SUPPORTED_ERR,
-  SAC_SYNTAX_ERR
+  SAC_ERROR_NOT_SUPPORTED,
+  SAC_ERROR_SYNTAX
 } SAC_ErrorCode;
 
 typedef struct _SAC_Error {
   signed int line;   /* -1 if unknown */
   signed int column; /* -1 if unknown */
-  SAC_ErrorCode   code;
-  SAC_STRING data; /* NULL if it is not relevant */
+  SAC_ErrorCode code;
+  const SAC_STRING data; /* NULL if it is not relevant */
 } SAC_Error;
 
 typedef void (*SAC_ErrorHandler)(void *userData,
