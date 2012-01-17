@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<document>
+  <property name="valid1">
+    <ident>foo</ident>
+  </property>
+  <error type="SYNTAX" line="2" column="11">unexpected token while parsing property expression</error>
+  <property name="valid2">
+    <ident>bar</ident>
+  </property>
+</document>

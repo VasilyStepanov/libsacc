@@ -30,7 +30,7 @@
 #define YYLEX_PARAM scanner
 #define YYPARSE_PARAM scanner
 
-void yyerror(const char *msg) { printf("ERROR: %s\n", msg); }
+void yyerror() { }
 extern int yylex();
 
 #define TEST_OBJ(obj, loc) \
@@ -39,6 +39,14 @@ extern int yylex();
       (loc).first_line, (loc).first_column, SAC_FATAL_ERROR_NO_MEMORY); \
     YYABORT; \
   }
+
+#define SAC_ERROR(loc, type, data) \
+  SAC_parser_error_handler(YY_SCANNER_PARSER(scanner), \
+    loc.first_line, loc.first_column, type, data); \
+  yyclearin;
+
+#define SAC_SYNTAX_ERROR(loc, data) \
+  SAC_ERROR(loc, SAC_ERROR_SYNTAX, data)
   
 
 %}
@@ -584,6 +592,10 @@ sac_maybe_declaration
         $1, expr, $5);
     }
   | /* empty */
+  | property ':' maybe_spaces error {
+      SAC_SYNTAX_ERROR(@4,
+        "unexpected token while parsing property expression");
+    }
   ;
 maybe_prio
   : IMPORTANT_SYM maybe_spaces {
