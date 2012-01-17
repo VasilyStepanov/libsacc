@@ -130,6 +130,7 @@ SAC_Pair pair;
 %type <vector> sac_style_start;
 %type <vector> sac_media_start;
 %type <sel> selector;
+%type <sel> selector_with_space;
 %type <sel> simple_selector;
 %type <sel> element_name;
 %type <cond> attribute_condition;
@@ -435,9 +436,24 @@ sac_style_start
       $$ = vector;
     }
   ;
+selector_with_space
+  : selector S {
+      $$ = $1;
+    }
+  ;
 selector
   : simple_selector {
       $$ = $1;
+    }
+  | selector_with_space {
+      $$ = $1;
+    }
+  | selector_with_space simple_selector {
+      $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner),
+        SAC_DESCENDANT_SELECTOR);
+      TEST_OBJ($$, @$);
+      $$->desc.descendant.descendantSelector = $1;
+      $$->desc.descendant.simpleSelector = $2;
     }
   | selector '+' maybe_spaces simple_selector {
       $$ = SAC_selector_alloc(
@@ -453,16 +469,9 @@ selector
       $$->desc.descendant.descendantSelector = $1;
       $$->desc.descendant.simpleSelector = $4;
     }
-  | selector simple_selector {
-      $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner),
-        SAC_DESCENDANT_SELECTOR);
-      TEST_OBJ($$, @$);
-      $$->desc.descendant.descendantSelector = $1;
-      $$->desc.descendant.simpleSelector = $2;
-    }
   ;
 simple_selector
-  : attribute_conditions maybe_spaces {
+  : attribute_conditions {
       $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner),
         SAC_CONDITIONAL_SELECTOR);
       TEST_OBJ($$, @$);
@@ -471,7 +480,7 @@ simple_selector
       TEST_OBJ($$->desc.conditional.simpleSelector, @$);
       $$->desc.conditional.condition = $1;
     }
-  | element_name maybe_attribute_conditions maybe_spaces {
+  | element_name maybe_attribute_conditions {
       if ($2 == NULL) {
         $$ = $1;
       } else {
