@@ -34,16 +34,20 @@ void yyerror() { }
 extern int yylex();
 
 #define TEST_OBJ(obj, loc) \
-  if ((obj) == NULL) { \
-    SAC_parser_fatal_error_handler(YY_SCANNER_PARSER(scanner), \
-      (loc).first_line, (loc).first_column, SAC_FATAL_ERROR_NO_MEMORY); \
-    YYABORT; \
-  }
+  do { \
+    if ((obj) == NULL) { \
+      SAC_parser_fatal_error_handler(YY_SCANNER_PARSER(scanner), \
+        (loc).first_line, (loc).first_column, SAC_FATAL_ERROR_NO_MEMORY); \
+      YYABORT; \
+    } \
+  } while (0)
 
 #define SAC_ERROR(loc, type, data) \
-  SAC_parser_error_handler(YY_SCANNER_PARSER(scanner), \
-    loc.first_line, loc.first_column, type, data); \
-  yyclearin;
+  do { \
+    SAC_parser_error_handler(YY_SCANNER_PARSER(scanner), \
+      loc.first_line, loc.first_column, type, data); \
+    yyclearin; \
+  } while (0)
 
 #define SAC_SYNTAX_ERROR(loc, data) \
   SAC_ERROR(loc, SAC_ERROR_SYNTAX, data)
