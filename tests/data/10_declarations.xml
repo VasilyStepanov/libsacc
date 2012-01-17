@@ -3,7 +3,7 @@
   <property name="prop-inherit1">
     <inherit/>
   </property>
-  <property name="prop-inherit2">
+  <property name="prop-inherit2" important="important">
     <inherit/>
   </property>
   <property name="prop-string">

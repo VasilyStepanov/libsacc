@@ -1,5 +1,5 @@
 prop-inherit1 : inherit;
-prop-inherit2 : Inherit;
+prop-inherit2 : Inherit ! important;
 prop-string : 'string' "string";
 prop-uri1 : url( 	"uri"	 );
 prop-uri2 : url( 	http://example.com/	 );
