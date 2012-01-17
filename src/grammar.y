@@ -259,8 +259,15 @@ maybe_attribute_conditions
   : /* empty */ {
       $$ = NULL;
     }
-  | attribute_conditions {
-      $$ = $1;
+  | maybe_attribute_conditions attribute_condition {
+      if ($1 == NULL) {
+        $$ = $2;
+      } else {
+        $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_AND_CONDITION);
+        TEST_OBJ($$, @$);
+        $$->desc.combinator.firstCondition = $1;
+        $$->desc.combinator.secondCondition = $2;
+      }
     }
   ;
 attribute_conditions
