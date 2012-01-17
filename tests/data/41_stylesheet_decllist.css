@@ -1,0 +1,17 @@
+element {
+  prop1 : ident;
+}
+
+element {
+  prop3 : ident
+}
+
+element {
+  prop4 : ident;
+  prop5 : ident;
+}
+
+element {
+  prop6 : ident;
+  prop7 : ident
+}

@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<document>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="element"/>
+    </start_selectors>
+    <property name="prop1">
+      <ident>ident</ident>
+    </property>
+    <end_selectors>
+      <selector type="element_node" localName="element"/>
+    </end_selectors>
+  </style>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="element"/>
+    </start_selectors>
+    <property name="prop3">
+      <ident>ident</ident>
+    </property>
+    <end_selectors>
+      <selector type="element_node" localName="element"/>
+    </end_selectors>
+  </style>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="element"/>
+    </start_selectors>
+    <property name="prop4">
+      <ident>ident</ident>
+    </property>
+    <property name="prop5">
+      <ident>ident</ident>
+    </property>
+    <end_selectors>
+      <selector type="element_node" localName="element"/>
+    </end_selectors>
+  </style>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="element"/>
+    </start_selectors>
+    <property name="prop6">
+      <ident>ident</ident>
+    </property>
+    <property name="prop7">
+      <ident>ident</ident>
+    </property>
+    <end_selectors>
+      <selector type="element_node" localName="element"/>
+    </end_selectors>
+  </style>
+</document>
