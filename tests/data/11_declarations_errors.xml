@@ -14,4 +14,8 @@
   <property name="valid4">
     <ident>green</ident>
   </property>
+  <property name="valid5">
+    <ident>center</ident>
+  </property>
+  <error type="SYNTAX" line="6" column="17">unexpected 'important' token while parsing property expression</error>
 </document>

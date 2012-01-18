@@ -597,6 +597,8 @@ sac_maybe_declaration
     }
   | /* empty */
   | property ':' maybe_spaces expr maybe_prio error {
+      /* p {color: red !important fail;} */
+
       SAC_LexicalUnit *expr;
       
       expr = SAC_lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner));
@@ -608,7 +610,15 @@ sac_maybe_declaration
       SAC_SYNTAX_ERROR(@6,
         "unexpected token after property expression");
     }
+  | IMPORTANT_SYM maybe_spaces {
+      /* div { text-align: center; !important } */
+
+      SAC_SYNTAX_ERROR(@1,
+        "unexpected 'important' token while parsing property expression");
+    }
   | property ':' maybe_spaces error {
+      /* p { weight: *; } */
+
       SAC_SYNTAX_ERROR(@4,
         "unexpected token while parsing property expression");
     }
