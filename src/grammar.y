@@ -614,6 +614,12 @@ sac_maybe_declaration
       SAC_SYNTAX_ERROR(@1,
         "unexpected 'important' token while parsing property expression");
     }
+  | property ':' maybe_spaces {
+      /* div { font-family: } */
+
+      SAC_SYNTAX_ERROR(@3,
+        "property expression expected");
+    }
   | property ':' maybe_spaces error {
       /* p { weight: *; } */
 
