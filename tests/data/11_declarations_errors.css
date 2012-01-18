@@ -3,4 +3,5 @@ invalid : *;
 valid2 : bar;
 valid3 : red !important fail;
 valid4 : green;
-valid5: center; !important;
+valid5 : center; !important;
+valid6 : foo;

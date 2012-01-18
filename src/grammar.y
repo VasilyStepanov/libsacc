@@ -43,11 +43,8 @@ extern int yylex();
   } while (0)
 
 #define SAC_ERROR(loc, type, data) \
-  do { \
-    SAC_parser_error_handler(YY_SCANNER_PARSER(scanner), \
-      loc.first_line, loc.first_column, type, data); \
-    yyclearin; \
-  } while (0)
+  SAC_parser_error_handler(YY_SCANNER_PARSER(scanner), \
+    loc.first_line, loc.first_column, type, data)
 
 #define SAC_SYNTAX_ERROR(loc, data) \
   SAC_ERROR(loc, SAC_ERROR_SYNTAX, data)
@@ -609,6 +606,7 @@ sac_maybe_declaration
 
       SAC_SYNTAX_ERROR(@6,
         "unexpected token after property expression");
+      yyclearin;
     }
   | IMPORTANT_SYM maybe_spaces {
       /* div { text-align: center; !important } */
@@ -621,6 +619,7 @@ sac_maybe_declaration
 
       SAC_SYNTAX_ERROR(@4,
         "unexpected token while parsing property expression");
+      yyclearin;
     }
   ;
 maybe_prio

@@ -17,5 +17,8 @@
   <property name="valid5">
     <ident>center</ident>
   </property>
-  <error type="SYNTAX" line="6" column="17">unexpected 'important' token while parsing property expression</error>
+  <error type="SYNTAX" line="6" column="18">unexpected 'important' token while parsing property expression</error>
+  <property name="valid6">
+    <ident>foo</ident>
+  </property>
 </document>
