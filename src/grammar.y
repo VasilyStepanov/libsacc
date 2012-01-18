@@ -593,6 +593,11 @@ sac_maybe_declaration
         $1, expr, $5);
     }
   | /* empty */
+  | property error {
+      SAC_SYNTAX_ERROR(@2,
+        "colon expected");
+      yyclearin;
+    }
   | property ':' maybe_spaces expr maybe_prio error {
       /* p {color: red !important fail;} */
 
