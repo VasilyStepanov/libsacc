@@ -5,3 +5,5 @@ valid3 : red !important fail;
 valid4 : green;
 valid5 : center; !important;
 valid6 : foo;
+color{;color:maroon};
+valid7 : foo;

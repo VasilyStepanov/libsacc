@@ -632,6 +632,12 @@ sac_maybe_declaration
         "unexpected token while parsing property expression");
       yyclearin;
     }
+  | property invalid_block {
+      /* div { color{;color:maroon} } */
+
+      SAC_SYNTAX_ERROR(@2,
+        "expected property expression");
+    }
   ;
 maybe_prio
   : IMPORTANT_SYM maybe_spaces {
@@ -877,4 +883,12 @@ hexcolor
         TEST_OBJ($$->desc.function.parameters, @$);
       }
     }
+  ;
+invalid_block
+  : '{' invalid_blocks error '}'
+  | '{' error '}'
+  ;
+invalid_blocks
+  : invalid_block
+  | invalid_blocks error invalid_block
   ;
