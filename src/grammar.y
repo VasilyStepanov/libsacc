@@ -30,7 +30,7 @@
 #define YYLEX_PARAM scanner
 #define YYPARSE_PARAM scanner
 
-void yyerror() { }
+int yyerror(const char *data) { return 0; }
 extern int yylex();
 
 #define TEST_OBJ(obj, loc) \
