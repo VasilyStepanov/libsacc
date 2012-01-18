@@ -7,4 +7,11 @@
   <property name="valid2">
     <ident>bar</ident>
   </property>
+  <property name="valid3" important="important">
+    <ident>red</ident>
+  </property>
+  <error type="SYNTAX" line="4" column="25">unexpected token after property expression</error>
+  <property name="valid4">
+    <ident>green</ident>
+  </property>
 </document>

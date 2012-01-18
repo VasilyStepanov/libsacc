@@ -596,6 +596,18 @@ sac_maybe_declaration
         $1, expr, $5);
     }
   | /* empty */
+  | property ':' maybe_spaces expr maybe_prio error {
+      SAC_LexicalUnit *expr;
+      
+      expr = SAC_lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(expr, @4);
+
+      SAC_parser_property_handler(YY_SCANNER_PARSER(scanner),
+        $1, expr, $5);
+
+      SAC_SYNTAX_ERROR(@6,
+        "unexpected token after property expression");
+    }
   | property ':' maybe_spaces error {
       SAC_SYNTAX_ERROR(@4,
         "unexpected token while parsing property expression");
