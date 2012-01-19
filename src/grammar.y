@@ -666,15 +666,21 @@ expr
       TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $3), @3);
     }
   | expr invalid_blocks {
+      $$ = $1;
+
       SAC_SYNTAX_ERROR(@2,
         "unexpected '{' while parsing property expression");
     }
   | expr invalid_blocks error {
+      $$ = $1;
+
       SAC_SYNTAX_ERROR(@2,
         "unexpected '{' while parsing property expression");
       yyclearin;
     }
   | expr error {
+      $$ = $1;
+
       SAC_SYNTAX_ERROR(@2,
         "unexpected token while parsing property expression");
       yyclearin;
