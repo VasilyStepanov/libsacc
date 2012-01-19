@@ -274,6 +274,10 @@ strict_declarations
       SAC_SYNTAX_ERROR(@2,
         "Unexpected token while parsing style declaration");
     }
+  | error ';' maybe_spaces {
+      SAC_SYNTAX_ERROR(@1,
+        "Unexpected token while parsing style declaration");
+    }
   ;
 maybe_attribute_conditions
   : /* empty */ {
