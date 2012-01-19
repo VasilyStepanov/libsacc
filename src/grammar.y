@@ -148,6 +148,7 @@ SAC_Pair pair;
 %type <cond> attrib;
 %type <cond> pseudo;
 %type <cond_type> attrib_match;
+%type <boolean> prio;
 %type <boolean> maybe_prio;
 %type <pair> page_start;
 
@@ -598,7 +599,7 @@ maybe_declaration
         "colon expected");
       yyclearin;
     }
-  | property ':' maybe_spaces expr maybe_prio error {
+  | property ':' maybe_spaces expr prio error {
       /* p {color: red !important fail;} */
 
       SAC_LexicalUnit *expr;
@@ -639,9 +640,14 @@ maybe_declaration
         "expected property expression");
     }
   ;
-maybe_prio
+prio
   : IMPORTANT_SYM maybe_spaces {
       $$ = SAC_TRUE;
+    }
+  ;
+maybe_prio
+  : prio {
+      $$ = $1;
     }
   | /* empty */ {
       $$ = SAC_FALSE;
