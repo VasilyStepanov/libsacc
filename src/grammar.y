@@ -261,9 +261,14 @@ selectors
       TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4), @4);
     }
   ;
+strict_declarations
+  : declaration ';' maybe_spaces
+  | strict_declarations declaration ';' maybe_spaces
+  ;
 maybe_declarations
-  : maybe_declaration 
-  | maybe_declarations ';' maybe_spaces maybe_declaration
+  : /* empty */
+  | strict_declarations
+  | strict_declarations declaration
   ;
 maybe_attribute_conditions
   : /* empty */ {
@@ -583,7 +588,7 @@ pseudo
     }
   | ':' FUNCTION maybe_spaces maybe_indent ')'
   ;
-maybe_declaration
+declaration
   : property ':' maybe_spaces expr maybe_prio {
       SAC_LexicalUnit *expr;
       
@@ -593,7 +598,6 @@ maybe_declaration
       SAC_parser_property_handler(YY_SCANNER_PARSER(scanner),
         $1, expr, $5);
     }
-  | /* empty */
   | property error {
       SAC_SYNTAX_ERROR(@2,
         "colon expected");
