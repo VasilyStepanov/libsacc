@@ -261,14 +261,15 @@ selectors
       TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4), @4);
     }
   ;
+maybe_declarations
+  : /* empty */
+  | declaration
+  | strict_declarations
+  | strict_declarations declaration
+  ;
 strict_declarations
   : declaration ';' maybe_spaces
   | strict_declarations declaration ';' maybe_spaces
-  ;
-maybe_declarations
-  : /* empty */
-  | strict_declarations
-  | strict_declarations declaration
   ;
 maybe_attribute_conditions
   : /* empty */ {
