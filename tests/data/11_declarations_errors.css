@@ -12,3 +12,6 @@ valid9 : foo;
 valid10 : bar{;color:maroon}*;
 valid11 : bar*;
 valid12 : foo;
+*;
+valid13 : foo;
+

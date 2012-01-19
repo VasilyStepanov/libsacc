@@ -44,4 +44,8 @@
   <property name="valid12">
     <ident>foo</ident>
   </property>
+  <error type="SYNTAX" line="15" column="1">Unexpected token while parsing style declaration</error>
+  <property name="valid13">
+    <ident>foo</ident>
+  </property>
 </document>
