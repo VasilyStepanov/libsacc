@@ -756,29 +756,49 @@ term
       $$->desc.dimension.unit = "grad";
       $$->desc.dimension.value.ureal = $1;
     }
-  | TIME_MS maybe_spaces {
+  | unary_operator TIME_MS maybe_spaces {
+      if ($1 == '-') {
+        SAC_SYNTAX_ERROR(@1,
+          "negative time not allowed");
+      }
+
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_MILLISECOND);
       TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "ms";
-      $$->desc.dimension.value.ureal = $1;
+      $$->desc.dimension.value.ureal = $2;
     }
-  | TIME_S maybe_spaces {
+  | unary_operator TIME_S maybe_spaces {
+      if ($1 == '-') {
+        SAC_SYNTAX_ERROR(@1,
+          "negative time not allowed");
+      }
+
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_SECOND);
       TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "s";
-      $$->desc.dimension.value.ureal = $1;
+      $$->desc.dimension.value.ureal = $2;
     }
-  | FREQ_HZ maybe_spaces {
+  | unary_operator FREQ_HZ maybe_spaces {
+      if ($1 == '-') {
+        SAC_SYNTAX_ERROR(@1,
+          "negative frequency not allowed");
+      }
+
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_HERTZ);
       TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "Hz";
-      $$->desc.dimension.value.ureal = $1;
+      $$->desc.dimension.value.ureal = $2;
     }
-  | FREQ_KHZ maybe_spaces {
+  | unary_operator FREQ_KHZ maybe_spaces {
+      if ($1 == '-') {
+        SAC_SYNTAX_ERROR(@1,
+          "negative frequency not allowed");
+      }
+
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_KILOHERTZ);
       TEST_OBJ($$, @$);
       $$->desc.stringValue = "kHz";
-      $$->desc.dimension.value.ureal = $1;
+      $$->desc.dimension.value.ureal = $2;
     }
   | STRING maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);

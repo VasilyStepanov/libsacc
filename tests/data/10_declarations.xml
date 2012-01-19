@@ -73,6 +73,8 @@
       <percentage dimension="%">-148</percentage>
     </sub>
   </property>
+  <error type="SYNTAX" line="10" column="27">negative frequency not allowed</error>
+  <error type="SYNTAX" line="10" column="35">negative frequency not allowed</error>
   <property name="prop-freq">
     <sub>
       <hertz dimension="Hz">50.1</hertz>
@@ -80,13 +82,27 @@
     <sub>
       <khertz dimension="kHz">5.1</khertz>
     </sub>
+    <sub>
+      <hertz dimension="Hz">10.1</hertz>
+    </sub>
+    <sub>
+      <khertz dimension="kHz">0.1</khertz>
+    </sub>
   </property>
+  <error type="SYNTAX" line="11" column="26">negative time not allowed</error>
+  <error type="SYNTAX" line="11" column="31">negative time not allowed</error>
   <property name="prop-time">
     <sub>
       <secs dimension="s">25.1</secs>
     </sub>
     <sub>
       <msecs dimension="ms">50.2</msecs>
+    </sub>
+    <sub>
+      <secs dimension="s">0.1</secs>
+    </sub>
+    <sub>
+      <msecs dimension="ms">10.1</msecs>
     </sub>
   </property>
   <property name="prop-angle">
