@@ -7,3 +7,8 @@ valid5 : center; !important;
 valid6 : foo;
 color{;color:maroon};
 valid7 : foo;
+valid8 : bar{;color:maroon};
+valid9 : foo;
+valid10 : bar{;color:maroon}*;
+valid11 : bar*;
+valid12 : foo;

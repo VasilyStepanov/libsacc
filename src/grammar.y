@@ -659,6 +659,20 @@ expr
         TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $2), @2);
       TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $3), @3);
     }
+  | expr invalid_blocks {
+      SAC_SYNTAX_ERROR(@2,
+        "unexpected '{' while parsing property expression");
+    }
+  | expr invalid_blocks error {
+      SAC_SYNTAX_ERROR(@2,
+        "unexpected '{' while parsing property expression");
+      yyclearin;
+    }
+  | expr error {
+      SAC_SYNTAX_ERROR(@2,
+        "unexpected token while parsing property expression");
+      yyclearin;
+    }
   ;
 term
   : unary_operator INT maybe_spaces {
