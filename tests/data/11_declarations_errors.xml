@@ -33,6 +33,7 @@
     <ident>foo</ident>
   </property>
   <error type="SYNTAX" line="12" column="14">unexpected '{' while parsing property expression</error>
+  <error type="SYNTAX" line="12" column="29">unexpected token while parsing property expression</error>
   <property name="valid10">
     <ident>bar</ident>
   </property>
