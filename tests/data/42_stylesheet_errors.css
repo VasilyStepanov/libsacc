@@ -3,7 +3,5 @@ valid-rule2 { }
 invalid-rule3 { x : y; *; }
 invalid-rule4 { *; x : y; }
 invalid-rule5 { *; }
-/*
 invalid-rule6 { * }
-*/
 valid-rule3 { foo : bar }

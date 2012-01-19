@@ -23,7 +23,7 @@
     <property name="x">
       <ident>y</ident>
     </property>
-    <error type="SYNTAX" line="3" column="24">Unexpected token while parsing style declaration</error>
+    <error type="SYNTAX" line="3" column="24">unexpected token while parsing style declaration</error>
     <end_selectors>
       <selector type="element_node" localName="invalid-rule3"/>
     </end_selectors>
@@ -32,7 +32,7 @@
     <start_selectors>
       <selector type="element_node" localName="invalid-rule4"/>
     </start_selectors>
-    <error type="SYNTAX" line="4" column="17">Unexpected token while parsing style declaration</error>
+    <error type="SYNTAX" line="4" column="17">unexpected token while parsing style declaration</error>
     <property name="x">
       <ident>y</ident>
     </property>
@@ -44,9 +44,18 @@
     <start_selectors>
       <selector type="element_node" localName="invalid-rule5"/>
     </start_selectors>
-    <error type="SYNTAX" line="5" column="17">Unexpected token while parsing style declaration</error>
+    <error type="SYNTAX" line="5" column="17">unexpected token while parsing style declaration</error>
     <end_selectors>
       <selector type="element_node" localName="invalid-rule5"/>
+    </end_selectors>
+  </style>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="invalid-rule6"/>
+    </start_selectors>
+    <error type="SYNTAX" line="6" column="17">unexpected token while parsing style declaration</error>
+    <end_selectors>
+      <selector type="element_node" localName="invalid-rule6"/>
     </end_selectors>
   </style>
   <style>

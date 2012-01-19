@@ -172,6 +172,14 @@ start
   | style_declarations_start maybe_declarations {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
     }
+  | style_declarations_start error {
+      SAC_SYNTAX_ERROR(@2,
+        "unexpected token while parsing style declaration");
+
+      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+
+      yyclearin;
+    }
   | START_AS_SELECTORS selectors {
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
@@ -272,11 +280,11 @@ strict_declarations
   | strict_declarations declaration ';' maybe_spaces
   | strict_declarations error ';' maybe_spaces {
       SAC_SYNTAX_ERROR(@2,
-        "Unexpected token while parsing style declaration");
+        "unexpected token while parsing style declaration");
     }
   | error ';' maybe_spaces {
       SAC_SYNTAX_ERROR(@1,
-        "Unexpected token while parsing style declaration");
+        "unexpected token while parsing style declaration");
     }
   ;
 maybe_attribute_conditions
@@ -372,6 +380,9 @@ page
       SAC_parser_end_page_handler(YY_SCANNER_PARSER(scanner),
         $1.first, $1.second);
     }
+    /**
+     * TODO: add maybe_declarations error rule
+     */
   ;
 page_start
   : PAGE_SYM maybe_spaces maybe_indent maybe_pseudo_page {
@@ -400,6 +411,9 @@ font_face
   : font_face_start '{' maybe_spaces maybe_declarations '}' {
       SAC_parser_end_font_face_handler(YY_SCANNER_PARSER(scanner));
     }
+    /**
+     * TODO: add maybe_declarations error rule
+     */
   ;
 font_face_start
   : FONT_FACE_SYM maybe_spaces {
@@ -439,6 +453,12 @@ property
   ;
 ruleset
   : style_start '{' maybe_spaces maybe_declarations '}' {
+      SAC_parser_end_style_handler(YY_SCANNER_PARSER(scanner), $1);
+    }
+  | style_start '{' maybe_spaces error '}' {
+      SAC_SYNTAX_ERROR(@4,
+        "unexpected token while parsing style declaration");
+      
       SAC_parser_end_style_handler(YY_SCANNER_PARSER(scanner), $1);
     }
   ;
