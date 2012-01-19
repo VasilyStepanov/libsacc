@@ -278,12 +278,12 @@ maybe_declarations
 strict_declarations
   : declaration ';' maybe_spaces
   | strict_declarations declaration ';' maybe_spaces
-  | strict_declarations error ';' maybe_spaces {
-      SAC_SYNTAX_ERROR(@2,
-        "unexpected token while parsing style declaration");
-    }
   | error ';' maybe_spaces {
       SAC_SYNTAX_ERROR(@1,
+        "unexpected token while parsing style declaration");
+    }
+  | strict_declarations error ';' maybe_spaces {
+      SAC_SYNTAX_ERROR(@2,
         "unexpected token while parsing style declaration");
     }
   ;
