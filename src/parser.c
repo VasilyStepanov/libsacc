@@ -47,15 +47,19 @@ static void SAC_parser_print_error(
   if (line != -1) {
     if (column != -1) {
       if  (data != NULL) {
-        fprintf(stderr, "sacc:%d:%d: %s: %s\n", line, column, msg, data);
+        fprintf(stderr, "sacc:%d:%d: %s: %s\n",
+          line + 1, column + 1, msg, data);
       } else {
-        fprintf(stderr, "sacc:%d:%d: %s\n", line, column, msg);
+        fprintf(stderr, "sacc:%d:%d: %s\n",
+          line + 1, column + 1, msg);
       }
     } else {
       if  (data != NULL) {
-        fprintf(stderr, "sacc:%d: %s: %s\n", line, msg, data);
+        fprintf(stderr, "sacc:%d: %s: %s\n",
+          line + 1, msg, data);
       } else {
-        fprintf(stderr, "sacc:%d: %s\n", line, msg);
+        fprintf(stderr, "sacc:%d: %s\n",
+          line + 1, msg);
       }
     }
   }

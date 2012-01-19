@@ -482,9 +482,9 @@ static void error(void *userData, const SAC_Error *error) {
   fprintf(USERDATA_FILE(userData),
     "<error type=\"%s\"", error_code(error->code));
   if (error->line != -1)
-    fprintf(USERDATA_FILE(userData), " line=\"%d\"", error->line);
+    fprintf(USERDATA_FILE(userData), " line=\"%d\"", error->line + 1);
   if (error->column != -1)
-    fprintf(USERDATA_FILE(userData), " column=\"%d\"", error->column);
+    fprintf(USERDATA_FILE(userData), " column=\"%d\"", error->column + 1);
   fprintf(USERDATA_FILE(userData), ">");
   if (error->data != NULL)
     fprintf(USERDATA_FILE(userData), "%s", error->data);

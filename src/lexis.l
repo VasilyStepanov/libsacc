@@ -29,15 +29,15 @@
 
 #define YY_USER_ACTION \
   yylloc->first_line = yylloc->last_line = yylineno; \
-  yylloc->first_column = yycolumn; \
+  yylloc->first_column = yycolumn - 1; \
   yylloc->last_column = yycolumn + yyleng - 1; \
   yycolumn += yyleng;
 
 
 #define YY_USER_INIT \
   do { \
-    yylineno = 1; \
-    yycolumn = 1; \
+    yylineno = 0; \
+    yycolumn = 0; \
   } while (0)
 
 %}
