@@ -1,7 +1,11 @@
 valid-rule1 { }
 valid-rule2 { }
 invalid-rule3 { x : y; *; }
-invalid-rule4 { *; x : y; }
-invalid-rule5 { *; }
-invalid-rule6 { * }
+/*
+invalid-rule4 { x : y; * }
+*/
+invalid-rule5 { *; x : y; }
+invalid-rule6 { * a : b; x : y }
+invalid-rule7 { *; }
+invalid-rule8 { * }
 valid-rule3 { foo : bar }

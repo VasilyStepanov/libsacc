@@ -30,22 +30,13 @@
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="invalid-rule4"/>
+      <selector type="element_node" localName="invalid-rule5"/>
     </start_selectors>
-    <error type="SYNTAX" line="4" column="17">unexpected token while parsing style declaration</error>
+    <error type="SYNTAX" line="7" column="17">unexpected token while parsing style declaration</error>
     <property name="x">
       <ident>y</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="invalid-rule4"/>
-    </end_selectors>
-  </style>
-  <style>
-    <start_selectors>
-      <selector type="element_node" localName="invalid-rule5"/>
-    </start_selectors>
-    <error type="SYNTAX" line="5" column="17">unexpected token while parsing style declaration</error>
-    <end_selectors>
       <selector type="element_node" localName="invalid-rule5"/>
     </end_selectors>
   </style>
@@ -53,9 +44,30 @@
     <start_selectors>
       <selector type="element_node" localName="invalid-rule6"/>
     </start_selectors>
-    <error type="SYNTAX" line="6" column="17">unexpected token while parsing style declaration</error>
+    <error type="SYNTAX" line="8" column="17">unexpected token while parsing style declaration</error>
+    <property name="x">
+      <ident>y</ident>
+    </property>
     <end_selectors>
       <selector type="element_node" localName="invalid-rule6"/>
+    </end_selectors>
+  </style>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="invalid-rule7"/>
+    </start_selectors>
+    <error type="SYNTAX" line="9" column="17">unexpected token while parsing style declaration</error>
+    <end_selectors>
+      <selector type="element_node" localName="invalid-rule7"/>
+    </end_selectors>
+  </style>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="invalid-rule8"/>
+    </start_selectors>
+    <error type="SYNTAX" line="10" column="17">unexpected token while parsing style declaration</error>
+    <end_selectors>
+      <selector type="element_node" localName="invalid-rule8"/>
     </end_selectors>
   </style>
   <style>
