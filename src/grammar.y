@@ -269,24 +269,6 @@ selectors
       TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4), @4);
     }
   ;
-maybe_declarations
-  : /* empty */
-  | declaration
-  | strict_declarations
-  | strict_declarations declaration
-  ;
-strict_declarations
-  : declaration ';' maybe_spaces
-  | strict_declarations declaration ';' maybe_spaces
-  | error ';' maybe_spaces {
-      SAC_SYNTAX_ERROR(@1,
-        "unexpected token while parsing style declaration");
-    }
-  | strict_declarations error ';' maybe_spaces {
-      SAC_SYNTAX_ERROR(@2,
-        "unexpected token while parsing style declaration");
-    }
-  ;
 maybe_attribute_conditions
   : /* empty */ {
       $$ = NULL;
@@ -616,6 +598,24 @@ pseudo
       $$->desc.attribute.value = NULL;
     }
   | ':' FUNCTION maybe_spaces maybe_indent ')'
+  ;
+maybe_declarations
+  : /* empty */
+  | declaration
+  | strict_declarations
+  | strict_declarations declaration
+  ;
+strict_declarations
+  : declaration ';' maybe_spaces
+  | strict_declarations declaration ';' maybe_spaces
+  | error ';' maybe_spaces {
+      SAC_SYNTAX_ERROR(@1,
+        "unexpected token while parsing style declaration");
+    }
+  | strict_declarations error ';' maybe_spaces {
+      SAC_SYNTAX_ERROR(@2,
+        "unexpected token while parsing style declaration");
+    }
   ;
 declaration
   : property ':' maybe_spaces expr maybe_prio {
