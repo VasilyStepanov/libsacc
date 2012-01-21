@@ -8,7 +8,7 @@ GENERIC_CFLAGS = -Wall -Wextra -ansi -pedantic -D_XOPEN_SOURCE=700 \
 AM_CFLAGS = $(GENERIC_CFLAGS) -Werror
 
 BUILT_SOURCES = grammar.h
-AM_YFLAGS = -d
+AM_YFLAGS = -d --warnings=error
 AM_LFLAGS = -o$(LEX_OUTPUT_ROOT).c
 
 

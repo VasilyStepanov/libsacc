@@ -597,7 +597,9 @@ pseudo
       $$->desc.attribute.specified = SAC_FALSE;
       $$->desc.attribute.value = NULL;
     }
+/*
   | ':' FUNCTION maybe_spaces maybe_indent ')'
+*/
   ;
 maybe_declarations
   : /* empty */
