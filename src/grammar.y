@@ -53,7 +53,6 @@ extern int yylex();
 %}
 
 %union {
-int val;
 signed long integer;
 double real;
 char ch;
@@ -73,47 +72,48 @@ SAC_Pair pair;
 
 %start start
 
-%token <val> START_AS_STYLE_DECLARATIONS
-%token <val> START_AS_SELECTORS
-%token <val> START_AS_STYLESHEET
-%token <val> START_AS_RULE
-%token <val> START_AS_PROPERTY_VALUE
-%token <val> START_AS_PRIORITY
+%token START_AS_STYLE_DECLARATIONS
+%token START_AS_SELECTORS
+%token START_AS_STYLESHEET
+%token START_AS_RULE
+%token START_AS_PROPERTY_VALUE
+%token START_AS_PRIORITY
+
+%token CDC
+%token CDO
+%token CHARSET_SYM
+%token DASHMATCH
+%token DIMEN
+%token BAD_STRING
+%token BAD_URI
+%token FONT_FACE_SYM
+%token INCLUDES
+%token IMPORT_SYM
+%token IMPORTANT_SYM
+%token MEDIA_SYM
+%token NAMESPACE_SYM
+%token PAGE_SYM
+%token S
 
 %token <real> ANGLE_DEG
 %token <real> ANGLE_RAD
 %token <real> ANGLE_GRAD
-%token <val> CDC
-%token <val> CDO
-%token <val> CHARSET_SYM
-%token <val> DASHMATCH
-%token <val> DIMEN
-%token <val> BAD_STRING
-%token <val> BAD_URI
 %token <real> LENGTH_EM
 %token <real> LENGTH_EX
-%token <val> FONT_FACE_SYM
 %token <real> FREQ_HZ
 %token <real> FREQ_KHZ
 %token <str> FUNCTION
 %token <str> HASH
 %token <str> IDENT
-%token <val> INCLUDES
-%token <val> IMPORT_SYM
-%token <val> IMPORTANT_SYM
 %token <real> LENGTH_PIXEL
 %token <real> LENGTH_CENTIMETER
 %token <real> LENGTH_MILLIMETER
 %token <real> LENGTH_INCH
 %token <real> LENGTH_POINT
 %token <real> LENGTH_PICA
-%token <val> MEDIA_SYM
-%token <val> NAMESPACE_SYM
 %token <integer> INT
 %token <real> REAL
-%token <val> PAGE_SYM
 %token <real> PERCENTAGE
-%token <val> S
 %token <str> STRING
 %token <real> TIME_MS
 %token <real> TIME_S
