@@ -18,7 +18,7 @@
     <property name="color">
       <ident>green</ident>
     </property>
-    <error type="SYNTAX" line="2" column="18">unexpected token while parsing style declaration</error>
+    <error type="SYNTAX" line="2" column="24">colon expected while parsing style declaration</error>
     <end_selectors>
       <selector type="element_node" localName="p"/>
     </end_selectors>
@@ -30,7 +30,7 @@
     <property name="color">
       <ident>red</ident>
     </property>
-    <error type="SYNTAX" line="3" column="18">unexpected token while parsing style declaration</error>
+    <error type="SYNTAX" line="3" column="23">colon expected while parsing style declaration</error>
     <property name="color">
       <ident>green</ident>
     </property>
@@ -72,7 +72,7 @@
     <property name="color">
       <ident>green</ident>
     </property>
-    <error type="SYNTAX" line="6" column="18">unexpected token while parsing style declaration</error>
+    <error type="SYNTAX" line="6" column="23">colon expected while parsing style declaration</error>
     <end_selectors>
       <selector type="element_node" localName="p"/>
     </end_selectors>
@@ -84,7 +84,67 @@
     <property name="color">
       <ident>red</ident>
     </property>
-    <error type="SYNTAX" line="7" column="18">unexpected token while parsing style declaration</error>
+    <error type="SYNTAX" line="7" column="23">colon expected while parsing style declaration</error>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_selectors>
+      <selector type="element_node" localName="p"/>
+    </end_selectors>
+  </style>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="p"/>
+    </start_selectors>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <error type="SYNTAX" line="9" column="24">unexpected token while parsing property expression</error>
+    <end_selectors>
+      <selector type="element_node" localName="p"/>
+    </end_selectors>
+  </style>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="p"/>
+    </start_selectors>
+    <property name="color">
+      <ident>red</ident>
+    </property>
+    <error type="SYNTAX" line="10" column="24">unexpected token while parsing property expression</error>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_selectors>
+      <selector type="element_node" localName="p"/>
+    </end_selectors>
+  </style>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="p"/>
+    </start_selectors>
+    <property name="color">
+      <ident>red</ident>
+    </property>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <error type="SYNTAX" line="11" column="27">unexpected token after property expression</error>
+    <end_selectors>
+      <selector type="element_node" localName="p"/>
+    </end_selectors>
+  </style>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="p"/>
+    </start_selectors>
+    <property name="color">
+      <ident>red</ident>
+    </property>
+    <property name="color">
+      <ident>purple</ident>
+    </property>
+    <error type="SYNTAX" line="12" column="30">unexpected token after property expression</error>
     <property name="color">
       <ident>green</ident>
     </property>

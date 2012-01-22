@@ -21,26 +21,25 @@
   <property name="valid6">
     <ident>foo</ident>
   </property>
-  <error type="SYNTAX" line="8" column="6">expected property expression</error>
+  <error type="SYNTAX" line="8" column="6">colon expected while parsing style declaration</error>
   <property name="valid7">
     <ident>foo</ident>
   </property>
-  <error type="SYNTAX" line="10" column="13">unexpected '{' while parsing property expression</error>
   <property name="valid8">
     <ident>bar</ident>
   </property>
+  <error type="SYNTAX" line="10" column="13">unexpected token after property expression</error>
   <property name="valid9">
     <ident>foo</ident>
   </property>
-  <error type="SYNTAX" line="12" column="14">unexpected '{' while parsing property expression</error>
-  <error type="SYNTAX" line="12" column="29">unexpected token while parsing property expression</error>
   <property name="valid10">
     <ident>bar</ident>
   </property>
-  <error type="SYNTAX" line="13" column="14">unexpected token while parsing property expression</error>
+  <error type="SYNTAX" line="12" column="14">unexpected token after property expression</error>
   <property name="valid11">
     <ident>bar</ident>
   </property>
+  <error type="SYNTAX" line="13" column="14">unexpected token after property expression</error>
   <property name="valid12">
     <ident>foo</ident>
   </property>

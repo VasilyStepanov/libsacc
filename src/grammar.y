@@ -628,7 +628,7 @@ declaration
       SAC_parser_property_handler(YY_SCANNER_PARSER(scanner),
         $1, expr, $5);
     }
-  | property ':' maybe_spaces expr prio error {
+  | property ':' maybe_spaces expr prio declaration_errors {
       /* p {color: red !important fail;} */
 
       SAC_LexicalUnit *expr;
@@ -641,7 +641,36 @@ declaration
 
       SAC_SYNTAX_ERROR(@6,
         "unexpected token after property expression");
-      yyclearin;
+    }
+  | property ':' maybe_spaces expr declaration_errors {
+      /* p {color: red !important fail;} */
+
+      SAC_LexicalUnit *expr;
+      
+      expr = SAC_lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(expr, @4);
+
+      SAC_parser_property_handler(YY_SCANNER_PARSER(scanner),
+        $1, expr, SAC_FALSE);
+
+      SAC_SYNTAX_ERROR(@5,
+        "unexpected token after property expression");
+    }
+  | property ':' maybe_spaces declaration_errors {
+      /* p { weight: *; } */
+
+      SAC_SYNTAX_ERROR(@4,
+        "unexpected token while parsing property expression");
+    }
+  | property declaration_errors {
+      /* p { weight: *; } */
+
+      SAC_SYNTAX_ERROR(@2,
+        "colon expected while parsing style declaration");
+    }
+  | declaration_errors {
+      SAC_SYNTAX_ERROR(@1,
+        "unexpected token while parsing style declaration");
     }
   | IMPORTANT_SYM maybe_spaces {
       /* div { text-align: center; !important } */
@@ -654,17 +683,6 @@ declaration
 
       SAC_SYNTAX_ERROR(@3,
         "property expression expected");
-    }
-  | property ':' maybe_spaces error {
-      /* p { weight: *; } */
-
-      SAC_SYNTAX_ERROR(@4,
-        "unexpected token while parsing property expression");
-      yyclearin;
-    }
-  | declaration_errors {
-      SAC_SYNTAX_ERROR(@1,
-        "unexpected token while parsing style declaration");
     }
   ;
 declaration_errors
@@ -697,19 +715,6 @@ expr
       if ($2 != NULL)
         TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $2), @2);
       TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $3), @3);
-    }
-  | expr invalid_block {
-      $$ = $1;
-
-      SAC_SYNTAX_ERROR(@2,
-        "unexpected '{' while parsing property expression");
-    }
-  | expr error {
-      $$ = $1;
-
-      SAC_SYNTAX_ERROR(@2,
-        "unexpected token while parsing property expression");
-      yyclearin;
     }
   ;
 term
