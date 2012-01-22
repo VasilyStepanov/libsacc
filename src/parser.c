@@ -189,7 +189,7 @@ static int SAC_parser_clear(SAC_Parser parser) {
   SAC_mpool_close(PARSER(parser)->mpool);
   PARSER(parser)->mpool = SAC_mpool_open(16384);
   if (PARSER(parser)->mpool == NULL) {
-    SAC_parser_fatal_error_handler(parser, -1, -1, SAC_FATAL_ERROR_NO_MEMORY);
+    SAC_parser_fatal_error_handler(parser, 0, 0, SAC_FATAL_ERROR_NO_MEMORY);
     return 0;
   }
   return 1;
