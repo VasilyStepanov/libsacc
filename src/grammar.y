@@ -55,6 +55,7 @@ extern int yylex();
     loc.last_line + 1, loc.last_column + 1, \
     data);
   
+int yydebug = 0;
 
 %}
 
@@ -75,6 +76,7 @@ SAC_Pair pair;
 
 %locations
 %pure_parser
+%debug
 
 %nonassoc LOWEST
 
