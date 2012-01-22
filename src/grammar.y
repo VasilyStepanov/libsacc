@@ -628,11 +628,6 @@ declaration
       SAC_parser_property_handler(YY_SCANNER_PARSER(scanner),
         $1, expr, $5);
     }
-  | property error {
-      SAC_SYNTAX_ERROR(@2,
-        "colon expected");
-      yyclearin;
-    }
   | property ':' maybe_spaces expr prio error {
       /* p {color: red !important fail;} */
 
@@ -667,12 +662,6 @@ declaration
         "unexpected token while parsing property expression");
       yyclearin;
     }
-  | property invalid_block {
-      /* div { color{;color:maroon} } */
-
-      SAC_SYNTAX_ERROR(@2,
-        "expected property expression");
-    }
   | declaration_errors {
       SAC_SYNTAX_ERROR(@1,
         "unexpected token while parsing style declaration");
@@ -681,6 +670,8 @@ declaration
 declaration_errors
   : error
   | declaration_errors error
+  | invalid_block
+  | declaration_errors invalid_block
   ;
 prio
   : IMPORTANT_SYM maybe_spaces {
