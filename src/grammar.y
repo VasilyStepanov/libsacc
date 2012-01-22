@@ -962,7 +962,7 @@ hexcolor
     }
   ;
 invalid_block
-  : '{' invalid_blocks error '}'
+  : '{' error invalid_blocks error '}'
   | '{' error '}'
   ;
 invalid_blocks
