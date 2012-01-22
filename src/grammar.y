@@ -85,78 +85,94 @@ SAC_Pair pair;
 %token START_AS_PROPERTY_VALUE
 %token START_AS_PRIORITY
 
+%token S
 %token CDC
 %token CDO
-%token CHARSET_SYM
+
+%token INCLUDES
 %token DASHMATCH
-%token DIMEN
+
+%token <str> STRING
+%token <str> IDENT
+
+%token <str> HASH
 %token BAD_STRING
 %token BAD_URI
-%token FONT_FACE_SYM
-%token INCLUDES
-%token IMPORT_SYM
-%token IMPORTANT_SYM
-%token MEDIA_SYM
-%token NAMESPACE_SYM
-%token PAGE_SYM
-%token S
 
-%token <real> ANGLE_DEG
-%token <real> ANGLE_RAD
-%token <real> ANGLE_GRAD
+%token IMPORT_SYM
+%token PAGE_SYM
+%token MEDIA_SYM
+%token FONT_FACE_SYM
+%token CHARSET_SYM
+%token NAMESPACE_SYM
+
+%token IMPORTANT_SYM
+
 %token <real> LENGTH_EM
 %token <real> LENGTH_EX
-%token <real> FREQ_HZ
-%token <real> FREQ_KHZ
-%token <str> FUNCTION
-%token <str> HASH
-%token <str> IDENT
 %token <real> LENGTH_PIXEL
 %token <real> LENGTH_CENTIMETER
 %token <real> LENGTH_MILLIMETER
 %token <real> LENGTH_INCH
 %token <real> LENGTH_POINT
 %token <real> LENGTH_PICA
-%token <integer> INT
-%token <real> REAL
-%token <real> PERCENTAGE
-%token <str> STRING
+%token <real> ANGLE_DEG
+%token <real> ANGLE_RAD
+%token <real> ANGLE_GRAD
 %token <real> TIME_MS
 %token <real> TIME_S
+%token <real> FREQ_HZ
+%token <real> FREQ_KHZ
+%token DIMEN
+%token <real> PERCENTAGE
+%token <real> REAL
+%token <integer> INT
+
 %token <str> URI
+%token <str> FUNCTION
+
 %token <str> UNICODERANGE
 
-%type <str> property;
-%type <str> attrib_value;
-%type <str> string_or_uri;
-%type <str> medium;
-%type <str> maybe_namespace_prefix;
-%type <str> maybe_indent;
-%type <str> maybe_pseudo_page;
-%type <ch> unary_operator;
-%type <value> term;
-%type <value> maybe_operator;
-%type <value> function;
-%type <value> hexcolor;
-%type <list> selectors;
-%type <list> expr;
-%type <list> mediums;
-%type <list> maybe_mediums;
+%type <pair> page_start;
 %type <vector> style_start;
 %type <vector> media_start;
-%type <sel> selector;
+
+%type <str> maybe_namespace_prefix;
+
+%type <str> string_or_uri;
+%type <str> maybe_ident;
+
+%type <str> medium;
+%type <list> mediums;
+%type <list> maybe_mediums;
+
+%type <str> property;
+
 %type <sel> simple_selector;
-%type <sel> element_name;
+%type <sel> selector;
+%type <list> selectors;
+%type <cond> maybe_attribute_conditions;
 %type <cond> attribute_condition;
 %type <cond> attribute_conditions;
-%type <cond> maybe_attribute_conditions;
 %type <cond> class;
 %type <cond> attrib;
+%type <value> hexcolor;
+%type <str> attrib_value;
 %type <cond> pseudo;
-%type <cond_type> attrib_match;
+%type <str> maybe_pseudo_page;
+
 %type <boolean> prio;
 %type <boolean> maybe_prio;
-%type <pair> page_start;
+
+%type <cond_type> attrib_match;
+%type <ch> unary_operator;
+%type <value> maybe_operator;
+
+%type <list> expr;
+%type <value> term;
+%type <value> function;
+
+%type <sel> element_name;
 
 %%
 
@@ -373,13 +389,13 @@ page
      */
   ;
 page_start
-  : PAGE_SYM maybe_spaces maybe_indent maybe_pseudo_page {
+  : PAGE_SYM maybe_spaces maybe_ident maybe_pseudo_page {
       SAC_parser_start_page_handler(YY_SCANNER_PARSER(scanner), $3, $4);
       $$.first = $3;
       $$.second = $4;
     }
   ;
-maybe_indent
+maybe_ident
   : /* empty */ {
       $$ = NULL;
     }
@@ -604,7 +620,7 @@ pseudo
       $$->desc.attribute.value = NULL;
     }
 /*
-  | ':' FUNCTION maybe_spaces maybe_indent ')'
+  | ':' FUNCTION maybe_spaces maybe_ident ')'
 */
   ;
 maybe_declarations
