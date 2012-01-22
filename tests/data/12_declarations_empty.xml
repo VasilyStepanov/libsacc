@@ -1,4 +1,4 @@
 <?xml version="1.0"?>
 <document>
-  <error type="SYNTAX" line="1">unexpected token while parsing style declaration</error>
+  <error type="SYNTAX" line="1" column="1">unexpected token while parsing style declaration</error>
 </document>

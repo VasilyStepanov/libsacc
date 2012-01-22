@@ -162,8 +162,8 @@ void SAC_parser_fatal_error_handler(SAC_Parser parser,
 {
   SAC_FatalError error;
   
-  error.line = line;
-  error.column = column;
+  error.line = line - 1;
+  error.column = column - 1;
   error.code = code;
   PARSER(parser)->fatal_error_handler(PARSER(parser)->user_data, &error);
 }
@@ -176,8 +176,8 @@ void SAC_parser_error_handler(SAC_Parser parser,
 {
   SAC_Error error;
   
-  error.line = line;
-  error.column = column;
+  error.line = line - 1;
+  error.column = column - 1;
   error.code = code;
   error.data = data;
   PARSER(parser)->error_handler(PARSER(parser)->user_data, &error);
