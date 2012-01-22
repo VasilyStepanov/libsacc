@@ -76,6 +76,8 @@ SAC_Pair pair;
 %locations
 %pure_parser
 
+%nonassoc LOWEST
+
 %start start
 
 %token START_AS_STYLE_DECLARATIONS
@@ -93,11 +95,12 @@ SAC_Pair pair;
 %token DASHMATCH
 
 %token <str> STRING
-%token <str> IDENT
+%right <str> IDENT
 
-%token <str> HASH
-%token BAD_STRING
-%token BAD_URI
+%nonassoc <str> HASH
+%nonassoc error
+%nonassoc BAD_STRING
+%nonassoc BAD_URI
 
 %token IMPORT_SYM
 %token PAGE_SYM
