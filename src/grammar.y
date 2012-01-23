@@ -277,17 +277,6 @@ maybe_rulesets
   :
   | maybe_rulesets ruleset maybe_spaces
   ;
-selectors
-  : selector {
-      $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
-      TEST_OBJ($$, @$);
-      TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1), @1);
-    }
-  | selectors ',' maybe_spaces selector {
-      $$ = $1;
-      TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4), @4);
-    }
-  ;
 maybe_attribute_conditions
   : /* empty */ {
       $$ = NULL;
@@ -450,6 +439,7 @@ ruleset
   : style_start '{' maybe_spaces maybe_declarations '}' {
       SAC_parser_end_style_handler(YY_SCANNER_PARSER(scanner), $1);
     }
+  | bad_selectors invalid_block
   ;
 style_start
   : selectors {
@@ -460,6 +450,30 @@ style_start
       SAC_parser_start_style_handler(YY_SCANNER_PARSER(scanner), vector);
       $$ = vector;
     }
+  ;
+selectors
+  : selector {
+      $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ($$, @$);
+      TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1), @1);
+    }
+  | selectors ',' maybe_spaces selector {
+      $$ = $1;
+      TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4), @4);
+    }
+  ;
+bad_selectors
+  : selectors_errors {
+      SAC_SYNTAX_ERROR(@1,
+        "unexpected token while parsing selectors");
+    }
+  | selectors selectors_errors {
+      SAC_SYNTAX_ERROR(@2,
+        "unexpected token while parsing selectors");
+    }
+selectors_errors
+  : error
+  | selectors_errors error
   ;
 selector
   : simple_selector {

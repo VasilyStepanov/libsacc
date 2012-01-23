@@ -1,0 +1,7 @@
+h1, h2 {color: green }
+h3, h4 & h5 {color: red }
+h6 {color: black }
+/* extra */
+.demo1 { color: maroon; };
+.demo1 { color: red; }
+.demo1 { color: green; }
