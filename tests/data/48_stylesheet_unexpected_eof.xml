@@ -11,9 +11,11 @@
           <condition type="pseudo_class" localName="before" specified="false"/>
         </selector>
       </start_selectors>
+      <error type="SYNTAX" line="2" column="23">closing quote not found</error>
       <property name="content">
         <str>Hello</str>
       </property>
+      <error type="SYNTAX" line="2" column="23">closing brace not found</error>
       <end_selectors>
         <selector type="conditional">
           <selector type="element_node" localName="p"/>
@@ -21,6 +23,7 @@
         </selector>
       </end_selectors>
     </style>
+    <error type="SYNTAX" line="2" column="23">closing brace not found</error>
     <end_mediums>
       <medium>screen</medium>
     </end_mediums>

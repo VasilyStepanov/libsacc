@@ -244,7 +244,10 @@ maybe_comments
   ;
 closing_brace
   : '}'
-  | EOF_TOKEN
+  | EOF_TOKEN {
+      SAC_SYNTAX_ERROR(@1,
+        "closing brace not found");
+    }
   ;
 mediums
   : medium {
@@ -321,12 +324,18 @@ string_or_uri
       $$ = $1;
     }
   | BAD_STRING EOF_TOKEN {
+      SAC_SYNTAX_ERROR(@1,
+        "closing quote not found");
+
       $$ = $1;
     }
   | URI maybe_spaces {
       $$ = $1;
     }
   | BAD_URI EOF_TOKEN {
+      SAC_SYNTAX_ERROR(@1,
+        "closing bracket not found");
+
       $$ = $1;
     }
   ;
@@ -627,6 +636,9 @@ attrib_value
       $$ = $1;
     }
   | BAD_STRING EOF_TOKEN {
+      SAC_SYNTAX_ERROR(@1,
+        "closing quote not found");
+
       $$ = $1;
     }
   ;
@@ -899,6 +911,9 @@ term
       $$->desc.stringValue = $1;
     }
   | BAD_STRING EOF_TOKEN {
+      SAC_SYNTAX_ERROR(@1,
+        "closing quote not found");
+
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
       TEST_OBJ($$, @$);
       $$->desc.stringValue = $1;
@@ -919,6 +934,9 @@ term
       $$->desc.uri = $1;
     }
   | BAD_URI EOF_TOKEN {
+      SAC_SYNTAX_ERROR(@1,
+        "closing bracket not found");
+
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_URI);
       TEST_OBJ($$, @$);
       $$->desc.uri = $1;
