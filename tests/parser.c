@@ -275,7 +275,7 @@ static void dump_selectors(FILE *out, const SAC_Selector **value) {
   const SAC_Selector **it;
 
   if (value == NULL) {
-    fprintf(out, "NULL");
+    fprintf(out, "<selectors />");
     return;
   }
 

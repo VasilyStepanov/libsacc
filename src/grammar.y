@@ -200,12 +200,17 @@ start
   | style_declarations_start maybe_declarations {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
     }
-  | START_AS_SELECTORS selectors {
-      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+  | selectors_start selectors {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
 
       YY_SCANNER_OUTPUT(scanner) = SAC_vector_from_list(
         $2, YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(YY_SCANNER_OUTPUT(scanner), @2);
+    }
+  | selectors_start bad_selectors {
+      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+
+      YY_SCANNER_OUTPUT(scanner) = NULL;
       TEST_OBJ(YY_SCANNER_OUTPUT(scanner), @2);
     }
   | rule_start ruleset maybe_spaces {
@@ -221,6 +226,10 @@ style_declarations_start
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
     }
   ;
+selectors_start
+  : START_AS_SELECTORS {
+      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+    }
 rule_start
   : START_AS_RULE {
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
@@ -474,6 +483,10 @@ selectors
 bad_selectors
   : selectors_errors {
       SAC_SYNTAX_ERROR(@1,
+        "unexpected token while parsing selectors");
+    }
+  | selectors ',' maybe_spaces selectors_errors {
+      SAC_SYNTAX_ERROR(@4,
         "unexpected token while parsing selectors");
     }
   | selectors selectors_errors {

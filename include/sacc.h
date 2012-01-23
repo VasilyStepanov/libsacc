@@ -605,6 +605,13 @@ int SAC_ParseStyleDeclaration(SAC_Parser parser, const char *buffer, int len);
 
 int SAC_ParseRule(SAC_Parser parser, const char *buffer, int len);
 
+/**
+ * Parse selectors. Returns an array of selectors terminated by NULL.
+ * Returns NULL in case of errors.
+ *
+ * Do NOT free the returned pointer and do not rely on its value after the next
+ * SAC_Parse* or SAC_DisposeParser call.
+ */
 const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
   const char *buffer, int len);
 
