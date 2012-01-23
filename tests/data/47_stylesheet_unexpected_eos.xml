@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<document>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="p"/>
+    </start_selectors>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <error type="SYNTAX" line="3" column="16">unexpected token while parsing property expression</error>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_selectors>
+      <selector type="element_node" localName="p"/>
+    </end_selectors>
+  </style>
+</document>
