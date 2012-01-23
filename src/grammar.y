@@ -211,7 +211,6 @@ start
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
 
       YY_SCANNER_OUTPUT(scanner) = NULL;
-      TEST_OBJ(YY_SCANNER_OUTPUT(scanner), @2);
     }
   | rule_start ruleset maybe_spaces {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
