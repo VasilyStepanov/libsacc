@@ -125,7 +125,16 @@ range        \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h}
                             YY_FATAL_ERROR("out of dynamic memory");
                           return STRING;
                         }
-{badstring}             {return BAD_STRING;}
+{badstring}             {
+                          yylval->str = SAC_mpool_strndup(
+                            YY_SCANNER_MPOOL(yyscanner),
+                            yytext + 1,
+                            yyleng - 1
+                          );
+                          if (yylval->str == NULL)
+                            YY_FATAL_ERROR("out of dynamic memory");
+                          return BAD_STRING;
+                        }
 
 {ident}                 {
                           yylval->str = SAC_mpool_strndup(
@@ -259,7 +268,20 @@ range        \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h}
                             YY_FATAL_ERROR("out of dynamic memory");
                           return URI;
                         }
-{baduri}                {return BAD_URI;}
+{baduri}                {
+                          const char *text;
+                          size_t len;
+                          SAC_strntrim(
+                            yytext + 4, yyleng - 4,
+                            &text, &len,
+                            " \t\r\n\f");
+                          yylval->str = SAC_mpool_strndup(
+                            YY_SCANNER_MPOOL(yyscanner), text, len
+                          );
+                          if (yylval->str == NULL)
+                            YY_FATAL_ERROR("out of dynamic memory");
+                          return BAD_URI;
+                        }
 {ident}"("              {
                           yylval->str = SAC_mpool_strndup(
                             YY_SCANNER_MPOOL(yyscanner), yytext, yyleng - 1

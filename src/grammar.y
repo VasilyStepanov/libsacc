@@ -92,6 +92,7 @@ SAC_Pair pair;
 %token S
 %token CDC
 %token CDO
+%token EOF_TOKEN 0
 
 %token INCLUDES
 %token DASHMATCH
@@ -101,8 +102,8 @@ SAC_Pair pair;
 
 %nonassoc <str> HASH
 %nonassoc error
-%nonassoc BAD_STRING
-%nonassoc BAD_URI
+%nonassoc <str> BAD_STRING
+%nonassoc <str> BAD_URI
 
 %token IMPORT_SYM
 %token PAGE_SYM
@@ -241,6 +242,10 @@ maybe_comments
   | maybe_comments CDO
   | maybe_comments CDC
   ;
+closing_brace
+  : '}'
+  | EOF_TOKEN
+  ;
 mediums
   : medium {
       $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
@@ -315,7 +320,13 @@ string_or_uri
   : STRING maybe_spaces {
       $$ = $1;
     }
+  | BAD_STRING EOF_TOKEN {
+      $$ = $1;
+    }
   | URI maybe_spaces {
+      $$ = $1;
+    }
+  | BAD_URI EOF_TOKEN {
       $$ = $1;
     }
   ;
@@ -328,7 +339,7 @@ maybe_namespace_prefix
     }
   ;
 media
-  : media_start '{' maybe_spaces maybe_rulesets '}' {
+  : media_start '{' maybe_spaces maybe_rulesets closing_brace {
       SAC_parser_end_media_handler(YY_SCANNER_PARSER(scanner), $1);
     }
   ;
@@ -348,7 +359,7 @@ medium
     }
   ;
 page
-  : page_start '{' maybe_spaces maybe_declarations '}' {
+  : page_start '{' maybe_spaces maybe_declarations closing_brace {
       SAC_parser_end_page_handler(YY_SCANNER_PARSER(scanner),
         $1.first, $1.second);
     }
@@ -377,7 +388,7 @@ maybe_pseudo_page
     }
   ;
 font_face
-  : font_face_start '{' maybe_spaces maybe_declarations '}' {
+  : font_face_start '{' maybe_spaces maybe_declarations closing_brace {
       SAC_parser_end_font_face_handler(YY_SCANNER_PARSER(scanner));
     }
   ;
@@ -425,7 +436,7 @@ property
     }
   ;
 ruleset
-  : style_start '{' maybe_spaces maybe_declarations '}' {
+  : style_start '{' maybe_spaces maybe_declarations closing_brace {
       SAC_parser_end_style_handler(YY_SCANNER_PARSER(scanner), $1);
     }
   | bad_selectors invalid_block
@@ -613,6 +624,9 @@ attrib_value
       $$ = $1;
     }
   | STRING {
+      $$ = $1;
+    }
+  | BAD_STRING EOF_TOKEN {
       $$ = $1;
     }
   ;
@@ -884,6 +898,11 @@ term
       TEST_OBJ($$, @$);
       $$->desc.stringValue = $1;
     }
+  | BAD_STRING EOF_TOKEN {
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
+      TEST_OBJ($$, @$);
+      $$->desc.stringValue = $1;
+    }
   | IDENT maybe_spaces {
       if (strcasecmp($1, "inherit") != 0) {
         $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_IDENT);
@@ -895,6 +914,11 @@ term
       }
     }
   | URI maybe_spaces {
+      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_URI);
+      TEST_OBJ($$, @$);
+      $$->desc.uri = $1;
+    }
+  | BAD_URI EOF_TOKEN {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_URI);
       TEST_OBJ($$, @$);
       $$->desc.uri = $1;
@@ -984,8 +1008,8 @@ hexcolor
     }
   ;
 invalid_block
-  : '{' error invalid_blocks error '}'
-  | '{' error '}'
+  : '{' error invalid_blocks error closing_brace
+  | '{' error closing_brace
   ;
 invalid_blocks
   : invalid_block

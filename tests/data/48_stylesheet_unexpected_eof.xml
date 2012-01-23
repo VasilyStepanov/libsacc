@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<document>
+  <media>
+    <start_mediums>
+      <medium>screen</medium>
+    </start_mediums>
+    <style>
+      <start_selectors>
+        <selector type="conditional">
+          <selector type="element_node" localName="p"/>
+          <condition type="pseudo_class" localName="before" specified="false"/>
+        </selector>
+      </start_selectors>
+      <property name="content">
+        <str>Hello</str>
+      </property>
+      <end_selectors>
+        <selector type="conditional">
+          <selector type="element_node" localName="p"/>
+          <condition type="pseudo_class" localName="before" specified="false"/>
+        </selector>
+      </end_selectors>
+    </style>
+    <end_mediums>
+      <medium>screen</medium>
+    </end_mediums>
+  </media>
+</document>
