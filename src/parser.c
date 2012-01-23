@@ -34,6 +34,7 @@ struct _SAC_Parser {
   SAC_StartStyleHandler start_style_handler;
   SAC_EndStyleHandler end_style_handler;
   SAC_PropertyHandler property_handler;
+  SAC_FatalError fatal_error;
   SAC_FatalErrorHandler fatal_error_handler;
   SAC_ErrorHandler error_handler;
   void *user_data;
@@ -161,13 +162,12 @@ void SAC_parser_property_handler(
 void SAC_parser_fatal_error_handler(SAC_Parser parser,
   signed int line, signed int column, SAC_FatalErrorCode code)
 {
-  SAC_FatalError error;
-  
-  error.line = line - 1;
-  error.column = column - 1;
-  error.code = code;
+  PARSER(parser)->fatal_error.line = line - 1;
+  PARSER(parser)->fatal_error.column = column - 1;
+  PARSER(parser)->fatal_error.code = code;
   PARSER(parser)->cleandoc = SAC_FALSE;
-  PARSER(parser)->fatal_error_handler(PARSER(parser)->user_data, &error);
+  PARSER(parser)->fatal_error_handler(PARSER(parser)->user_data,
+    &PARSER(parser)->fatal_error);
 }
 
 
