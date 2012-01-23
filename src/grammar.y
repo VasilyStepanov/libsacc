@@ -241,18 +241,6 @@ maybe_comments
   | maybe_comments CDO
   | maybe_comments CDC
   ;
-maybe_style_units
-  : /* empty */
-  | maybe_style_units style_unit
-  ;
-maybe_imports
-  :
-  | maybe_imports import
-  ;
-maybe_namespaces
-  :
-  | maybe_namespaces namespace
-  ;
 mediums
   : medium {
       $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
@@ -277,25 +265,6 @@ maybe_rulesets
   :
   | maybe_rulesets ruleset maybe_spaces
   ;
-maybe_attribute_conditions
-  : /* empty */ {
-      $$ = NULL;
-    }
-  | attribute_conditions {
-      $$ = $1;
-    }
-  ;
-attribute_conditions
-  : attribute_condition {
-      $$ = $1;
-    }
-  | attribute_conditions attribute_condition {
-      $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_AND_CONDITION);
-      TEST_OBJ($$, @$);
-      $$->desc.combinator.firstCondition = $1;
-      $$->desc.combinator.secondCondition = $2;
-    }
-  ;
 stylesheet
   : maybe_charset maybe_imports maybe_namespaces maybe_style_units
   ;
@@ -306,11 +275,9 @@ maybe_charset
 charset
   : CHARSET_SYM maybe_spaces STRING maybe_spaces ';' maybe_comments
   ;
-style_unit
-  : ruleset maybe_comments
-  | media maybe_comments
-  | page maybe_comments
-  | font_face maybe_comments
+maybe_imports
+  :
+  | maybe_imports import
   ;
 import
   : IMPORT_SYM maybe_spaces string_or_uri maybe_mediums ';' maybe_comments {
@@ -321,6 +288,10 @@ import
       SAC_parser_import_handler(YY_SCANNER_PARSER(scanner), $3, mediums, NULL);
     }
   ;
+maybe_namespaces
+  :
+  | maybe_namespaces namespace
+  ;
 namespace
   : NAMESPACE_SYM maybe_spaces maybe_namespace_prefix string_or_uri
     ';' maybe_comments
@@ -328,6 +299,16 @@ namespace
       SAC_parser_namespace_declaration_handler(YY_SCANNER_PARSER(scanner),
         $3, $4);
     }
+  ;
+maybe_style_units
+  : /* empty */
+  | maybe_style_units style_unit
+  ;
+style_unit
+  : ruleset maybe_comments
+  | media maybe_comments
+  | page maybe_comments
+  | font_face maybe_comments
   ;
 string_or_uri
   : STRING maybe_spaces {
@@ -524,6 +505,25 @@ simple_selector
         $$->desc.conditional.simpleSelector = $1;
         $$->desc.conditional.condition = $2;
       }
+    }
+  ;
+maybe_attribute_conditions
+  : /* empty */ {
+      $$ = NULL;
+    }
+  | attribute_conditions {
+      $$ = $1;
+    }
+  ;
+attribute_conditions
+  : attribute_condition {
+      $$ = $1;
+    }
+  | attribute_conditions attribute_condition {
+      $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_AND_CONDITION);
+      TEST_OBJ($$, @$);
+      $$->desc.combinator.firstCondition = $1;
+      $$->desc.combinator.secondCondition = $2;
     }
   ;
 attribute_condition
