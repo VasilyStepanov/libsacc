@@ -183,11 +183,17 @@ SAC_Pair pair;
 %%
 
 start
-  : START_AS_PRIORITY maybe_prio {
-      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+  : priority_start maybe_prio {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
 
       YY_SCANNER_OUTPUT(scanner) = (void*)$2;
+    }
+  | priority_start error {
+      SAC_SYNTAX_ERROR(@2,
+        "unexpected token while parsing priority");
+      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+
+      YY_SCANNER_OUTPUT(scanner) = (void*)SAC_FALSE;
     }
   | START_AS_PROPERTY_VALUE expr {
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
@@ -220,6 +226,11 @@ start
     }
   ;
 
+priority_start
+  : START_AS_PRIORITY {
+      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+    }
+  ;
 style_declarations_start
   : START_AS_STYLE_DECLARATIONS {
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
