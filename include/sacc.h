@@ -243,7 +243,7 @@ typedef enum {
   PROCESSING_INSTRUCTION_NODE,
   COMMENT_NODE,
   ANY_NODE
-} SAC_nodeType;
+} SAC_NodeType;
 
 typedef struct _SAC_Selector SAC_Selector;
 typedef struct _SAC_Condition SAC_Condition;
@@ -278,7 +278,7 @@ struct _SAC_Selector {
 
     /* SAC_DIRECT_ADJACENT_SELECTOR */
     struct _SAC_Ssibling {
-      SAC_nodeType nodeType;
+      SAC_NodeType nodeType;
       SAC_Selector *firstSelector;
       /* can't be a descendant or sibling selector */
       SAC_Selector *secondSelector;

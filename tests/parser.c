@@ -180,7 +180,7 @@ static void dump_condition(FILE *out, const SAC_Condition *condition) {
 
 
 
-static const char* node_type(SAC_nodeType type) {
+static const char* node_type(SAC_NodeType type) {
   switch (type) {
     case ELEMENT_NODE: return "ELEMENT";
     case ATTRIBUTE_NODE: return "ATTRIBUTE";
