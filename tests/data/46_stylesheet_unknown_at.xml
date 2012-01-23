@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<document>
+  <ignorable_at_rule name="three-dee"/>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="h1"/>
+    </start_selectors>
+    <property name="color">
+      <ident>blue</ident>
+    </property>
+    <end_selectors>
+      <selector type="element_node" localName="h1"/>
+    </end_selectors>
+  </style>
+</document>
