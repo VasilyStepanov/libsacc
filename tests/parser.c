@@ -320,7 +320,7 @@ static void end_style(
 
 static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
   if (value == NULL) {
-    fprintf(out, "NULL");
+    fprintf(out, "<no_lexical_units />");
   } else {
     switch (value->lexicalUnitType) {
       case SAC_OPERATOR_COMMA:

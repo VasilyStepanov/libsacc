@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<property>
+  <document>
+    <error type="SYNTAX" line="1" column="10">unexpected token while parsing property expression</error>
+  </document>
+  <no_lexical_units/>
+</property>

@@ -615,6 +615,13 @@ int SAC_ParseRule(SAC_Parser parser, const char *buffer, int len);
 const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
   const char *buffer, int len);
 
+/**
+ * Parse property value.
+ * Returns NULL in case of errors.
+ *
+ * Do NOT free the returned pointer and do not rely on its value after the next
+ * SAC_Parse* or SAC_DisposeParser call.
+ */
 const SAC_LexicalUnit* SAC_ParsePropertyValue(SAC_Parser parser, 
   const char *buffer, int len);
 

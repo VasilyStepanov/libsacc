@@ -195,13 +195,17 @@ start
 
       YY_SCANNER_OUTPUT(scanner) = (void*)SAC_FALSE;
     }
-  | START_AS_PROPERTY_VALUE expr {
-      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+  | property_value_start expr {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
 
       YY_SCANNER_OUTPUT(scanner) = SAC_lexical_unit_from_list(
         $2, YY_SCANNER_MPOOL(scanner));
       TEST_OBJ(YY_SCANNER_OUTPUT(scanner), @2);
+    }
+  | property_value_start bad_expr {
+      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+
+      YY_SCANNER_OUTPUT(scanner) = NULL;
     }
   | style_declarations_start maybe_declarations {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
@@ -228,6 +232,11 @@ start
 
 priority_start
   : START_AS_PRIORITY {
+      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+    }
+  ;
+property_value_start
+  : START_AS_PROPERTY_VALUE {
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
     }
   ;
@@ -788,6 +797,21 @@ expr
       TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $3), @3);
     }
   ;
+bad_expr
+  : expr_errors {
+      SAC_SYNTAX_ERROR(@1,
+        "unexpected token while parsing property expression");
+    }
+  | expr expr_errors {
+      SAC_SYNTAX_ERROR(@2,
+        "unexpected token while parsing property expression");
+    }
+  ;
+expr_errors
+  : error
+  | expr_errors error
+  ;
+
 term
   : unary_operator INT maybe_spaces {
       if ($1 == '-') $2 = -$2;
