@@ -18,6 +18,16 @@ static void end_document(void *userData) {
 
 
 
+static void ignorable_at_rule(void *userData,
+  const SAC_STRING atRule)
+{
+  fprintf(USERDATA_FILE(userData), "<ignorable_at_rule");
+  fprintf(USERDATA_FILE(userData), " name=\"%s\"", atRule);
+  fprintf(USERDATA_FILE(userData), "/>");
+}
+
+
+
 static void namespace_declaration(void *userData,
   const SAC_STRING prefix, const SAC_STRING uri)
 {
@@ -499,6 +509,7 @@ static SAC_Parser create_parser(FILE *out) {
   parser = SAC_CreateParser();
   
   SAC_SetDocumentHandler(parser, start_document, end_document);
+  SAC_SetIgnorableAtRuleHandler(parser, ignorable_at_rule);
   SAC_SetNamespaceDeclarationHandler(parser, namespace_declaration);
   SAC_SetPageHandler(parser, start_page, end_page);
   SAC_SetImportHandler(parser, import);

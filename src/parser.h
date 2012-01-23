@@ -52,6 +52,9 @@ void SAC_parser_start_style_handler(SAC_Parser parser,
 void SAC_parser_end_style_handler(SAC_Parser parser,
   const SAC_Selector *selectors[]);
 
+void SAC_parser_ignorable_at_rule_handler(SAC_Parser parser,
+  const SAC_STRING atRule);
+
 void SAC_parser_namespace_declaration_handler(SAC_Parser parser,
   const SAC_STRING prefix, const SAC_STRING uri);
 

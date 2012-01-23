@@ -405,6 +405,12 @@ typedef void (*SAC_StartDocumentHandler)(void *userData);
 typedef void (*SAC_EndDocumentHandler)(void *userData);
 
 /**
+ * Receive notification of an unknown rule at-rule not supported by this parser.
+ */
+typedef void (*SAC_IgnorableAtRuleHandler)(void *userData,
+  const SAC_STRING atRule);
+
+/**
  * Receive notification of a namespace declaration and the default namespace
  * if any (prefix will be NULL in that case). uri can never be NULL.
  */
@@ -547,6 +553,9 @@ typedef void (*SAC_PropertyHandler)(void *userData,
 
 void SAC_SetDocumentHandler(SAC_Parser parser,
   SAC_StartDocumentHandler start, SAC_EndDocumentHandler end);
+
+void SAC_SetIgnorableAtRuleHandler(SAC_Parser parser,
+  SAC_IgnorableAtRuleHandler handler);
 
 void SAC_SetNamespaceDeclarationHandler(SAC_Parser parser,
   SAC_NamespaceDeclarationHandler handler);

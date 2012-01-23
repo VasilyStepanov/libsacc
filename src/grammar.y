@@ -309,6 +309,7 @@ style_unit
   | media maybe_comments
   | page maybe_comments
   | font_face maybe_comments
+  | ignorable_at_rule maybe_comments
   ;
 string_or_uri
   : STRING maybe_spaces {
@@ -385,6 +386,13 @@ font_face_start
       SAC_parser_start_font_face_handler(YY_SCANNER_PARSER(scanner));
     }
   ;
+ignorable_at_rule
+  : '@' IDENT maybe_spaces error invalid_block {
+      SAC_parser_ignorable_at_rule_handler(YY_SCANNER_PARSER(scanner), $2);
+    }
+  | '@' IDENT maybe_spaces error ';' {
+      SAC_parser_ignorable_at_rule_handler(YY_SCANNER_PARSER(scanner), $2);
+    }
 maybe_operator
   : '/' maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner),
