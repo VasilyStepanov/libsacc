@@ -37,6 +37,7 @@ struct _SAC_Parser {
   SAC_FatalErrorHandler fatal_error_handler;
   SAC_ErrorHandler error_handler;
   void *user_data;
+  SAC_Boolean cleandoc;
 };
 
 
@@ -165,6 +166,7 @@ void SAC_parser_fatal_error_handler(SAC_Parser parser,
   error.line = line - 1;
   error.column = column - 1;
   error.code = code;
+  PARSER(parser)->cleandoc = SAC_FALSE;
   PARSER(parser)->fatal_error_handler(PARSER(parser)->user_data, &error);
 }
 
@@ -180,19 +182,21 @@ void SAC_parser_error_handler(SAC_Parser parser,
   error.column = column - 1;
   error.code = code;
   error.data = data;
+  PARSER(parser)->cleandoc = SAC_FALSE;
   PARSER(parser)->error_handler(PARSER(parser)->user_data, &error);
 }
 
 
 
-static int SAC_parser_clear(SAC_Parser parser) {
+static SAC_Boolean SAC_parser_clear(SAC_Parser parser) {
   SAC_mpool_close(PARSER(parser)->mpool);
   PARSER(parser)->mpool = SAC_mpool_open(16384);
+  PARSER(parser)->cleandoc = SAC_TRUE;
   if (PARSER(parser)->mpool == NULL) {
     SAC_parser_fatal_error_handler(parser, 0, 0, SAC_FATAL_ERROR_NO_MEMORY);
-    return 0;
+    return SAC_FALSE;
   }
-  return 1;
+  return SAC_TRUE;
 }
 
 
@@ -366,7 +370,7 @@ static void* SAC_parse(SAC_Parser parser, int start_token,
   void *scanner;
   SAC_YYExtra yy_extra;
 
-  if (!SAC_parser_clear(parser)) return NULL;
+  if (SAC_parser_clear(parser) == SAC_FALSE) return NULL;
 
   yy_extra.mpool = PARSER(parser)->mpool;
   yy_extra.parser = parser;
@@ -387,16 +391,17 @@ static void* SAC_parse(SAC_Parser parser, int start_token,
 
 
 int SAC_ParseStyleSheet(SAC_Parser parser, const char *buffer, int len) {
-
-  return (int)SAC_parse(parser,
-    START_AS_STYLESHEET, buffer, len);
+  SAC_parse(parser, START_AS_STYLESHEET, buffer, len);
+  if (PARSER(parser)->cleandoc == SAC_FALSE) return 1;
+  return 0;
 }
 
 
 
 int SAC_ParseStyleDeclaration(SAC_Parser parser, const char *buffer, int len) {
-  return (int)SAC_parse(parser,
-    START_AS_STYLE_DECLARATIONS, buffer, len);
+  SAC_parse(parser, START_AS_STYLE_DECLARATIONS, buffer, len);
+  if (PARSER(parser)->cleandoc == SAC_FALSE) return 1;
+  return 0;
 }
 
 
@@ -427,8 +432,9 @@ SAC_Boolean SAC_ParsePriority(SAC_Parser parser, const char *buffer, int len) {
 
 
 int SAC_ParseRule(SAC_Parser parser, const char *buffer, int len) {
-  return (int)SAC_parse(parser,
-    START_AS_RULE, buffer, len);
+  SAC_parse(parser, START_AS_RULE, buffer, len);
+  if (PARSER(parser)->cleandoc == SAC_FALSE) return 1;
+  return 0;
 }
 
 
@@ -436,7 +442,8 @@ int SAC_ParseRule(SAC_Parser parser, const char *buffer, int len) {
 int SAC_SetBase(SAC_Parser parser, const SAC_STRING base) {
   free(PARSER(parser)->base);
   PARSER(parser)->base = strdup(base);
-  return 1;
+  if (PARSER(parser)->base == NULL) return 1;
+  return 0;
 }
 
 

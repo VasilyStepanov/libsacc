@@ -583,8 +583,8 @@ void* SAC_GetUserData(SAC_Parser parser);
  * Sets the base to be used for resolving relative URIs in system identifiers
  * in declarations.  Resolving relative identifiers is left to the application:
  * this value will be passed through as the base argument to the
- * SAC_ImportHandler. The base argument will be copied. Returns zero if out of
- * memory, non-zero otherwise.
+ * SAC_ImportHandler. The base argument will be copied. Returns non-zero if
+ * out of memory, zero otherwise.
  */
 int SAC_SetBase(SAC_Parser parser, const SAC_STRING base);
 
