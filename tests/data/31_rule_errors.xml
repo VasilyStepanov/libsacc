@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<document>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="element"/>
+    </start_selectors>
+    <property name="prop">
+      <ident>ident</ident>
+    </property>
+    <end_selectors>
+      <selector type="element_node" localName="element"/>
+    </end_selectors>
+  </style>
+  <error type="SYNTAX" line="4" column="1">unexpected token while parsing ruleset</error>
+</document>

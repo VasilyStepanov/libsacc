@@ -222,7 +222,12 @@ start
 
       YY_SCANNER_OUTPUT(scanner) = NULL;
     }
-  | rule_start ruleset maybe_spaces {
+  | rule_start ruleset maybe_spaces EOF_TOKEN {
+      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+    }
+  | rule_start ruleset maybe_spaces error {
+      SAC_SYNTAX_ERROR(@4,
+        "unexpected token while parsing ruleset");
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
     }
   | stylesheet_start stylesheet {
