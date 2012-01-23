@@ -25,4 +25,39 @@
       <selector type="element_node" localName="h6"/>
     </end_selectors>
   </style>
+  <style>
+    <start_selectors>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="class" localName="class" specified="true" value="demo1"/>
+      </selector>
+    </start_selectors>
+    <property name="color">
+      <ident>maroon</ident>
+    </property>
+    <end_selectors>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="class" localName="class" specified="true" value="demo1"/>
+      </selector>
+    </end_selectors>
+  </style>
+  <error type="SYNTAX" line="5" column="26">unexpected token while parsing selectors</error>
+  <style>
+    <start_selectors>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="class" localName="class" specified="true" value="demo1"/>
+      </selector>
+    </start_selectors>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_selectors>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="class" localName="class" specified="true" value="demo1"/>
+      </selector>
+    </end_selectors>
+  </style>
 </document>
