@@ -330,8 +330,13 @@ ignore_charset
     }
   ;
 maybe_imports
-  :
-  | maybe_imports import
+  : /* empty */
+  | imports
+  ;
+imports
+  : import
+  | imports import
+  | imports ignore_charset
   ;
 import
   : IMPORT_SYM maybe_spaces string_or_uri maybe_mediums ';' maybe_comments {
@@ -349,8 +354,14 @@ ignore_import
     }
   ;
 maybe_namespaces
-  :
-  | maybe_namespaces namespace
+  : /* empty */
+  | namespaces
+  ;
+namespaces
+  : namespace
+  | namespaces namespace
+  | namespaces ignore_charset
+  | namespaces ignore_import
   ;
 namespace
   : NAMESPACE_SYM maybe_spaces maybe_namespace_prefix string_or_uri
@@ -375,7 +386,9 @@ maybe_style_units
 style_units
   : style_unit
   | style_units style_unit
-  | style_units ignore_style_unit
+  | style_units ignore_charset
+  | style_units ignore_import
+  | style_units ignore_namespace
   ;
 style_unit
   : ruleset maybe_comments
@@ -383,11 +396,6 @@ style_unit
   | page maybe_comments
   | font_face maybe_comments
   | ignorable_at_rule maybe_comments
-  ;
-ignore_style_unit
-  : ignore_charset
-  | ignore_import
-  | ignore_namespace
   ;
 string_or_uri
   : STRING maybe_spaces {
