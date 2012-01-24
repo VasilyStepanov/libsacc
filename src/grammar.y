@@ -143,9 +143,11 @@ SAC_Pair pair;
 %type <vector> style_start;
 %type <vector> media_start;
 
+%type <str> namespace_prefix;
 %type <str> maybe_namespace_prefix;
 
 %type <str> string_or_uri;
+%type <str> ident;
 %type <str> maybe_ident;
 
 %type <str> medium;
@@ -165,6 +167,7 @@ SAC_Pair pair;
 %type <value> hexcolor;
 %type <str> attrib_value;
 %type <cond> pseudo;
+%type <str> pseudo_page;
 %type <str> maybe_pseudo_page;
 
 %type <boolean> prio;
@@ -322,12 +325,40 @@ maybe_charset
   ;
 charset
   : CHARSET_SYM maybe_spaces STRING maybe_spaces ';' maybe_comments
+  | bad_charset
   ;
 ignore_charset
   : CHARSET_SYM maybe_spaces STRING maybe_spaces ';' maybe_comments {
       SAC_SYNTAX_ERROR(@1,
         "unexpected 'charset' rule");
     }
+  | bad_charset
+  ;
+bad_charset
+  : CHARSET_SYM maybe_spaces STRING maybe_spaces charset_errors ';'
+    maybe_comments
+    {
+      SAC_SYNTAX_ERROR(@5,
+        "unexpected token while parsing 'charset' rule");
+    }
+  | CHARSET_SYM maybe_spaces charset_errors ';' maybe_comments {
+      SAC_SYNTAX_ERROR(@3,
+        "unexpected token while parsing 'charset' rule");
+    }
+  | CHARSET_SYM maybe_spaces STRING maybe_spaces charset_errors invalid_block
+    maybe_comments
+    {
+      SAC_SYNTAX_ERROR(@6,
+        "unexpected 'opening brace' while parsing 'charset' rule");
+    }
+  | CHARSET_SYM maybe_spaces charset_errors invalid_block maybe_comments {
+      SAC_SYNTAX_ERROR(@4,
+        "unexpected 'opening brace' while parsing 'charset' rule");
+    }
+  ;
+charset_errors
+  : error
+  | charset_errors error
   ;
 maybe_imports
   : /* empty */
@@ -346,13 +377,40 @@ import
       TEST_OBJ(mediums, @4);
       SAC_parser_import_handler(YY_SCANNER_PARSER(scanner), $3, mediums, NULL);
     }
+  | bad_import
   ;
 ignore_import
   : IMPORT_SYM maybe_spaces string_or_uri maybe_mediums ';' maybe_comments {
       SAC_SYNTAX_ERROR(@1,
         "unexpected 'import' rule");
     }
+  | bad_import
   ;
+bad_import
+  : IMPORT_SYM maybe_spaces string_or_uri maybe_mediums import_errors ';'
+    maybe_comments
+    {
+      SAC_SYNTAX_ERROR(@5,
+        "unexpected token while parsing 'import' rule");
+    }
+  | IMPORT_SYM maybe_spaces import_errors ';' maybe_comments {
+      SAC_SYNTAX_ERROR(@3,
+        "unexpected token while parsing 'import' rule");
+    }
+  | IMPORT_SYM maybe_spaces string_or_uri maybe_mediums import_errors
+    invalid_block maybe_spaces
+    {
+      SAC_SYNTAX_ERROR(@6,
+        "unexpected 'opening brace' token while parsing 'import' rule");
+    }
+  | IMPORT_SYM maybe_spaces import_errors invalid_block maybe_spaces {
+      SAC_SYNTAX_ERROR(@4,
+        "unexpected 'opening brace' token while parsing 'import' rule");
+    }
+  ;
+import_errors
+  : error
+  | import_errors error
 maybe_namespaces
   : /* empty */
   | namespaces
@@ -370,6 +428,7 @@ namespace
       SAC_parser_namespace_declaration_handler(YY_SCANNER_PARSER(scanner),
         $3, $4);
     }
+  | bad_namespace
   ;
 ignore_namespace
   : NAMESPACE_SYM maybe_spaces maybe_namespace_prefix string_or_uri
@@ -378,6 +437,34 @@ ignore_namespace
       SAC_SYNTAX_ERROR(@1,
         "unexpected 'namespace' rule");
     }
+  | bad_namespace
+  ;
+bad_namespace
+  : NAMESPACE_SYM maybe_spaces maybe_namespace_prefix string_or_uri
+    namespace_errors ';' maybe_comments
+    {
+      SAC_SYNTAX_ERROR(@5,
+        "unexpected token while parsing 'namespace' rule");
+    }
+  | NAMESPACE_SYM maybe_spaces namespace_prefix namespace_errors ';'
+    maybe_comments
+    {
+      SAC_SYNTAX_ERROR(@4,
+        "unexpected token while parsing 'namespace' rule");
+    }
+  | NAMESPACE_SYM maybe_spaces namespace_errors ';' maybe_comments {
+      SAC_SYNTAX_ERROR(@3,
+        "unexpected token while parsing 'namespace' rule");
+    }
+  | NAMESPACE_SYM maybe_spaces namespace_errors invalid_block maybe_comments
+    {
+      SAC_SYNTAX_ERROR(@4,
+        "unexpected 'opening brace' token while parsing 'namespace' rule");
+    }
+  ;
+namespace_errors
+  : error
+  | namespace_errors error
   ;
 maybe_style_units
   : /* empty */
@@ -421,7 +508,12 @@ maybe_namespace_prefix
   : /* empty */ {
       $$ = NULL;
     }
-  | IDENT maybe_spaces {
+  | namespace_prefix {
+      $$ = $1;
+    }
+  ;
+namespace_prefix
+  : IDENT maybe_spaces {
       $$ = $1;
     }
   ;
@@ -429,6 +521,22 @@ media
   : media_start '{' maybe_spaces maybe_rulesets closing_brace {
       SAC_parser_end_media_handler(YY_SCANNER_PARSER(scanner), $1);
     }
+  | MEDIA_SYM maybe_spaces mediums media_errors ';' {
+      SAC_SYNTAX_ERROR(@5,
+        "unexpected 'semicolon' while parsing 'media' rule");
+    }
+  | MEDIA_SYM maybe_spaces media_errors ';' {
+      SAC_SYNTAX_ERROR(@4,
+        "unexpected 'semicolon' while parsing 'media' rule");
+    }
+  | MEDIA_SYM maybe_spaces media_errors invalid_block {
+      SAC_SYNTAX_ERROR(@3,
+        "unexpected token while parsing 'media' rule");
+    }
+  ;
+media_errors
+  : error
+  | media_errors error
   ;
 media_start
   : MEDIA_SYM maybe_spaces mediums {
@@ -450,6 +558,34 @@ page
       SAC_parser_end_page_handler(YY_SCANNER_PARSER(scanner),
         $1.first, $1.second);
     }
+  | PAGE_SYM maybe_spaces maybe_ident pseudo_page page_errors invalid_block {
+      SAC_SYNTAX_ERROR(@5,
+        "unexpected token while parsing 'page' rule1");
+    }
+  | PAGE_SYM maybe_spaces ident page_errors invalid_block {
+      SAC_SYNTAX_ERROR(@4,
+        "unexpected token while parsing 'page' rule");
+    }
+  | PAGE_SYM maybe_spaces page_errors invalid_block {
+      SAC_SYNTAX_ERROR(@3,
+        "unexpected token while parsing 'page' rule3");
+    }
+  | PAGE_SYM maybe_spaces maybe_ident pseudo_page page_errors ';' {
+      SAC_SYNTAX_ERROR(@6,
+        "unexpected 'semicolon' while parsing 'page' rule");
+    }
+  | PAGE_SYM maybe_spaces ident page_errors ';' {
+      SAC_SYNTAX_ERROR(@5,
+        "unexpected 'semicolon' while parsing 'page' rule");
+    }
+  | PAGE_SYM maybe_spaces page_errors ';' {
+      SAC_SYNTAX_ERROR(@4,
+        "unexpected 'semicolon' while parsing 'page' rule");
+    }
+  ;
+page_errors
+  : error
+  | page_errors error
   ;
 page_start
   : PAGE_SYM maybe_spaces maybe_ident maybe_pseudo_page {
@@ -462,7 +598,12 @@ maybe_ident
   : /* empty */ {
       $$ = NULL;
     }
-  | IDENT maybe_spaces {
+  | ident {
+      $$ = $1;
+    }
+  ;
+ident
+  : IDENT maybe_spaces {
       $$ = $1;
     }
   ;
@@ -470,7 +611,12 @@ maybe_pseudo_page
   : /* empty */ {
       $$ = NULL;
     }
-  | ':' IDENT maybe_spaces {
+  | pseudo_page {
+      $$ = $1;
+    }
+  ;
+pseudo_page
+  : ':' IDENT maybe_spaces {
       $$ = $2;
     }
   ;
@@ -478,6 +624,18 @@ font_face
   : font_face_start '{' maybe_spaces maybe_declarations closing_brace {
       SAC_parser_end_font_face_handler(YY_SCANNER_PARSER(scanner));
     }
+  | FONT_FACE_SYM maybe_spaces font_face_errors invalid_block {
+      SAC_SYNTAX_ERROR(@3,
+        "unexpected token while parsing 'font-face' rule");
+    }
+  | FONT_FACE_SYM maybe_spaces font_face_errors ';' {
+      SAC_SYNTAX_ERROR(@4,
+        "unexpected 'semicolon' while parsing 'font-face' rule");
+    }
+  ;
+font_face_errors
+  : error
+  | font_face_errors error
   ;
 font_face_start
   : FONT_FACE_SYM maybe_spaces {

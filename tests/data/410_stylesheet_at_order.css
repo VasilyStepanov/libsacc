@@ -1,0 +1,20 @@
+@import url("all.css");
+p { color : red }
+@import url("error.css") & projection, screen;
+p { color : maroon }
+@import url("error.css") {} projection, screen;
+p { color : red }
+@namespace {}
+@namespace "" {}
+@namespace "" "" "";
+@font-face ident;
+@font-face ident {}
+@page ident;
+@page ident error;
+@page ident:pseudo;
+@page ident error {}
+@media;
+@media &;
+@media {}
+@media & {}
+p { color : green }
