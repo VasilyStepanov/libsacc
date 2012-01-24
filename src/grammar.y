@@ -564,7 +564,7 @@ page
     }
   | PAGE_SYM maybe_spaces maybe_ident pseudo_page page_errors invalid_block {
       SAC_SYNTAX_ERROR(@5,
-        "unexpected token while parsing 'page' rule1");
+        "unexpected token while parsing 'page' rule");
     }
   | PAGE_SYM maybe_spaces ident page_errors invalid_block {
       SAC_SYNTAX_ERROR(@4,
@@ -572,7 +572,7 @@ page
     }
   | PAGE_SYM maybe_spaces page_errors invalid_block {
       SAC_SYNTAX_ERROR(@3,
-        "unexpected token while parsing 'page' rule3");
+        "unexpected token while parsing 'page' rule");
     }
   | PAGE_SYM maybe_spaces maybe_ident pseudo_page page_errors ';' {
       SAC_SYNTAX_ERROR(@6,
