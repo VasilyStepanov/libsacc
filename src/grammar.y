@@ -188,6 +188,13 @@ start
 
       YY_SCANNER_OUTPUT(scanner) = (void*)$2;
     }
+  | priority_start prio error {
+      SAC_SYNTAX_ERROR(@3,
+        "unexpected token while parsing priority");
+      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+
+      YY_SCANNER_OUTPUT(scanner) = (void*)SAC_FALSE;
+    }
   | priority_start error {
       SAC_SYNTAX_ERROR(@2,
         "unexpected token while parsing priority");
@@ -222,7 +229,7 @@ start
 
       YY_SCANNER_OUTPUT(scanner) = NULL;
     }
-  | rule_start ruleset maybe_spaces EOF_TOKEN {
+  | rule_start ruleset maybe_spaces {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
     }
   | rule_start ruleset maybe_spaces error {
