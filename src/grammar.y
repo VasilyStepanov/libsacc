@@ -1102,23 +1102,26 @@ term
       $$->desc.dimension.unit = "ex";
       $$->desc.dimension.value.sreal = $2;
     }
-  | ANGLE_DEG maybe_spaces {
+  | unary_operator ANGLE_DEG maybe_spaces {
+      if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_DEGREE);
       TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "deg";
-      $$->desc.dimension.value.ureal = $1;
+      $$->desc.dimension.value.sreal = $2;
     }
-  | ANGLE_RAD maybe_spaces {
+  | unary_operator ANGLE_RAD maybe_spaces {
+      if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_RADIAN);
       TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "rad";
-      $$->desc.dimension.value.ureal = $1;
+      $$->desc.dimension.value.sreal = $2;
     }
-  | ANGLE_GRAD maybe_spaces {
+  | unary_operator ANGLE_GRAD maybe_spaces {
+      if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_GRADIAN);
       TEST_OBJ($$, @$);
       $$->desc.dimension.unit = "grad";
-      $$->desc.dimension.value.ureal = $1;
+      $$->desc.dimension.value.sreal = $2;
     }
   | unary_operator TIME_MS maybe_spaces {
       if ($1 == '-') {

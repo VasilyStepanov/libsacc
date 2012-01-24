@@ -115,6 +115,15 @@
     <sub>
       <gradian dimension="grad">100</gradian>
     </sub>
+    <sub>
+      <degree dimension="deg">-90</degree>
+    </sub>
+    <sub>
+      <radian dimension="rad">-1.57</radian>
+    </sub>
+    <sub>
+      <gradian dimension="grad">-100</gradian>
+    </sub>
   </property>
   <property name="prop-em">
     <em dimension="em">1.1</em>

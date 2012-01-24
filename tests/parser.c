@@ -373,15 +373,15 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
         break;
       case SAC_DEGREE:
         fprintf(out, "<degree dimension=\"%s\">%g</degree>",
-          value->desc.dimension.unit, value->desc.dimension.value.ureal);
+          value->desc.dimension.unit, value->desc.dimension.value.sreal);
         break;
       case SAC_GRADIAN:
         fprintf(out, "<gradian dimension=\"%s\">%g</gradian>",
-          value->desc.dimension.unit, value->desc.dimension.value.ureal);
+          value->desc.dimension.unit, value->desc.dimension.value.sreal);
         break;
       case SAC_RADIAN:
         fprintf(out, "<radian dimension=\"%s\">%g</radian>",
-          value->desc.dimension.unit, value->desc.dimension.value.ureal);
+          value->desc.dimension.unit, value->desc.dimension.value.sreal);
         break;
       case SAC_MILLISECOND:
         fprintf(out, "<msecs dimension=\"%s\">%g</msecs>",

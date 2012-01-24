@@ -138,12 +138,12 @@ struct _SAC_LexicalUnit {
         /* SAC_LENGTH_MILLIMETER */
         /* SAC_LENGTH_POINT */
         /* SAC_LENGTH_PICA */
-        /* SAC_PERCENTAGE */
-        double sreal; /* signed */
-
         /* SAC_DEGREE */
         /* SAC_GRADIAN */
         /* SAC_RADIAN */
+        /* SAC_PERCENTAGE */
+        double sreal; /* signed */
+
         /* SAC_MILLISECOND */
         /* SAC_SECOND */
         /* SAC_HERTZ */
