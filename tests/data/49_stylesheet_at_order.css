@@ -1,0 +1,6 @@
+@import url("all.css");
+@namespace "";
+p { color : red }
+@import url("bluish.css") projection, tv;
+@namespace svg url('http://www.w3.org/2000/svg');
+p { color : green }

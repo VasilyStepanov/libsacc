@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<document>
+  <import uri="all.css"/>
+  <namespace uri=""/>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="p"/>
+    </start_selectors>
+    <property name="color">
+      <ident>red</ident>
+    </property>
+    <end_selectors>
+      <selector type="element_node" localName="p"/>
+    </end_selectors>
+  </style>
+  <error type="SYNTAX" line="4" column="1">unexpected 'import' rule</error>
+  <error type="SYNTAX" line="5" column="1">unexpected 'namespace' rule</error>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="p"/>
+    </start_selectors>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_selectors>
+      <selector type="element_node" localName="p"/>
+    </end_selectors>
+  </style>
+</document>

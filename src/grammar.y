@@ -323,6 +323,12 @@ maybe_charset
 charset
   : CHARSET_SYM maybe_spaces STRING maybe_spaces ';' maybe_comments
   ;
+ignore_charset
+  : CHARSET_SYM maybe_spaces STRING maybe_spaces ';' maybe_comments {
+      SAC_SYNTAX_ERROR(@1,
+        "unexpected 'charset' rule");
+    }
+  ;
 maybe_imports
   :
   | maybe_imports import
@@ -334,6 +340,12 @@ import
       mediums = SAC_vector_from_list($4, YY_SCANNER_MPOOL(scanner));
       TEST_OBJ(mediums, @4);
       SAC_parser_import_handler(YY_SCANNER_PARSER(scanner), $3, mediums, NULL);
+    }
+  ;
+ignore_import
+  : IMPORT_SYM maybe_spaces string_or_uri maybe_mediums ';' maybe_comments {
+      SAC_SYNTAX_ERROR(@1,
+        "unexpected 'import' rule");
     }
   ;
 maybe_namespaces
@@ -348,9 +360,22 @@ namespace
         $3, $4);
     }
   ;
+ignore_namespace
+  : NAMESPACE_SYM maybe_spaces maybe_namespace_prefix string_or_uri
+    ';' maybe_comments
+    {
+      SAC_SYNTAX_ERROR(@1,
+        "unexpected 'namespace' rule");
+    }
+  ;
 maybe_style_units
   : /* empty */
-  | maybe_style_units style_unit
+  | style_units
+  ;
+style_units
+  : style_unit
+  | style_units style_unit
+  | style_units ignore_style_unit
   ;
 style_unit
   : ruleset maybe_comments
@@ -358,6 +383,11 @@ style_unit
   | page maybe_comments
   | font_face maybe_comments
   | ignorable_at_rule maybe_comments
+  ;
+ignore_style_unit
+  : ignore_charset
+  | ignore_import
+  | ignore_namespace
   ;
 string_or_uri
   : STRING maybe_spaces {
