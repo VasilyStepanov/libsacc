@@ -51,8 +51,8 @@ extern int yylex();
 
 #define SAC_LOG_LOCATION(loc, data) \
   fprintf(stderr, "%d:%d:%d:%d: %s\n", \
-    loc.first_line + 1, loc.first_column + 1, \
-    loc.last_line + 1, loc.last_column + 1, \
+    loc.first_line, loc.first_column, \
+    loc.last_line, loc.last_column, \
     data);
   
 int yydebug = 0;
