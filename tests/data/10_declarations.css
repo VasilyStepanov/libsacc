@@ -20,3 +20,4 @@ prop-pt : 1.7PT;
 prop-pc : 1.8PC;
 prop-func : foo('arg') bar('arg1', 2);
 prop-color : #ab #aBc #abcde #aBCdef;
+prop-res : 300.5dpi 300.5dpcm -300.5dpi -300.5dpcm;

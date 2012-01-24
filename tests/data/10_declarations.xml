@@ -217,4 +217,20 @@
       </func>
     </sub>
   </property>
+  <error type="SYNTAX" line="23" column="31">negative resolution not allowed</error>
+  <error type="SYNTAX" line="23" column="41">negative resolution not allowed</error>
+  <property name="prop-res">
+    <sub>
+      <dpi dimension="dpi">300.5</dpi>
+    </sub>
+    <sub>
+      <dpcm dimension="dpcm">300.5</dpcm>
+    </sub>
+    <sub>
+      <dpi dimension="dpi">300.5</dpi>
+    </sub>
+    <sub>
+      <dpcm dimension="dpcm">300.5</dpcm>
+    </sub>
+  </property>
 </document>

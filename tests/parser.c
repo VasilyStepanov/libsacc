@@ -399,6 +399,14 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
         fprintf(out, "<khertz dimension=\"%s\">%g</khertz>",
           value->desc.dimension.unit, value->desc.dimension.value.ureal);
         break;
+      case SAC_DOTS_PER_INCH:
+        fprintf(out, "<dpi dimension=\"%s\">%g</dpi>",
+          value->desc.dimension.unit, value->desc.dimension.value.ureal);
+        break;
+      case SAC_DOTS_PER_CENTIMETER:
+        fprintf(out, "<dpcm dimension=\"%s\">%g</dpcm>",
+          value->desc.dimension.unit, value->desc.dimension.value.ureal);
+        break;
       case SAC_URI:
         fprintf(out, "<uri>%s</uri>", value->desc.uri);
         break;

@@ -82,6 +82,9 @@ typedef enum _SAC_LexicalUnitCode {
   /* Frequencies */
   SAC_HERTZ,
   SAC_KILOHERTZ,
+  /* Resolution */
+  SAC_DOTS_PER_INCH,
+  SAC_DOTS_PER_CENTIMETER,
   /* Misc */
   SAC_IDENT,              /* any ident except inherit ! */
   SAC_STRING_VALUE,
@@ -142,6 +145,7 @@ struct _SAC_LexicalUnit {
         /* SAC_GRADIAN */
         /* SAC_RADIAN */
         /* SAC_PERCENTAGE */
+        /* SAC_ */
         double sreal; /* signed */
 
         /* SAC_MILLISECOND */
