@@ -145,13 +145,14 @@ struct _SAC_LexicalUnit {
         /* SAC_GRADIAN */
         /* SAC_RADIAN */
         /* SAC_PERCENTAGE */
-        /* SAC_ */
         double sreal; /* signed */
 
         /* SAC_MILLISECOND */
         /* SAC_SECOND */
         /* SAC_HERTZ */
         /* SAC_KILOHERTZ */
+        /* SAC_DOTS_PER_INCH */
+        /* SAC_DOTS_PER_CENTIMETER */
         double ureal; /* unsigned */
       } value;
     } dimension;

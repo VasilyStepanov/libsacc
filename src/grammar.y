@@ -1178,7 +1178,7 @@ term
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_DOTS_PER_INCH);
       TEST_OBJ($$, @$);
       $$->desc.stringValue = "dpi";
-      $$->desc.dimension.value.sreal = $2;
+      $$->desc.dimension.value.ureal = $2;
     }
   | unary_operator RESOLUTION_DPCM maybe_spaces {
       if ($1 == '-') {
@@ -1190,7 +1190,7 @@ term
         SAC_DOTS_PER_CENTIMETER);
       TEST_OBJ($$, @$);
       $$->desc.stringValue = "dpcm";
-      $$->desc.dimension.value.sreal = $2;
+      $$->desc.dimension.value.ureal = $2;
     }
   | STRING maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
