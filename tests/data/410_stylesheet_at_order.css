@@ -2,6 +2,7 @@
 p { color : red }
 @import url("error.css") & projection, screen;
 p { color : maroon }
+@import "error.css" {}
 @import url("error.css") {} projection, screen;
 p { color : red }
 @namespace {}
@@ -13,8 +14,9 @@ p { color : red }
 @page ident error;
 @page ident:pseudo;
 @page ident error {}
-@media;
-@media &;
+@media ident ;
+@media ident &;
 @media {}
-@media & {}
+@media ident & {}
+@media ident & {}
 p { color : green }

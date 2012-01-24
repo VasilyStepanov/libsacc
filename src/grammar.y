@@ -529,6 +529,10 @@ media
       SAC_SYNTAX_ERROR(@4,
         "unexpected 'semicolon' while parsing 'media' rule");
     }
+  | MEDIA_SYM maybe_spaces mediums media_errors invalid_block {
+      SAC_SYNTAX_ERROR(@4,
+        "unexpected token while parsing 'media' rule");
+    }
   | MEDIA_SYM maybe_spaces media_errors invalid_block {
       SAC_SYNTAX_ERROR(@3,
         "unexpected token while parsing 'media' rule");
