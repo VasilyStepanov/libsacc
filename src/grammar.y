@@ -243,31 +243,31 @@ start
   ;
 
 priority_start
-  : START_AS_PRIORITY {
+  : START_AS_PRIORITY maybe_spaces {
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
     }
   ;
 property_value_start
-  : START_AS_PROPERTY_VALUE {
+  : START_AS_PROPERTY_VALUE maybe_spaces {
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
     }
   ;
 style_declarations_start
-  : START_AS_STYLE_DECLARATIONS {
+  : START_AS_STYLE_DECLARATIONS maybe_spaces {
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
     }
   ;
 selectors_start
-  : START_AS_SELECTORS {
+  : START_AS_SELECTORS maybe_spaces {
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
     }
 rule_start
-  : START_AS_RULE {
+  : START_AS_RULE maybe_spaces {
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
     }
   ;
 stylesheet_start
-  : START_AS_STYLESHEET {
+  : START_AS_STYLESHEET maybe_spaces {
       SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
     }
   ;
