@@ -227,6 +227,14 @@ range        \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h}
                           yylval->real = strtod(yytext, NULL);
                           return FREQ_KHZ;
                         }
+{num}{D}{P}{I}          {
+                          yylval->real = strtod(yytext, NULL);
+                          return RESOLUTION_DPI;
+                        }
+{num}{D}{P}{C}{M}       {
+                          yylval->real = strtod(yytext, NULL);
+                          return RESOLUTION_DPCM;
+                        }
 {num}{ident}            {return DIMEN;}
 {num}%                  {
                           yylval->real = strtod(yytext, NULL);

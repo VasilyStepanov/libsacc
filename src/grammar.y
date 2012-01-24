@@ -129,6 +129,8 @@ SAC_Pair pair;
 %token <real> TIME_S
 %token <real> FREQ_HZ
 %token <real> FREQ_KHZ
+%token <real> RESOLUTION_DPI
+%token <real> RESOLUTION_DPCM
 %token DIMEN
 %token <real> PERCENTAGE
 %token <real> REAL
