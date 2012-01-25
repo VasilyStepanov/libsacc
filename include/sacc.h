@@ -383,6 +383,32 @@ struct _SAC_Condition {
 
 
 /**
+ * Media selectors.
+ */
+
+typedef enum {
+  SAC_CONDITIONAL_MEDIA_SELECTOR,
+  SAC_TYPE_MEDIA_SELECTOR,
+  SAC_ANY_TYPE_MEDIA_SELECTOR
+} SAC_MediaSelectorType;
+
+typedef enum {
+  SAC_AND_MEDIA_CONDITION
+} SAC_MediaConditionType;
+
+typedef struct _SAC_MediaSelector SAC_MediaSelector;
+typedef struct _SAC_MediaCondition SAC_MediaCondition;
+
+struct _SAC_MediaSelector {
+  SAC_MediaSelectorType mediaSelectorType;
+};
+
+struct _SAC_MediaCondition {
+  SAC_MediaConditionType mediaConditionType;
+};
+
+
+/**
  * Parser.
  */
 
