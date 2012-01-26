@@ -383,28 +383,37 @@ struct _SAC_Condition {
 
 
 /**
- * Media selectors.
+ * Media queries.
  */
 
 typedef enum {
-  SAC_CONDITIONAL_MEDIA_SELECTOR,
-  SAC_TYPE_MEDIA_SELECTOR,
-  SAC_ANY_TYPE_MEDIA_SELECTOR
-} SAC_MediaSelectorType;
+  SAC_CONDITIONAL_MEDIA_QUERY,
+  SAC_TYPE_MEDIA_QUERY,
+  SAC_ANY_TYPE_MEDIA_QUERY
+} SAC_MediaQueryType;
 
 typedef enum {
   SAC_AND_MEDIA_CONDITION
 } SAC_MediaConditionType;
 
-typedef struct _SAC_MediaSelector SAC_MediaSelector;
+typedef struct _SAC_MediaQuery SAC_MediaQuery;
 typedef struct _SAC_MediaCondition SAC_MediaCondition;
 
-struct _SAC_MediaSelector {
-  SAC_MediaSelectorType mediaSelectorType;
+struct _SAC_MediaQuery {
+  SAC_MediaQueryType mediaQueryType;
 };
 
 struct _SAC_MediaCondition {
+  /* the type of the condition */
   SAC_MediaConditionType mediaConditionType;
+
+  union _SAC_MCdesc {
+    /* SAC_AND_MEDIA_CONDITION */
+    struct _SAC_MCcombinator {
+      SAC_MediaCondition *firstCondition;
+      SAC_MediaCondition *secondCondition;
+    } combinator;
+  } desc;
 };
 
 
