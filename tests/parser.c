@@ -41,15 +41,6 @@ static void namespace_declaration(void *userData,
 
 
 
-static void dump_media(FILE *out, const SAC_STRING media[]) {
-  const SAC_STRING *m;
-
-  for (m = media; *m != NULL; ++m)
-    fprintf(out, "<medium>%s</medium>", *m);
-}
-
-
-
 static void start_page(void *userData,
   const SAC_STRING name, const SAC_STRING pseudoPage)
 {
@@ -78,10 +69,202 @@ static void end_page(void *userData,
 
 
 
+static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
+  if (value == NULL) {
+    fprintf(out, "<no_lexical_units />");
+  } else {
+    switch (value->lexicalUnitType) {
+      case SAC_OPERATOR_COMMA:
+        fprintf(out, "<comma/>");
+        break;
+      case SAC_INHERIT:
+        fprintf(out, "<inherit/>");
+        break;
+      case SAC_INTEGER:
+        fprintf(out, "<int>%li</int>", value->desc.integer);
+        break;
+      case SAC_REAL:
+        fprintf(out, "<real>%g</real>", value->desc.real);
+        break;
+      case SAC_LENGTH_EM:
+        fprintf(out, "<em dimension=\"%s\">%g</em>",
+          value->desc.dimension.unit, value->desc.dimension.value.sreal);
+        break;
+      case SAC_LENGTH_EX:
+        fprintf(out, "<ex dimension=\"%s\">%g</ex>",
+          value->desc.dimension.unit, value->desc.dimension.value.sreal);
+        break;
+      case SAC_LENGTH_PIXEL:
+        fprintf(out, "<pixel dimension=\"%s\">%g</pixel>",
+          value->desc.dimension.unit, value->desc.dimension.value.sreal);
+        break;
+      case SAC_LENGTH_INCH:
+        fprintf(out, "<inch dimension=\"%s\">%g</inch>",
+          value->desc.dimension.unit, value->desc.dimension.value.sreal);
+        break;
+      case SAC_LENGTH_CENTIMETER:
+        fprintf(out, "<centimeter dimension=\"%s\">%g</centimeter>",
+          value->desc.dimension.unit, value->desc.dimension.value.sreal);
+        break;
+      case SAC_LENGTH_MILLIMETER:
+        fprintf(out, "<millimeter dimension=\"%s\">%g</millimeter>",
+          value->desc.dimension.unit, value->desc.dimension.value.sreal);
+        break;
+      case SAC_LENGTH_POINT:
+        fprintf(out, "<point dimension=\"%s\">%g</point>",
+          value->desc.dimension.unit, value->desc.dimension.value.sreal);
+        break;
+      case SAC_LENGTH_PICA:
+        fprintf(out, "<pica dimension=\"%s\">%g</pica>",
+          value->desc.dimension.unit, value->desc.dimension.value.sreal);
+        break;
+      case SAC_PERCENTAGE:
+        fprintf(out, "<percentage dimension=\"%s\">%g</percentage>",
+          value->desc.dimension.unit, value->desc.dimension.value.sreal);
+        break;
+      case SAC_DEGREE:
+        fprintf(out, "<degree dimension=\"%s\">%g</degree>",
+          value->desc.dimension.unit, value->desc.dimension.value.sreal);
+        break;
+      case SAC_GRADIAN:
+        fprintf(out, "<gradian dimension=\"%s\">%g</gradian>",
+          value->desc.dimension.unit, value->desc.dimension.value.sreal);
+        break;
+      case SAC_RADIAN:
+        fprintf(out, "<radian dimension=\"%s\">%g</radian>",
+          value->desc.dimension.unit, value->desc.dimension.value.sreal);
+        break;
+      case SAC_MILLISECOND:
+        fprintf(out, "<msecs dimension=\"%s\">%g</msecs>",
+          value->desc.dimension.unit, value->desc.dimension.value.ureal);
+        break;
+      case SAC_SECOND:
+        fprintf(out, "<secs dimension=\"%s\">%g</secs>",
+          value->desc.dimension.unit, value->desc.dimension.value.ureal);
+        break;
+      case SAC_HERTZ:
+        fprintf(out, "<hertz dimension=\"%s\">%g</hertz>",
+          value->desc.dimension.unit, value->desc.dimension.value.ureal);
+        break;
+      case SAC_KILOHERTZ:
+        fprintf(out, "<khertz dimension=\"%s\">%g</khertz>",
+          value->desc.dimension.unit, value->desc.dimension.value.ureal);
+        break;
+      case SAC_DOTS_PER_INCH:
+        fprintf(out, "<dpi dimension=\"%s\">%g</dpi>",
+          value->desc.dimension.unit, value->desc.dimension.value.ureal);
+        break;
+      case SAC_DOTS_PER_CENTIMETER:
+        fprintf(out, "<dpcm dimension=\"%s\">%g</dpcm>",
+          value->desc.dimension.unit, value->desc.dimension.value.ureal);
+        break;
+      case SAC_URI:
+        fprintf(out, "<uri>%s</uri>", value->desc.uri);
+        break;
+      case SAC_RGBCOLOR:
+      case SAC_FUNCTION:
+        {
+          SAC_LexicalUnit **arg;
+
+          fprintf(out,
+            "<func name=\"%s\">", value->desc.function.name);
+          for (arg = value->desc.function.parameters; *arg != NULL; ++arg) {
+            fprintf(out, "<arg>");
+            dump_lexical_unit(out, *arg);
+            fprintf(out, "</arg>");
+          }
+          fprintf(out, "</func>");
+        }
+        break;
+      case SAC_IDENT:
+        fprintf(out, "<ident>%s</ident>", value->desc.ident);
+        break;
+      case SAC_STRING_VALUE:
+        fprintf(out, "<str>%s</str>", value->desc.stringValue);
+        break;
+      case SAC_UNICODERANGE:
+        fprintf(out, "<urange>%s</urange>", value->desc.unicodeRange);
+        break;
+      case SAC_SUB_EXPRESSION:
+        {
+          SAC_LexicalUnit **sub;
+
+          for (sub = value->desc.subValues; *sub != NULL; ++sub) {
+            fprintf(out, "<sub>");
+            dump_lexical_unit(out, *sub);
+            fprintf(out, "</sub>");
+          }
+        }
+        break;
+      case SAC_OPERATOR_PLUS:
+      case SAC_OPERATOR_MINUS:
+      case SAC_OPERATOR_MULTIPLY:
+      case SAC_OPERATOR_SLASH:
+      case SAC_OPERATOR_MOD:
+      case SAC_OPERATOR_EXP:
+      case SAC_OPERATOR_LT:
+      case SAC_OPERATOR_GT:
+      case SAC_OPERATOR_LE:
+      case SAC_OPERATOR_GE:
+      case SAC_OPERATOR_TILDE:
+      case SAC_COUNTER_FUNCTION:
+      case SAC_COUNTERS_FUNCTION:
+      case SAC_ATTR:
+      case SAC_RECT_FUNCTION:
+      case SAC_DIMENSION:
+        fprintf(out,
+          "<value type=\"unknown_%d\"/>", value->lexicalUnitType);
+        break;
+    };
+  }
+}
+
+
+
+static void dump_media_query(FILE *out, const SAC_MediaQuery *mediaQuery) {
+  switch (mediaQuery->mediaQueryType) {
+    case SAC_TYPE_MEDIA_QUERY:
+      fprintf(out, "<media type=\"type\">%s</media>", mediaQuery->desc.type);
+      break;
+    case SAC_FEATURE_MEDIA_QUERY:
+      fprintf(out, "<media type=\"feature\" feature=\"%s\">",
+        mediaQuery->desc.feature.name);
+      dump_lexical_unit(out, mediaQuery->desc.feature.value);
+      fprintf(out, "</media>");
+      break;
+    case SAC_AND_MEDIA_QUERY:
+      fprintf(out, "<media type=\"and\">");
+      dump_media_query(out, mediaQuery->desc.subQuery);
+      fprintf(out, "</media>");
+      break;
+    case SAC_ONLY_MEDIA_QUERY:
+      fprintf(out, "<media type=\"only\">");
+      dump_media_query(out, mediaQuery->desc.subQuery);
+      fprintf(out, "</media>");
+      break;
+    case SAC_NOT_MEDIA_QUERY:
+      fprintf(out, "<media type=\"not\">");
+      dump_media_query(out, mediaQuery->desc.subQuery);
+      fprintf(out, "</media >");
+      break;
+  }
+}
+
+
+
+static void dump_media_queries(FILE *out, const SAC_MediaQuery *media[]) {
+  const SAC_MediaQuery **m;
+
+  for (m = media; *m != NULL; ++m)
+    dump_media_query(out, *m);
+}
+
+
+
 static void import(void *userData,
   const SAC_STRING base,
   const SAC_STRING uri,
-  const SAC_STRING media[],
+  const SAC_MediaQuery *media[],
   const SAC_STRING defaultNamepaceURI)
 {
   fprintf(USERDATA_FILE(userData), "<import");
@@ -94,25 +277,25 @@ static void import(void *userData,
       " defaultNamepaceURI=\"%s\"", defaultNamepaceURI);
   fprintf(USERDATA_FILE(userData), ">");
 
-  dump_media(USERDATA_FILE(userData), media);
+  dump_media_queries(USERDATA_FILE(userData), media);
 
   fprintf(USERDATA_FILE(userData), "</import>");
 }
 
 
 
-static void start_media(void *userData, const SAC_STRING media[]) {
+static void start_media(void *userData, const SAC_MediaQuery *media[]) {
   fprintf(USERDATA_FILE(userData), "<media>");
   fprintf(USERDATA_FILE(userData), "<start_mediums>");
-  dump_media(USERDATA_FILE(userData), media);
+  dump_media_queries(USERDATA_FILE(userData), media);
   fprintf(USERDATA_FILE(userData), "</start_mediums>");
 }
 
 
 
-static void end_media(void *userData, const SAC_STRING media[]) {
+static void end_media(void *userData, const SAC_MediaQuery *media[]) {
   fprintf(USERDATA_FILE(userData), "<end_mediums>");
-  dump_media(USERDATA_FILE(userData), media);
+  dump_media_queries(USERDATA_FILE(userData), media);
   fprintf(USERDATA_FILE(userData), "</end_mediums>");
   fprintf(USERDATA_FILE(userData), "</media>");
 }
@@ -314,158 +497,6 @@ static void end_style(
   dump_selectors(USERDATA_FILE(userData), selectors);
   fprintf(USERDATA_FILE(userData), "</end_selectors>");
   fprintf(USERDATA_FILE(userData), "</style>");
-}
-
-
-
-static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
-  if (value == NULL) {
-    fprintf(out, "<no_lexical_units />");
-  } else {
-    switch (value->lexicalUnitType) {
-      case SAC_OPERATOR_COMMA:
-        fprintf(out, "<comma/>");
-        break;
-      case SAC_INHERIT:
-        fprintf(out, "<inherit/>");
-        break;
-      case SAC_INTEGER:
-        fprintf(out, "<int>%li</int>", value->desc.integer);
-        break;
-      case SAC_REAL:
-        fprintf(out, "<real>%g</real>", value->desc.real);
-        break;
-      case SAC_LENGTH_EM:
-        fprintf(out, "<em dimension=\"%s\">%g</em>",
-          value->desc.dimension.unit, value->desc.dimension.value.sreal);
-        break;
-      case SAC_LENGTH_EX:
-        fprintf(out, "<ex dimension=\"%s\">%g</ex>",
-          value->desc.dimension.unit, value->desc.dimension.value.sreal);
-        break;
-      case SAC_LENGTH_PIXEL:
-        fprintf(out, "<pixel dimension=\"%s\">%g</pixel>",
-          value->desc.dimension.unit, value->desc.dimension.value.sreal);
-        break;
-      case SAC_LENGTH_INCH:
-        fprintf(out, "<inch dimension=\"%s\">%g</inch>",
-          value->desc.dimension.unit, value->desc.dimension.value.sreal);
-        break;
-      case SAC_LENGTH_CENTIMETER:
-        fprintf(out, "<centimeter dimension=\"%s\">%g</centimeter>",
-          value->desc.dimension.unit, value->desc.dimension.value.sreal);
-        break;
-      case SAC_LENGTH_MILLIMETER:
-        fprintf(out, "<millimeter dimension=\"%s\">%g</millimeter>",
-          value->desc.dimension.unit, value->desc.dimension.value.sreal);
-        break;
-      case SAC_LENGTH_POINT:
-        fprintf(out, "<point dimension=\"%s\">%g</point>",
-          value->desc.dimension.unit, value->desc.dimension.value.sreal);
-        break;
-      case SAC_LENGTH_PICA:
-        fprintf(out, "<pica dimension=\"%s\">%g</pica>",
-          value->desc.dimension.unit, value->desc.dimension.value.sreal);
-        break;
-      case SAC_PERCENTAGE:
-        fprintf(out, "<percentage dimension=\"%s\">%g</percentage>",
-          value->desc.dimension.unit, value->desc.dimension.value.sreal);
-        break;
-      case SAC_DEGREE:
-        fprintf(out, "<degree dimension=\"%s\">%g</degree>",
-          value->desc.dimension.unit, value->desc.dimension.value.sreal);
-        break;
-      case SAC_GRADIAN:
-        fprintf(out, "<gradian dimension=\"%s\">%g</gradian>",
-          value->desc.dimension.unit, value->desc.dimension.value.sreal);
-        break;
-      case SAC_RADIAN:
-        fprintf(out, "<radian dimension=\"%s\">%g</radian>",
-          value->desc.dimension.unit, value->desc.dimension.value.sreal);
-        break;
-      case SAC_MILLISECOND:
-        fprintf(out, "<msecs dimension=\"%s\">%g</msecs>",
-          value->desc.dimension.unit, value->desc.dimension.value.ureal);
-        break;
-      case SAC_SECOND:
-        fprintf(out, "<secs dimension=\"%s\">%g</secs>",
-          value->desc.dimension.unit, value->desc.dimension.value.ureal);
-        break;
-      case SAC_HERTZ:
-        fprintf(out, "<hertz dimension=\"%s\">%g</hertz>",
-          value->desc.dimension.unit, value->desc.dimension.value.ureal);
-        break;
-      case SAC_KILOHERTZ:
-        fprintf(out, "<khertz dimension=\"%s\">%g</khertz>",
-          value->desc.dimension.unit, value->desc.dimension.value.ureal);
-        break;
-      case SAC_DOTS_PER_INCH:
-        fprintf(out, "<dpi dimension=\"%s\">%g</dpi>",
-          value->desc.dimension.unit, value->desc.dimension.value.ureal);
-        break;
-      case SAC_DOTS_PER_CENTIMETER:
-        fprintf(out, "<dpcm dimension=\"%s\">%g</dpcm>",
-          value->desc.dimension.unit, value->desc.dimension.value.ureal);
-        break;
-      case SAC_URI:
-        fprintf(out, "<uri>%s</uri>", value->desc.uri);
-        break;
-      case SAC_RGBCOLOR:
-      case SAC_FUNCTION:
-        {
-          SAC_LexicalUnit **arg;
-
-          fprintf(out,
-            "<func name=\"%s\">", value->desc.function.name);
-          for (arg = value->desc.function.parameters; *arg != NULL; ++arg) {
-            fprintf(out, "<arg>");
-            dump_lexical_unit(out, *arg);
-            fprintf(out, "</arg>");
-          }
-          fprintf(out, "</func>");
-        }
-        break;
-      case SAC_IDENT:
-        fprintf(out, "<ident>%s</ident>", value->desc.ident);
-        break;
-      case SAC_STRING_VALUE:
-        fprintf(out, "<str>%s</str>", value->desc.stringValue);
-        break;
-      case SAC_UNICODERANGE:
-        fprintf(out, "<urange>%s</urange>", value->desc.unicodeRange);
-        break;
-      case SAC_SUB_EXPRESSION:
-        {
-          SAC_LexicalUnit **sub;
-
-          for (sub = value->desc.subValues; *sub != NULL; ++sub) {
-            fprintf(out, "<sub>");
-            dump_lexical_unit(out, *sub);
-            fprintf(out, "</sub>");
-          }
-        }
-        break;
-      case SAC_OPERATOR_PLUS:
-      case SAC_OPERATOR_MINUS:
-      case SAC_OPERATOR_MULTIPLY:
-      case SAC_OPERATOR_SLASH:
-      case SAC_OPERATOR_MOD:
-      case SAC_OPERATOR_EXP:
-      case SAC_OPERATOR_LT:
-      case SAC_OPERATOR_GT:
-      case SAC_OPERATOR_LE:
-      case SAC_OPERATOR_GE:
-      case SAC_OPERATOR_TILDE:
-      case SAC_COUNTER_FUNCTION:
-      case SAC_COUNTERS_FUNCTION:
-      case SAC_ATTR:
-      case SAC_RECT_FUNCTION:
-      case SAC_DIMENSION:
-        fprintf(out,
-          "<value type=\"unknown_%d\"/>", value->lexicalUnitType);
-        break;
-    };
-  }
 }
 
 

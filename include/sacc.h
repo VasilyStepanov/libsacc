@@ -407,7 +407,7 @@ struct _SAC_MediaQuery {
     /* SAC_FEATURE_MEDIA_QUERY */
     struct _SAC_MQfeature {
       SAC_STRING name;
-      SAC_LexicalUnit **values;
+      SAC_LexicalUnit *value;
     } feature;
 
     /* SAC_AND_MEDIA_QUERY */
@@ -418,9 +418,7 @@ struct _SAC_MediaQuery {
 
     /* SAC_ONLY_MEDIA_QUERY */
     /* SAC_NOT_MEDIA_QUERY */
-    struct _SAC_MQrestrictor {
-      SAC_MediaQuery *query;
-    } restrictor;
+    SAC_MediaQuery *subQuery;
   } desc;
 };
 
@@ -478,7 +476,7 @@ typedef void (*SAC_NamespaceDeclarationHandler)(void *userData,
 typedef void (*SAC_ImportHandler)(void *userData,
   const SAC_STRING base,
   const SAC_STRING uri,
-  const SAC_STRING media[],
+  const SAC_MediaQuery *media[],
   const SAC_STRING defaultNamepaceURI);
 
 /**
@@ -492,7 +490,8 @@ typedef void (*SAC_ImportHandler)(void *userData,
  * media - It is an array of all media for the media rule.
  *         It terminated by NULL.
  */
-typedef void (*SAC_StartMediaHandler)(void *userData, const SAC_STRING media[]);
+typedef void (*SAC_StartMediaHandler)(void *userData,
+  const SAC_MediaQuery *media[]);
 
 /**
  * Receive notification of the end of a media rule.
@@ -504,7 +503,8 @@ typedef void (*SAC_StartMediaHandler)(void *userData, const SAC_STRING media[]);
  * media - It is an array of all media for the media rule.
  *         It terminated by NULL.
  */
-typedef void (*SAC_EndMediaHandler)(void *userData, const SAC_STRING media[]);
+typedef void (*SAC_EndMediaHandler)(void *userData,
+  const SAC_MediaQuery *media[]);
 
 /**
  * Receive notification of the beginning of a page rule.

@@ -70,6 +70,7 @@ SAC_Vector vector;
 SAC_Selector *sel;
 SAC_Condition *cond;
 SAC_ConditionType cond_type;
+SAC_MediaQuery *media;
 SAC_Boolean boolean;
 SAC_Pair pair;
 }
@@ -157,6 +158,7 @@ SAC_Pair pair;
 
 %type <list> media_query_list;
 %type <list> maybe_media_query_list;
+%type <media> media_query;
 
 %type <str> property;
 
@@ -559,10 +561,18 @@ media_query_list
     }
   ;
 media_query
-  : media_type_selector
-  | ONLY maybe_spaces media_type_selector
-  | NOT maybe_spaces media_type_selector
-  | media_exprs
+  : media_type_selector {
+      $$ = NULL;
+    }
+  | ONLY maybe_spaces media_type_selector {
+      $$ = NULL;
+    }
+  | NOT maybe_spaces media_type_selector {
+      $$ = NULL;
+    }
+  | media_exprs {
+      $$ = NULL;
+    }
   ;
 media_type_selector
   : media_type

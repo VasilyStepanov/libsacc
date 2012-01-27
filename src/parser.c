@@ -245,7 +245,7 @@ void SAC_parser_namespace_declaration_handler(SAC_Parser parser,
 
 void SAC_parser_import_handler(SAC_Parser parser,
   const SAC_STRING uri,
-  const SAC_STRING media[],
+  const SAC_MediaQuery *media[],
   const SAC_STRING defaultNamepaceURI)
 {
   if (PARSER(parser)->import_handler != NULL)
@@ -256,7 +256,7 @@ void SAC_parser_import_handler(SAC_Parser parser,
 
 
 void SAC_parser_start_media_handler(SAC_Parser parser,
-  const SAC_STRING media[])
+  const SAC_MediaQuery *media[])
 {
   if (PARSER(parser)->start_media_handler != NULL)
     PARSER(parser)->start_media_handler(PARSER(parser)->user_data, media);
@@ -265,7 +265,7 @@ void SAC_parser_start_media_handler(SAC_Parser parser,
 
 
 void SAC_parser_end_media_handler(SAC_Parser parser,
-  const SAC_STRING media[])
+  const SAC_MediaQuery *media[])
 {
   if (PARSER(parser)->end_media_handler != NULL)
     PARSER(parser)->end_media_handler(PARSER(parser)->user_data, media);
