@@ -14,6 +14,7 @@
 #include "lexical_unit.h"
 #include "condition.h"
 #include "selector.h"
+#include "media_query.h"
 #include "mpool.h"
 #include "pair.h"
 }
@@ -159,6 +160,8 @@ SAC_Pair pair;
 %type <list> media_query_list;
 %type <list> maybe_media_query_list;
 %type <media> media_query;
+%type <media> media_type;
+%type <media> media_type_selector;
 
 %type <str> property;
 
@@ -555,14 +558,16 @@ media_query_list
   : media_query {
       $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
       TEST_OBJ($$, @1);
+      TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1), @1);
     }
   | media_query_list ',' maybe_spaces media_query {
       $$ = $1;
+      TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4), @4);
     }
   ;
 media_query
   : media_type_selector {
-      $$ = NULL;
+      $$ = $1;
     }
   | ONLY maybe_spaces media_type_selector {
       $$ = NULL;
@@ -575,7 +580,9 @@ media_query
     }
   ;
 media_type_selector
-  : media_type
+  : media_type {
+      $$ = $1;
+    }
   | media_type AND maybe_spaces media_exprs
   ;
 media_exprs
@@ -583,7 +590,12 @@ media_exprs
   | media_exprs AND maybe_spaces media_expr
   ;
 media_type
-  : IDENT maybe_spaces
+  : IDENT maybe_spaces {
+      $$ = SAC_media_query_alloc(YY_SCANNER_MPOOL(scanner),
+        SAC_TYPE_MEDIA_QUERY);
+      TEST_OBJ($$, @1);
+      $$->desc.type = $1;
+    }
   ;
 media_expr
   : '(' maybe_spaces media_feature ')' maybe_spaces

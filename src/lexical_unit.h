@@ -3,7 +3,6 @@
 
 #include "mpool.h"
 #include "list.h"
-#include "vector.h"
 
 #include <sacc.h>
 

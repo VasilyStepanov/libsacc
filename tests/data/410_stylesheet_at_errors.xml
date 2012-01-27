@@ -12,7 +12,7 @@
       <selector type="element_node" localName="p"/>
     </end_selectors>
   </style>
-  <error type="SYNTAX" line="3" column="26">unexpected token while parsing 'import' rule</error>
+  <error type="SYNTAX" line="3" column="9">unexpected token while parsing 'import' rule</error>
   <style>
     <start_selectors>
       <selector type="element_node" localName="p"/>
@@ -37,7 +37,10 @@
   <error type="SYNTAX" line="16" column="13">unexpected token while parsing 'page' rule</error>
   <error type="SYNTAX" line="17" column="14">unexpected 'semicolon' while parsing 'media' rule</error>
   <error type="SYNTAX" line="18" column="15">unexpected 'semicolon' while parsing 'media' rule</error>
-  <error type="SYNTAX" line="19" column="8">unexpected token while parsing 'media' rule</error>
+  <media>
+    <start_mediums/>
+    <end_mediums/>
+  </media>
   <error type="SYNTAX" line="20" column="14">unexpected token while parsing 'media' rule</error>
   <error type="SYNTAX" line="21" column="14">unexpected token while parsing 'media' rule</error>
   <style>

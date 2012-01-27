@@ -2,8 +2,8 @@
 <document>
   <import uri="all.css"/>
   <import uri="bluish.css">
-    <medium>projection</medium>
-    <medium>tv</medium>
+    <media type="type">projection</media>
+    <media type="type">tv</media>
   </import>
   <namespace uri=""/>
   <namespace prefix="svg" uri="http://www.w3.org/2000/svg"/>
@@ -20,8 +20,8 @@
   </style>
   <media>
     <start_mediums>
-      <medium>screen</medium>
-      <medium>print</medium>
+      <media type="type">screen</media>
+      <media type="type">print</media>
     </start_mediums>
     <style>
       <start_selectors>
@@ -35,8 +35,8 @@
       </end_selectors>
     </style>
     <end_mediums>
-      <medium>screen</medium>
-      <medium>print</medium>
+      <media type="type">screen</media>
+      <media type="type">print</media>
     </end_mediums>
   </media>
   <page>

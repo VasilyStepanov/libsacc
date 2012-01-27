@@ -2,7 +2,7 @@
 <document>
   <media>
     <start_mediums>
-      <medium>screen</medium>
+      <media type="type">screen</media>
     </start_mediums>
     <style>
       <start_selectors>
@@ -25,7 +25,7 @@
     </style>
     <error type="SYNTAX" line="2" column="23">closing brace not found</error>
     <end_mediums>
-      <medium>screen</medium>
+      <media type="type">screen</media>
     </end_mediums>
   </media>
 </document>
