@@ -387,34 +387,43 @@ struct _SAC_Condition {
  */
 
 typedef enum {
-  SAC_CONDITIONAL_MEDIA_QUERY,
   SAC_TYPE_MEDIA_QUERY,
-  SAC_ANY_TYPE_MEDIA_QUERY
+  SAC_FEATURE_MEDIA_QUERY,
+  SAC_AND_MEDIA_QUERY,
+  SAC_ONLY_MEDIA_QUERY,
+  SAC_NOT_MEDIA_QUERY
 } SAC_MediaQueryType;
 
-typedef enum {
-  SAC_AND_MEDIA_CONDITION
-} SAC_MediaConditionType;
-
 typedef struct _SAC_MediaQuery SAC_MediaQuery;
-typedef struct _SAC_MediaCondition SAC_MediaCondition;
 
 struct _SAC_MediaQuery {
+  /* the type of the media query */
   SAC_MediaQueryType mediaQueryType;
-};
 
-struct _SAC_MediaCondition {
-  /* the type of the condition */
-  SAC_MediaConditionType mediaConditionType;
+  union _SAC_MQdesc {
+    /* SAC_TYPE_MEDIA_QUERY */
+    SAC_STRING type;
 
-  union _SAC_MCdesc {
-    /* SAC_AND_MEDIA_CONDITION */
-    struct _SAC_MCcombinator {
-      SAC_MediaCondition *firstCondition;
-      SAC_MediaCondition *secondCondition;
+    /* SAC_FEATURE_MEDIA_QUERY */
+    struct _SAC_MQfeature {
+      SAC_STRING name;
+      SAC_LexicalUnit **values;
+    } feature;
+
+    /* SAC_AND_MEDIA_QUERY */
+    struct _SAC_MQcombinator {
+      SAC_MediaQuery *firstMediaQuery;
+      SAC_MediaQuery *secondMediaQuery;
     } combinator;
+
+    /* SAC_ONLY_MEDIA_QUERY */
+    /* SAC_NOT_MEDIA_QUERY */
+    struct _SAC_MQrestrictor {
+      SAC_MediaQuery *query;
+    } restrictor;
   } desc;
 };
+
 
 
 /**
