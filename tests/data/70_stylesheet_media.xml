@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<document>
+  <media>
+    <start_mediums/>
+    <end_mediums/>
+  </media>
+  <media>
+    <start_mediums>
+      <media type="type">all</media>
+    </start_mediums>
+    <end_mediums>
+      <media type="type">all</media>
+    </end_mediums>
+  </media>
+  <media>
+    <start_mediums>
+      <media type="type">screen</media>
+      <media type="type">projection</media>
+    </start_mediums>
+    <end_mediums>
+      <media type="type">screen</media>
+      <media type="type">projection</media>
+    </end_mediums>
+  </media>
+  <media>
+    <start_mediums>
+      <media type="feature" feature="min-width">
+        <pixel dimension="px">400</pixel>
+      </media>
+    </start_mediums>
+    <end_mediums>
+      <media type="feature" feature="min-width">
+        <pixel dimension="px">400</pixel>
+      </media>
+    </end_mediums>
+  </media>
+  <media>
+    <start_mediums>
+      <media type="and">
+        <media type="type">screen</media>
+        <media type="feature" feature="min-width">
+          <pixel dimension="px">400</pixel>
+        </media>
+      </media>
+    </start_mediums>
+    <end_mediums>
+      <media type="and">
+        <media type="type">screen</media>
+        <media type="feature" feature="min-width">
+          <pixel dimension="px">400</pixel>
+        </media>
+      </media>
+    </end_mediums>
+  </media>
+  <media>
+    <start_mediums>
+      <media type="and">
+        <media type="type">screen</media>
+        <media type="and">
+          <media type="feature" feature="min-width">
+            <pixel dimension="px">400</pixel>
+          </media>
+          <media type="feature" feature="max-width">
+            <pixel dimension="px">700</pixel>
+          </media>
+        </media>
+      </media>
+    </start_mediums>
+    <style>
+      <start_selectors>
+        <selector type="element_node" localName="p"/>
+      </start_selectors>
+      <property name="color">
+        <ident>green</ident>
+      </property>
+      <end_selectors>
+        <selector type="element_node" localName="p"/>
+      </end_selectors>
+    </style>
+    <end_mediums>
+      <media type="and">
+        <media type="type">screen</media>
+        <media type="and">
+          <media type="feature" feature="min-width">
+            <pixel dimension="px">400</pixel>
+          </media>
+          <media type="feature" feature="max-width">
+            <pixel dimension="px">700</pixel>
+          </media>
+        </media>
+      </media>
+    </end_mediums>
+  </media>
+</document>

@@ -116,6 +116,10 @@ range        \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h}
 "~="                    {return INCLUDES;}
 "|="                    {return DASHMATCH;}
 
+{O}{N}{L}{Y}            {return ONLY;}
+{N}{O}{T}               {return NOT;}
+{A}{N}{D}               {return AND;}
+
 {string}                {
                           yylval->str = SAC_mpool_strndup(
                             YY_SCANNER_MPOOL(yyscanner),

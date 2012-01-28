@@ -234,7 +234,8 @@ static void dump_media_query(FILE *out, const SAC_MediaQuery *mediaQuery) {
       break;
     case SAC_AND_MEDIA_QUERY:
       fprintf(out, "<media type=\"and\">");
-      dump_media_query(out, mediaQuery->desc.subQuery);
+      dump_media_query(out, mediaQuery->desc.combinator.firstMediaQuery);
+      dump_media_query(out, mediaQuery->desc.combinator.secondMediaQuery);
       fprintf(out, "</media>");
       break;
     case SAC_ONLY_MEDIA_QUERY:

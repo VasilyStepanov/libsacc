@@ -162,6 +162,9 @@ SAC_Pair pair;
 %type <media> media_query;
 %type <media> media_type;
 %type <media> media_type_selector;
+%type <media> media_expr;
+%type <media> media_exprs;
+%type <str> media_feature;
 
 %type <str> property;
 
@@ -576,33 +579,66 @@ media_query
       $$ = NULL;
     }
   | media_exprs {
-      $$ = NULL;
+      $$ = $1;
     }
   ;
 media_type_selector
   : media_type {
       $$ = $1;
     }
-  | media_type AND maybe_spaces media_exprs
+  | media_type AND maybe_spaces media_exprs {
+      $$ = SAC_media_query_alloc(YY_SCANNER_MPOOL(scanner),
+        SAC_AND_MEDIA_QUERY);
+      TEST_OBJ($$, @$);
+      $$->desc.combinator.firstMediaQuery = $1;
+      $$->desc.combinator.secondMediaQuery = $4;
+    }
   ;
 media_exprs
-  : media_expr
-  | media_exprs AND maybe_spaces media_expr
+  : media_expr {
+      $$ = $1;
+    }
+  | media_exprs AND maybe_spaces media_expr {
+      $$ = SAC_media_query_alloc(YY_SCANNER_MPOOL(scanner),
+        SAC_AND_MEDIA_QUERY);
+      TEST_OBJ($$, @$);
+      $$->desc.combinator.firstMediaQuery = $1;
+      $$->desc.combinator.secondMediaQuery = $4;
+    }
   ;
 media_type
   : IDENT maybe_spaces {
       $$ = SAC_media_query_alloc(YY_SCANNER_MPOOL(scanner),
         SAC_TYPE_MEDIA_QUERY);
-      TEST_OBJ($$, @1);
+      TEST_OBJ($$, @$);
       $$->desc.type = $1;
     }
   ;
 media_expr
-  : '(' maybe_spaces media_feature ')' maybe_spaces
-  | '(' maybe_spaces media_feature ':' maybe_spaces expr ')' maybe_spaces
+  : '(' maybe_spaces media_feature ')' maybe_spaces {
+      $$ = SAC_media_query_alloc(YY_SCANNER_MPOOL(scanner),
+        SAC_FEATURE_MEDIA_QUERY);
+      TEST_OBJ($$, @$);
+      $$->desc.feature.name = $3;
+      $$->desc.feature.value = NULL;
+    }
+  | '(' maybe_spaces media_feature ':' maybe_spaces expr ')' maybe_spaces {
+      SAC_LexicalUnit *expr;
+      
+      expr = SAC_lexical_unit_from_list($6, YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(expr, @6);
+
+      $$ = SAC_media_query_alloc(YY_SCANNER_MPOOL(scanner),
+        SAC_FEATURE_MEDIA_QUERY);
+      TEST_OBJ($$, @$);
+      $$->desc.feature.name = $3;
+      $$->desc.feature.value = expr;
+    }
   ;
 media_feature
-  : IDENT maybe_spaces
+  : IDENT maybe_spaces {
+      $$ = $1;
+    }
   ;
 page
   : page_start '{' maybe_spaces maybe_declarations closing_brace {
