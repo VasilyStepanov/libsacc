@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<document>
+  <error type="SYNTAX" line="7" column="22">unexpected token while parsing media query</error>
+  <error type="SYNTAX" line="7" column="8">unexpected token while parsing media query</error>
+  <media>
+    <start_mediums>
+      <media type="type">all</media>
+      <media type="type">speech</media>
+    </start_mediums>
+    <end_mediums>
+      <media type="type">all</media>
+      <media type="type">speech</media>
+    </end_mediums>
+  </media>
+  <error type="SYNTAX" line="8" column="8">unexpected token while parsing media query</error>
+  <media>
+    <start_mediums>
+      <media type="type">screen</media>
+    </start_mediums>
+    <end_mediums>
+      <media type="type">screen</media>
+    </end_mediums>
+  </media>
+  <error type="SYNTAX" line="9" column="12">unexpected token while parsing 'media' rule</error>
+  <error type="SYNTAX" line="10" column="12">unexpected 'semicolon' while parsing 'media' rule</error>
+  <error type="SYNTAX" line="10" column="13">unexpected token while parsing selectors</error>
+  <style>
+    <start_selectors>
+      <selector type="element_node" localName="p"/>
+    </start_selectors>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_selectors>
+      <selector type="element_node" localName="p"/>
+    </end_selectors>
+  </style>
+</document>

@@ -159,6 +159,7 @@ SAC_Pair pair;
 
 %type <list> media_query_list;
 %type <list> maybe_media_query_list;
+%type <list> some_media_query_list;
 %type <media> media_query;
 %type <media> media_type;
 %type <media> media_type_selector;
@@ -383,23 +384,23 @@ ignore_import
   | bad_import
   ;
 bad_import
-  : IMPORT_SYM maybe_spaces string_or_uri media_query_list import_errors
-    ';' maybe_comments
+  : IMPORT_SYM maybe_spaces string_or_uri bad_media_query ';'
+    maybe_comments
     {
-      SAC_SYNTAX_ERROR(@5,
+      SAC_SYNTAX_ERROR(@4,
         "unexpected token while parsing 'import' rule");
     }
   | IMPORT_SYM maybe_spaces import_errors ';' maybe_comments {
       SAC_SYNTAX_ERROR(@3,
         "unexpected token while parsing 'import' rule");
     }
-  | IMPORT_SYM maybe_spaces string_or_uri media_query_list import_errors
-    invalid_block maybe_spaces
+  | IMPORT_SYM maybe_spaces string_or_uri bad_media_query invalid_block
+    maybe_comments
     {
-      SAC_SYNTAX_ERROR(@6,
+      SAC_SYNTAX_ERROR(@5,
         "unexpected 'opening brace' token while parsing 'import' rule");
     }
-  | IMPORT_SYM maybe_spaces import_errors invalid_block maybe_spaces {
+  | IMPORT_SYM maybe_spaces import_errors invalid_block maybe_comments {
       SAC_SYNTAX_ERROR(@4,
         "unexpected 'opening brace' token while parsing 'import' rule");
     }
@@ -514,32 +515,28 @@ namespace_prefix
     }
   ;
 media
-  : media_start '{' maybe_spaces maybe_rulesets closing_brace {
+  : media_start maybe_rulesets closing_brace {
       SAC_parser_end_media_handler(YY_SCANNER_PARSER(scanner), $1);
     }
-  | MEDIA_SYM maybe_spaces media_query_list media_errors ';' {
-      SAC_SYNTAX_ERROR(@5,
-        "unexpected 'semicolon' while parsing 'media' rule");
-    }
-  | MEDIA_SYM maybe_spaces media_errors ';' {
-      SAC_SYNTAX_ERROR(@4,
-        "unexpected 'semicolon' while parsing 'media' rule");
-    }
-  | MEDIA_SYM maybe_spaces media_query_list media_errors invalid_block {
+  | MEDIA_SYM maybe_spaces media_query media_query_errors invalid_block {
       SAC_SYNTAX_ERROR(@4,
         "unexpected token while parsing 'media' rule");
     }
-  | MEDIA_SYM maybe_spaces media_errors invalid_block {
+  | MEDIA_SYM maybe_spaces bad_media_query invalid_block {
       SAC_SYNTAX_ERROR(@3,
         "unexpected token while parsing 'media' rule");
     }
-  ;
-media_errors
-  : error
-  | media_errors error
+  | MEDIA_SYM maybe_spaces media_query media_query_errors ';' {
+      SAC_SYNTAX_ERROR(@5,
+        "unexpected 'semicolon' while parsing 'media' rule");
+    }
+  | MEDIA_SYM maybe_spaces bad_media_query ';' {
+      SAC_SYNTAX_ERROR(@4,
+        "unexpected 'semicolon' while parsing 'media' rule");
+    }
   ;
 media_start
-  : MEDIA_SYM maybe_spaces maybe_media_query_list {
+  : MEDIA_SYM maybe_spaces maybe_media_query_list '{' maybe_spaces {
       SAC_Vector mediums;
 
       mediums = SAC_vector_from_list($3, YY_SCANNER_MPOOL(scanner));
@@ -557,26 +554,68 @@ maybe_media_query_list
       $$ = $1;
     }
   ;
-media_query_list
+some_media_query_list
   : media_query {
       $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
       TEST_OBJ($$, @1);
       TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1), @1);
     }
-  | media_query_list ',' maybe_spaces media_query {
+  | some_media_query_list ',' maybe_spaces media_query {
       $$ = $1;
       TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4), @4);
     }
+  | some_media_query_list ',' maybe_spaces media_query media_query_errors {
+      SAC_SYNTAX_ERROR(@5,
+        "unexpected token while parsing media query");
+
+      $$ = $1;
+    }
+  | some_media_query_list ',' maybe_spaces bad_media_query {
+      SAC_SYNTAX_ERROR(@4,
+        "unexpected token while parsing media query");
+
+      $$ = $1;
+    }
+  ;
+media_query_list
+  : some_media_query_list {
+      $$ = $1;
+    }
+  | media_query media_query_errors ',' maybe_spaces some_media_query_list {
+      SAC_SYNTAX_ERROR(@2,
+        "unexpected token while parsing media query");
+
+      $$ = $5;
+    }
+  | bad_media_query ',' maybe_spaces some_media_query_list {
+      SAC_SYNTAX_ERROR(@1,
+        "unexpected token while parsing media query");
+
+      $$ = $4;
+    }
+  ;
+bad_media_query
+  : media_query_errors
+  ;
+media_query_errors
+  : error
+  | media_query_errors error
   ;
 media_query
   : media_type_selector {
       $$ = $1;
     }
   | ONLY maybe_spaces media_type_selector {
-      $$ = NULL;
+      $$ = SAC_media_query_alloc(YY_SCANNER_MPOOL(scanner),
+        SAC_ONLY_MEDIA_QUERY);
+      TEST_OBJ($$, @$);
+      $$->desc.subQuery = $3;
     }
   | NOT maybe_spaces media_type_selector {
-      $$ = NULL;
+      $$ = SAC_media_query_alloc(YY_SCANNER_MPOOL(scanner),
+        SAC_NOT_MEDIA_QUERY);
+      TEST_OBJ($$, @$);
+      $$->desc.subQuery = $3;
     }
   | media_exprs {
       $$ = $1;
@@ -641,7 +680,7 @@ media_feature
     }
   ;
 page
-  : page_start '{' maybe_spaces maybe_declarations closing_brace {
+  : page_start maybe_declarations closing_brace {
       SAC_parser_end_page_handler(YY_SCANNER_PARSER(scanner),
         $1.first, $1.second);
     }
@@ -675,7 +714,7 @@ page_errors
   | page_errors error
   ;
 page_start
-  : PAGE_SYM maybe_spaces maybe_ident maybe_pseudo_page {
+  : PAGE_SYM maybe_spaces maybe_ident maybe_pseudo_page '{' maybe_spaces {
       SAC_parser_start_page_handler(YY_SCANNER_PARSER(scanner), $3, $4);
       $$.first = $3;
       $$.second = $4;
@@ -708,7 +747,7 @@ pseudo_page
     }
   ;
 font_face
-  : font_face_start '{' maybe_spaces maybe_declarations closing_brace {
+  : font_face_start maybe_declarations closing_brace {
       SAC_parser_end_font_face_handler(YY_SCANNER_PARSER(scanner));
     }
   | FONT_FACE_SYM maybe_spaces font_face_errors invalid_block {
@@ -725,7 +764,7 @@ font_face_errors
   | font_face_errors error
   ;
 font_face_start
-  : FONT_FACE_SYM maybe_spaces {
+  : FONT_FACE_SYM maybe_spaces '{' maybe_spaces {
       SAC_parser_start_font_face_handler(YY_SCANNER_PARSER(scanner));
     }
   ;
@@ -768,13 +807,13 @@ property
     }
   ;
 ruleset
-  : style_start '{' maybe_spaces maybe_declarations closing_brace {
+  : style_start maybe_declarations closing_brace {
       SAC_parser_end_style_handler(YY_SCANNER_PARSER(scanner), $1);
     }
   | bad_selectors invalid_block
   ;
 style_start
-  : selectors {
+  : selectors '{' maybe_spaces {
       SAC_Vector vector;
       
       vector = SAC_vector_from_list($1, YY_SCANNER_MPOOL(scanner));

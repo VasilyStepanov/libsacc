@@ -1,10 +1,19 @@
 @import url("all.css");
+@import url("all.css") & projection;
+@import url("all.css") projection &;
+@import url("all.css") & projection, screen;
+@import url("all.css") projection, screen & ;
+@import url("all.css") projection, screen {}
+p { color : red }
+@import url("error.css") & projection;
 p { color : red }
 @import url("error.css") & projection, screen;
-p { color : maroon }
-@import "error.css" {}
-@import url("error.css") {} projection, screen;
 p { color : red }
+@import "error.css" {}
+@import url("error.css") {} projection;
+p { color : maroon }
+@import url("error.css") {} projection, screen;
+p { color : maroon }
 @namespace {}
 @namespace "" {}
 @namespace "" "" "";
@@ -14,9 +23,11 @@ p { color : red }
 @page ident error;
 @page ident:pseudo;
 @page ident error {}
-@media ident ;
+@media ident;
 @media ident &;
-@media {}
-@media ident & {}
-@media ident & {}
+@media projection { h1 { color : green } }
+@media projection & { h2 { color : maroon } }
+p { color : red }
+@media & projection, screen { h2 { color : green } }
+@media projection, screen & { h3 { color : green } }
 p { color : green }

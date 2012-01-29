@@ -91,4 +91,90 @@
       </media>
     </end_mediums>
   </media>
+  <media>
+    <start_mediums>
+      <media type="only">
+        <media type="and">
+          <media type="type">screen</media>
+          <media type="and">
+            <media type="feature" feature="min-width">
+              <pixel dimension="px">400</pixel>
+            </media>
+            <media type="feature" feature="max-width">
+              <pixel dimension="px">700</pixel>
+            </media>
+          </media>
+        </media>
+      </media>
+    </start_mediums>
+    <style>
+      <start_selectors>
+        <selector type="element_node" localName="p"/>
+      </start_selectors>
+      <property name="color">
+        <ident>green</ident>
+      </property>
+      <end_selectors>
+        <selector type="element_node" localName="p"/>
+      </end_selectors>
+    </style>
+    <end_mediums>
+      <media type="only">
+        <media type="and">
+          <media type="type">screen</media>
+          <media type="and">
+            <media type="feature" feature="min-width">
+              <pixel dimension="px">400</pixel>
+            </media>
+            <media type="feature" feature="max-width">
+              <pixel dimension="px">700</pixel>
+            </media>
+          </media>
+        </media>
+      </media>
+    </end_mediums>
+  </media>
+  <media>
+    <start_mediums>
+      <media type="not">
+        <media type="and">
+          <media type="type">print</media>
+          <media type="and">
+            <media type="feature" feature="min-width">
+              <pixel dimension="px">400</pixel>
+            </media>
+            <media type="feature" feature="max-width">
+              <pixel dimension="px">700</pixel>
+            </media>
+          </media>
+        </media>
+      </media>
+    </start_mediums>
+    <style>
+      <start_selectors>
+        <selector type="element_node" localName="p"/>
+      </start_selectors>
+      <property name="color">
+        <ident>green</ident>
+      </property>
+      <end_selectors>
+        <selector type="element_node" localName="p"/>
+      </end_selectors>
+    </style>
+    <end_mediums>
+      <media type="not">
+        <media type="and">
+          <media type="type">print</media>
+          <media type="and">
+            <media type="feature" feature="min-width">
+              <pixel dimension="px">400</pixel>
+            </media>
+            <media type="feature" feature="max-width">
+              <pixel dimension="px">700</pixel>
+            </media>
+          </media>
+        </media>
+      </media>
+    </end_mediums>
+  </media>
 </document>
