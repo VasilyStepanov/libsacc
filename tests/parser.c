@@ -224,29 +224,30 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
 static void dump_media_query(FILE *out, const SAC_MediaQuery *mediaQuery) {
   switch (mediaQuery->mediaQueryType) {
     case SAC_TYPE_MEDIA_QUERY:
-      fprintf(out, "<media type=\"type\">%s</media>", mediaQuery->desc.type);
+      fprintf(out, "<media_query type=\"type\">%s</media_query>",
+        mediaQuery->desc.type);
       break;
     case SAC_FEATURE_MEDIA_QUERY:
-      fprintf(out, "<media type=\"feature\" feature=\"%s\">",
+      fprintf(out, "<media_query type=\"feature\" feature=\"%s\">",
         mediaQuery->desc.feature.name);
       dump_lexical_unit(out, mediaQuery->desc.feature.value);
-      fprintf(out, "</media>");
+      fprintf(out, "</media_query>");
       break;
     case SAC_AND_MEDIA_QUERY:
-      fprintf(out, "<media type=\"and\">");
+      fprintf(out, "<media_query type=\"and\">");
       dump_media_query(out, mediaQuery->desc.combinator.firstMediaQuery);
       dump_media_query(out, mediaQuery->desc.combinator.secondMediaQuery);
-      fprintf(out, "</media>");
+      fprintf(out, "</media_query>");
       break;
     case SAC_ONLY_MEDIA_QUERY:
-      fprintf(out, "<media type=\"only\">");
+      fprintf(out, "<media_query type=\"only\">");
       dump_media_query(out, mediaQuery->desc.subQuery);
-      fprintf(out, "</media>");
+      fprintf(out, "</media_query>");
       break;
     case SAC_NOT_MEDIA_QUERY:
-      fprintf(out, "<media type=\"not\">");
+      fprintf(out, "<media_query type=\"not\">");
       dump_media_query(out, mediaQuery->desc.subQuery);
-      fprintf(out, "</media >");
+      fprintf(out, "</media_query>");
       break;
   }
 }
@@ -287,17 +288,17 @@ static void import(void *userData,
 
 static void start_media(void *userData, const SAC_MediaQuery *media[]) {
   fprintf(USERDATA_FILE(userData), "<media>");
-  fprintf(USERDATA_FILE(userData), "<start_mediums>");
+  fprintf(USERDATA_FILE(userData), "<start_media_queries>");
   dump_media_queries(USERDATA_FILE(userData), media);
-  fprintf(USERDATA_FILE(userData), "</start_mediums>");
+  fprintf(USERDATA_FILE(userData), "</start_media_queries>");
 }
 
 
 
 static void end_media(void *userData, const SAC_MediaQuery *media[]) {
-  fprintf(USERDATA_FILE(userData), "<end_mediums>");
+  fprintf(USERDATA_FILE(userData), "<end_media_queries>");
   dump_media_queries(USERDATA_FILE(userData), media);
-  fprintf(USERDATA_FILE(userData), "</end_mediums>");
+  fprintf(USERDATA_FILE(userData), "</end_media_queries>");
   fprintf(USERDATA_FILE(userData), "</media>");
 }
 

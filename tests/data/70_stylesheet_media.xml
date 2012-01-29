@@ -1,71 +1,71 @@
 <?xml version="1.0"?>
 <document>
   <media>
-    <start_mediums/>
-    <end_mediums/>
+    <start_media_queries/>
+    <end_media_queries/>
   </media>
   <media>
-    <start_mediums>
-      <media type="type">all</media>
-    </start_mediums>
-    <end_mediums>
-      <media type="type">all</media>
-    </end_mediums>
+    <start_media_queries>
+      <media_query type="type">all</media_query>
+    </start_media_queries>
+    <end_media_queries>
+      <media_query type="type">all</media_query>
+    </end_media_queries>
   </media>
   <media>
-    <start_mediums>
-      <media type="type">screen</media>
-      <media type="type">projection</media>
-    </start_mediums>
-    <end_mediums>
-      <media type="type">screen</media>
-      <media type="type">projection</media>
-    </end_mediums>
+    <start_media_queries>
+      <media_query type="type">screen</media_query>
+      <media_query type="type">projection</media_query>
+    </start_media_queries>
+    <end_media_queries>
+      <media_query type="type">screen</media_query>
+      <media_query type="type">projection</media_query>
+    </end_media_queries>
   </media>
   <media>
-    <start_mediums>
-      <media type="feature" feature="min-width">
+    <start_media_queries>
+      <media_query type="feature" feature="min-width">
         <pixel dimension="px">400</pixel>
-      </media>
-    </start_mediums>
-    <end_mediums>
-      <media type="feature" feature="min-width">
+      </media_query>
+    </start_media_queries>
+    <end_media_queries>
+      <media_query type="feature" feature="min-width">
         <pixel dimension="px">400</pixel>
-      </media>
-    </end_mediums>
+      </media_query>
+    </end_media_queries>
   </media>
   <media>
-    <start_mediums>
-      <media type="and">
-        <media type="type">screen</media>
-        <media type="feature" feature="min-width">
+    <start_media_queries>
+      <media_query type="and">
+        <media_query type="type">screen</media_query>
+        <media_query type="feature" feature="min-width">
           <pixel dimension="px">400</pixel>
-        </media>
-      </media>
-    </start_mediums>
-    <end_mediums>
-      <media type="and">
-        <media type="type">screen</media>
-        <media type="feature" feature="min-width">
+        </media_query>
+      </media_query>
+    </start_media_queries>
+    <end_media_queries>
+      <media_query type="and">
+        <media_query type="type">screen</media_query>
+        <media_query type="feature" feature="min-width">
           <pixel dimension="px">400</pixel>
-        </media>
-      </media>
-    </end_mediums>
+        </media_query>
+      </media_query>
+    </end_media_queries>
   </media>
   <media>
-    <start_mediums>
-      <media type="and">
-        <media type="type">screen</media>
-        <media type="and">
-          <media type="feature" feature="min-width">
+    <start_media_queries>
+      <media_query type="and">
+        <media_query type="type">screen</media_query>
+        <media_query type="and">
+          <media_query type="feature" feature="min-width">
             <pixel dimension="px">400</pixel>
-          </media>
-          <media type="feature" feature="max-width">
+          </media_query>
+          <media_query type="feature" feature="max-width">
             <pixel dimension="px">700</pixel>
-          </media>
-        </media>
-      </media>
-    </start_mediums>
+          </media_query>
+        </media_query>
+      </media_query>
+    </start_media_queries>
     <style>
       <start_selectors>
         <selector type="element_node" localName="p"/>
@@ -77,36 +77,36 @@
         <selector type="element_node" localName="p"/>
       </end_selectors>
     </style>
-    <end_mediums>
-      <media type="and">
-        <media type="type">screen</media>
-        <media type="and">
-          <media type="feature" feature="min-width">
+    <end_media_queries>
+      <media_query type="and">
+        <media_query type="type">screen</media_query>
+        <media_query type="and">
+          <media_query type="feature" feature="min-width">
             <pixel dimension="px">400</pixel>
-          </media>
-          <media type="feature" feature="max-width">
+          </media_query>
+          <media_query type="feature" feature="max-width">
             <pixel dimension="px">700</pixel>
-          </media>
-        </media>
-      </media>
-    </end_mediums>
+          </media_query>
+        </media_query>
+      </media_query>
+    </end_media_queries>
   </media>
   <media>
-    <start_mediums>
-      <media type="only">
-        <media type="and">
-          <media type="type">screen</media>
-          <media type="and">
-            <media type="feature" feature="min-width">
+    <start_media_queries>
+      <media_query type="only">
+        <media_query type="and">
+          <media_query type="type">screen</media_query>
+          <media_query type="and">
+            <media_query type="feature" feature="min-width">
               <pixel dimension="px">400</pixel>
-            </media>
-            <media type="feature" feature="max-width">
+            </media_query>
+            <media_query type="feature" feature="max-width">
               <pixel dimension="px">700</pixel>
-            </media>
-          </media>
-        </media>
-      </media>
-    </start_mediums>
+            </media_query>
+          </media_query>
+        </media_query>
+      </media_query>
+    </start_media_queries>
     <style>
       <start_selectors>
         <selector type="element_node" localName="p"/>
@@ -118,38 +118,38 @@
         <selector type="element_node" localName="p"/>
       </end_selectors>
     </style>
-    <end_mediums>
-      <media type="only">
-        <media type="and">
-          <media type="type">screen</media>
-          <media type="and">
-            <media type="feature" feature="min-width">
+    <end_media_queries>
+      <media_query type="only">
+        <media_query type="and">
+          <media_query type="type">screen</media_query>
+          <media_query type="and">
+            <media_query type="feature" feature="min-width">
               <pixel dimension="px">400</pixel>
-            </media>
-            <media type="feature" feature="max-width">
+            </media_query>
+            <media_query type="feature" feature="max-width">
               <pixel dimension="px">700</pixel>
-            </media>
-          </media>
-        </media>
-      </media>
-    </end_mediums>
+            </media_query>
+          </media_query>
+        </media_query>
+      </media_query>
+    </end_media_queries>
   </media>
   <media>
-    <start_mediums>
-      <media type="not">
-        <media type="and">
-          <media type="type">print</media>
-          <media type="and">
-            <media type="feature" feature="min-width">
+    <start_media_queries>
+      <media_query type="not">
+        <media_query type="and">
+          <media_query type="type">print</media_query>
+          <media_query type="and">
+            <media_query type="feature" feature="min-width">
               <pixel dimension="px">400</pixel>
-            </media>
-            <media type="feature" feature="max-width">
+            </media_query>
+            <media_query type="feature" feature="max-width">
               <pixel dimension="px">700</pixel>
-            </media>
-          </media>
-        </media>
-      </media>
-    </start_mediums>
+            </media_query>
+          </media_query>
+        </media_query>
+      </media_query>
+    </start_media_queries>
     <style>
       <start_selectors>
         <selector type="element_node" localName="p"/>
@@ -161,20 +161,20 @@
         <selector type="element_node" localName="p"/>
       </end_selectors>
     </style>
-    <end_mediums>
-      <media type="not">
-        <media type="and">
-          <media type="type">print</media>
-          <media type="and">
-            <media type="feature" feature="min-width">
+    <end_media_queries>
+      <media_query type="not">
+        <media_query type="and">
+          <media_query type="type">print</media_query>
+          <media_query type="and">
+            <media_query type="feature" feature="min-width">
               <pixel dimension="px">400</pixel>
-            </media>
-            <media type="feature" feature="max-width">
+            </media_query>
+            <media_query type="feature" feature="max-width">
               <pixel dimension="px">700</pixel>
-            </media>
-          </media>
-        </media>
-      </media>
-    </end_mediums>
+            </media_query>
+          </media_query>
+        </media_query>
+      </media_query>
+    </end_media_queries>
   </media>
 </document>

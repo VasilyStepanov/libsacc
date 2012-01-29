@@ -3,23 +3,23 @@
   <error type="SYNTAX" line="7" column="22">unexpected token while parsing media query</error>
   <error type="SYNTAX" line="7" column="8">unexpected token while parsing media query</error>
   <media>
-    <start_mediums>
-      <media type="type">all</media>
-      <media type="type">speech</media>
-    </start_mediums>
-    <end_mediums>
-      <media type="type">all</media>
-      <media type="type">speech</media>
-    </end_mediums>
+    <start_media_queries>
+      <media_query type="type">all</media_query>
+      <media_query type="type">speech</media_query>
+    </start_media_queries>
+    <end_media_queries>
+      <media_query type="type">all</media_query>
+      <media_query type="type">speech</media_query>
+    </end_media_queries>
   </media>
   <error type="SYNTAX" line="8" column="8">unexpected token while parsing media query</error>
   <media>
-    <start_mediums>
-      <media type="type">screen</media>
-    </start_mediums>
-    <end_mediums>
-      <media type="type">screen</media>
-    </end_mediums>
+    <start_media_queries>
+      <media_query type="type">screen</media_query>
+    </start_media_queries>
+    <end_media_queries>
+      <media_query type="type">screen</media_query>
+    </end_media_queries>
   </media>
   <error type="SYNTAX" line="9" column="12">unexpected token while parsing 'media' rule</error>
   <error type="SYNTAX" line="10" column="12">unexpected 'semicolon' while parsing 'media' rule</error>

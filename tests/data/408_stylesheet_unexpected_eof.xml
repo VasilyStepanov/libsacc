@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <document>
   <media>
-    <start_mediums>
-      <media type="type">screen</media>
-    </start_mediums>
+    <start_media_queries>
+      <media_query type="type">screen</media_query>
+    </start_media_queries>
     <style>
       <start_selectors>
         <selector type="conditional">
@@ -24,8 +24,8 @@
       </end_selectors>
     </style>
     <error type="SYNTAX" line="2" column="23">closing brace not found</error>
-    <end_mediums>
-      <media type="type">screen</media>
-    </end_mediums>
+    <end_media_queries>
+      <media_query type="type">screen</media_query>
+    </end_media_queries>
   </media>
 </document>

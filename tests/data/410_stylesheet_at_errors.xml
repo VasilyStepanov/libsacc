@@ -4,11 +4,11 @@
   <error type="SYNTAX" line="2" column="24">unexpected token while parsing 'import' rule</error>
   <error type="SYNTAX" line="3" column="35">unexpected token while parsing media query</error>
   <import uri="all.css">
-    <media type="type">screen</media>
+    <media_query type="type">screen</media_query>
   </import>
   <error type="SYNTAX" line="5" column="43">unexpected token while parsing media query</error>
   <import uri="all.css">
-    <media type="type">projection</media>
+    <media_query type="type">projection</media_query>
   </import>
   <error type="SYNTAX" line="6" column="43">unexpected 'opening brace' token while parsing 'import' rule</error>
   <style>
@@ -63,9 +63,9 @@
   <error type="SYNTAX" line="26" column="13">unexpected 'semicolon' while parsing 'media' rule</error>
   <error type="SYNTAX" line="27" column="15">unexpected 'semicolon' while parsing 'media' rule</error>
   <media>
-    <start_mediums>
-      <media type="type">projection</media>
-    </start_mediums>
+    <start_media_queries>
+      <media_query type="type">projection</media_query>
+    </start_media_queries>
     <style>
       <start_selectors>
         <selector type="element_node" localName="h1"/>
@@ -77,9 +77,9 @@
         <selector type="element_node" localName="h1"/>
       </end_selectors>
     </style>
-    <end_mediums>
-      <media type="type">projection</media>
-    </end_mediums>
+    <end_media_queries>
+      <media_query type="type">projection</media_query>
+    </end_media_queries>
   </media>
   <error type="SYNTAX" line="29" column="19">unexpected token while parsing 'media' rule</error>
   <style>
@@ -95,9 +95,9 @@
   </style>
   <error type="SYNTAX" line="31" column="8">unexpected token while parsing media query</error>
   <media>
-    <start_mediums>
-      <media type="type">screen</media>
-    </start_mediums>
+    <start_media_queries>
+      <media_query type="type">screen</media_query>
+    </start_media_queries>
     <style>
       <start_selectors>
         <selector type="element_node" localName="h2"/>
@@ -109,15 +109,15 @@
         <selector type="element_node" localName="h2"/>
       </end_selectors>
     </style>
-    <end_mediums>
-      <media type="type">screen</media>
-    </end_mediums>
+    <end_media_queries>
+      <media_query type="type">screen</media_query>
+    </end_media_queries>
   </media>
   <error type="SYNTAX" line="32" column="27">unexpected token while parsing media query</error>
   <media>
-    <start_mediums>
-      <media type="type">projection</media>
-    </start_mediums>
+    <start_media_queries>
+      <media_query type="type">projection</media_query>
+    </start_media_queries>
     <style>
       <start_selectors>
         <selector type="element_node" localName="h3"/>
@@ -129,9 +129,9 @@
         <selector type="element_node" localName="h3"/>
       </end_selectors>
     </style>
-    <end_mediums>
-      <media type="type">projection</media>
-    </end_mediums>
+    <end_media_queries>
+      <media_query type="type">projection</media_query>
+    </end_media_queries>
   </media>
   <style>
     <start_selectors>

@@ -2,8 +2,8 @@
 <document>
   <import uri="all.css"/>
   <import uri="bluish.css">
-    <media type="type">projection</media>
-    <media type="type">tv</media>
+    <media_query type="type">projection</media_query>
+    <media_query type="type">tv</media_query>
   </import>
   <namespace uri=""/>
   <namespace prefix="svg" uri="http://www.w3.org/2000/svg"/>
@@ -19,10 +19,10 @@
     </end_selectors>
   </style>
   <media>
-    <start_mediums>
-      <media type="type">screen</media>
-      <media type="type">print</media>
-    </start_mediums>
+    <start_media_queries>
+      <media_query type="type">screen</media_query>
+      <media_query type="type">print</media_query>
+    </start_media_queries>
     <style>
       <start_selectors>
         <selector type="element_node" localName="body"/>
@@ -34,10 +34,10 @@
         <selector type="element_node" localName="body"/>
       </end_selectors>
     </style>
-    <end_mediums>
-      <media type="type">screen</media>
-      <media type="type">print</media>
-    </end_mediums>
+    <end_media_queries>
+      <media_query type="type">screen</media_query>
+      <media_query type="type">print</media_query>
+    </end_media_queries>
   </media>
   <page>
     <start_page name="page_name" pseudoPage="first"/>
