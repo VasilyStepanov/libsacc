@@ -487,69 +487,147 @@ struct _SAC_Condition {
   SAC_ConditionType conditionType;
 
   union _SAC_Cdesc {
-    /* SAC_AND_CONDITION */
-    /* SAC_OR_CONDITION */
+    /**
+     * SAC_AND_CONDITION
+     * SAC_OR_CONDITION
+     */
+
     struct _SAC_Ccombinator {
+      /**
+       * The first condition.
+       */
       SAC_Condition *firstCondition;
+
+      /**
+       * The second condition.
+       */
       SAC_Condition *secondCondition;
     } combinator;
 
-    /* SAC_NEGATIVE_SELECTOR */
+
+
+    /**
+     * SAC_NEGATIVE_SELECTOR
+     */
+
+    /**
+     * The condition.
+     */
     SAC_Condition *condition;
 
-    /* SAC_POSITIONAL_CONDITION */
+
+
+    /**
+     * SAC_POSITIONAL_CONDITION
+     */
+
     struct _SAC_CPositional {
-      /* a negative value means from the end of child node list */
+      /**
+       * The position in the tree.
+       * A negative value means from the end of child node list.
+       * The child node list begins at 0.
+       */
       signed int position;
 
       /**
-       * SAC_TRUE if the child node list only shows nodes of the same
-       *          type.
+       * SAC_TRUE if the child node list only shows nodes of the same type of
+       * the selector (only elements, only PIS, ...)
        */
       SAC_Boolean typeNode;
+
       /**
-       * SAC_TRUE if the node should have the same node type.
-       *          (for element, same namespaceURI and same localName)
+       * SAC_TRUE if the node should have the same node type (for element, same
+       * namespaceURI and same localName).
        */
       SAC_Boolean type;
     } position;
 
-    /* SAC_ATTRIBUTE_CONDITION */
-    /* SAC_ONE_OF_ATTRIBUTE_CONDITION */
-    /* SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION */
-    /* SAC_ID_CONDITION */
-    /* SAC_CLASS_CONDITION */
-    /* SAC_PSEUDO_CLASS_CONDITION */
+
+
+    /**
+     * SAC_ATTRIBUTE_CONDITION
+     * SAC_ONE_OF_ATTRIBUTE_CONDITION
+     * SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION
+     * SAC_ID_CONDITION
+     * SAC_CLASS_CONDITION
+     * SAC_PSEUDO_CLASS_CONDITION
+     */
+
     struct _SAC_Attribute {
       /**
+       * The namespace URI of this attribute condition.
+       *
        * NULL if :
-       *  - any
-       *  - if conditionType == SAC_ID_CONDITION
-      */
+       *  - this attribute condition can match any namespace.
+       *  - this attribute is an id attribute.
+       * 
+       * [namespace URI](http://www.w3.org/TR/REC-xml-names/#dt-NSName)
+       *
+       */
       SAC_STRING namespaceURI;
+
       /**
+       * The local part of the qualified name of this attribute.
+       *
        * NULL if:
        *  - this attribute condition can match any attribute.
-       *  - this attribute is a class or a pseudo class.
+       *  - this attribute is a class attribute.
+       *  - this attribute is an id attribute.
+       *  - this attribute is a pseudo-class attribute.
+       *
+       * [local part](http://www.w3.org/TR/REC-xml-names/#NT-LocalPart) of the
+       * [qualified name](http://www.w3.org/TR/REC-xml-names/#ns-qualnames) of
        */
       SAC_STRING localName;
+
       /**
-       * If the attribute must have an explicit value in the original
-       * document, 'specified' is SAC_TRUE; otherwise, it is SAC_FALSE.
+       * SAC_TRUE if the attribute must have an explicit value in the original
+       * document, SAC_FALSE otherwise.
        */
       SAC_Boolean specified;
-      SAC_STRING  value; /* NULL if any */
+
+      /**
+       * The value of the attribute.
+       * If this attribute is a class or a pseudo class attribute, you'll get
+       * the class name (or psedo class name) without the '.' or ':'.
+       *
+       * NULL if any.
+       */
+      SAC_STRING  value;
     } attribute;
 
-    /* SAC_LANG_CONDITION */
-    SAC_STRING lang; /* NULL if any */
 
-    /* SAC_ONLY_CHILD_CONDITION */
-    /* SAC_ONLY_TYPE_CONDITION */
+
+    /**
+     * SAC_LANG_CONDITION
+     */
+
+    /**
+     * The language.
+     * NULL if any.
+     */
+    SAC_STRING lang;
+
+
+
+    /**
+     * SAC_ONLY_CHILD_CONDITION
+     * SAC_ONLY_TYPE_CONDITION
+     */
+
     /* empty */
 
-    /* SAC_CONTENT_CONDITION */
-    SAC_STRING data; /* can't be NULL */
+
+
+    /**
+     * SAC_CONTENT_CONDITION
+     */
+
+    /**
+     * The content.
+     * Can't be NULL.
+     */
+    SAC_STRING data;
   } desc;
 };
 
@@ -759,8 +837,8 @@ typedef void (*SAC_EndStyleHandler)(void *userData,
  *
  * propertyName - The name of the property.
  * value - The value of the property.
- * important - true if this property is important (i.e. "!important"),
- *             false otherwise.
+ * important - SAC_TRUE if this property is important (i.e. "!important"),
+ *             SAC_FALSE otherwise.
  */
 typedef void (*SAC_PropertyHandler)(void *userData,
   const SAC_STRING propertyName,
