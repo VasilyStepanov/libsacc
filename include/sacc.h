@@ -202,23 +202,109 @@ struct _SAC_LexicalUnit {
  */
 
 typedef enum {
-  /* simple selectors */
+  /**
+   * Simple selectors.
+   */
+
+  /**
+   * This is a conditional selector.
+   *
+   * Examples:
+   *   simple[role="private"]
+   *   .part1
+   *   H1#myId
+   *   P:lang(fr).p1
+   */
   SAC_CONDITIONAL_SELECTOR,
+
+  /**
+   * This selector matches any node.
+   */
   SAC_ANY_NODE_SELECTOR,
+
+  /**
+   * This selector matches the root node.
+   */
   SAC_ROOT_NODE_SELECTOR,
+
+  /**
+   * This selector matches only node that are different from a specified one.
+   */
   SAC_NEGATIVE_SELECTOR,
+
+  /**
+   * This selector matches only element node.
+   *
+   * Examples:
+   *   H1
+   *   animate
+   */
   SAC_ELEMENT_NODE_SELECTOR,
+
+  /**
+   * This selector matches only text node.
+   */
   SAC_TEXT_NODE_SELECTOR,
+
+  /**
+   * This selector matches only cdata node.
+   */
   SAC_CDATA_SECTION_NODE_SELECTOR,
+
+  /**
+   * This selector matches only processing instruction node.
+   */
   SAC_PROCESSING_INSTRUCTION_NODE_SELECTOR,
+
+  /**
+   * This selector matches only comment node.
+   */
   SAC_COMMENT_NODE_SELECTOR,
+
+  /**
+   * This selector matches the 'first line' pseudo element.
+   *
+   * Examples:
+   *   :first-line
+   */
   SAC_PSEUDO_ELEMENT_SELECTOR,
 
-  /* descendant selectors */
+
+
+  /**
+   * Descendant selectors.
+   */
+
+  /**
+   * This selector matches an arbitrary descendant of some ancestor element.
+   *
+   * Examples:
+   *   E F
+   */
   SAC_DESCENDANT_SELECTOR,
+
+  /**
+   * This selector matches a childhood relationship between two elements.
+   *
+   * Examples:
+   *   E > F
+   */
   SAC_CHILD_SELECTOR,
 
-  /* sibling selectors */
+
+
+  /**
+   * Sibling selectors.
+   */
+
+  /**
+   * This selector matches two selectors who shared the same parent in the
+   * document tree and the element represented by the first sequence immediately
+   * precedes the element represented by the second one.
+   *
+   * Examples:
+   *   E + F
+   */
   SAC_DIRECT_ADJACENT_SELECTOR
 } SAC_SelectorType;
 
