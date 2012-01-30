@@ -15,6 +15,7 @@
 #include "condition.h"
 #include "selector.h"
 #include "media_query.h"
+#include "dimen_value.h"
 #include "mpool.h"
 #include "pair.h"
 }
@@ -72,6 +73,7 @@ SAC_Selector *sel;
 SAC_Condition *cond;
 SAC_ConditionType cond_type;
 SAC_MediaQuery *media;
+SAC_DimenValue *dimen;
 SAC_Boolean boolean;
 SAC_Pair pair;
 }
@@ -119,25 +121,25 @@ SAC_Pair pair;
 %token NOT
 %token ONLY
 
-%token <real> LENGTH_EM
-%token <real> LENGTH_EX
-%token <real> LENGTH_PIXEL
-%token <real> LENGTH_CENTIMETER
-%token <real> LENGTH_MILLIMETER
-%token <real> LENGTH_INCH
-%token <real> LENGTH_POINT
-%token <real> LENGTH_PICA
-%token <real> ANGLE_DEG
-%token <real> ANGLE_RAD
-%token <real> ANGLE_GRAD
-%token <real> TIME_MS
-%token <real> TIME_S
-%token <real> FREQ_HZ
-%token <real> FREQ_KHZ
-%token <real> RESOLUTION_DPI
-%token <real> RESOLUTION_DPCM
+%token <dimen> LENGTH_EM
+%token <dimen> LENGTH_EX
+%token <dimen> LENGTH_PIXEL
+%token <dimen> LENGTH_CENTIMETER
+%token <dimen> LENGTH_MILLIMETER
+%token <dimen> LENGTH_INCH
+%token <dimen> LENGTH_POINT
+%token <dimen> LENGTH_PICA
+%token <dimen> ANGLE_DEG
+%token <dimen> ANGLE_RAD
+%token <dimen> ANGLE_GRAD
+%token <dimen> TIME_MS
+%token <dimen> TIME_S
+%token <dimen> FREQ_HZ
+%token <dimen> FREQ_KHZ
+%token <dimen> RESOLUTION_DPI
+%token <dimen> RESOLUTION_DPCM
 %token DIMEN
-%token <real> PERCENTAGE
+%token <dimen> PERCENTAGE
 %token <real> REAL
 %token <integer> INT
 
@@ -1160,90 +1162,90 @@ term
       $$->desc.real = $2;
     }
   | unary_operator PERCENTAGE maybe_spaces {
-      if ($1 == '-') $2 = -$2;
+      if ($1 == '-') $2->value = -$2->value;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_PERCENTAGE);
       TEST_OBJ($$, @$);
-      $$->desc.dimension.unit = "%";
-      $$->desc.dimension.value.sreal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.sreal = $2->value;
     }
   | unary_operator LENGTH_PIXEL maybe_spaces {
-      if ($1 == '-') $2 = -$2;
+      if ($1 == '-') $2->value = -$2->value;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_PIXEL);
       TEST_OBJ($$, @$);
-      $$->desc.dimension.unit = "px";
-      $$->desc.dimension.value.sreal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.sreal = $2->value;
     }
   | unary_operator LENGTH_INCH maybe_spaces {
-      if ($1 == '-') $2 = -$2;
+      if ($1 == '-') $2->value = -$2->value;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_INCH);
       TEST_OBJ($$, @$);
-      $$->desc.dimension.unit = "in";
-      $$->desc.dimension.value.sreal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.sreal = $2->value;
     }
   | unary_operator LENGTH_CENTIMETER maybe_spaces {
-      if ($1 == '-') $2 = -$2;
+      if ($1 == '-') $2->value = -$2->value;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner),
         SAC_LENGTH_CENTIMETER);
       TEST_OBJ($$, @$);
-      $$->desc.dimension.unit = "cm";
-      $$->desc.dimension.value.sreal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.sreal = $2->value;
     }
   | unary_operator LENGTH_MILLIMETER maybe_spaces {
-      if ($1 == '-') $2 = -$2;
+      if ($1 == '-') $2->value = -$2->value;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner),
         SAC_LENGTH_MILLIMETER);
       TEST_OBJ($$, @$);
-      $$->desc.dimension.unit = "mm";
-      $$->desc.dimension.value.sreal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.sreal = $2->value;
     }
   | unary_operator LENGTH_POINT maybe_spaces {
-      if ($1 == '-') $2 = -$2;
+      if ($1 == '-') $2->value = -$2->value;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_POINT);
       TEST_OBJ($$, @$);
-      $$->desc.dimension.unit = "pt";
-      $$->desc.dimension.value.sreal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.sreal = $2->value;
     }
   | unary_operator LENGTH_PICA maybe_spaces {
-      if ($1 == '-') $2 = -$2;
+      if ($1 == '-') $2->value = -$2->value;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_PICA);
       TEST_OBJ($$, @$);
-      $$->desc.dimension.unit = "pc";
-      $$->desc.dimension.value.sreal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.sreal = $2->value;
     }
   | unary_operator LENGTH_EM maybe_spaces {
-      if ($1 == '-') $2 = -$2;
+      if ($1 == '-') $2->value = -$2->value;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_EM);
       TEST_OBJ($$, @$);
-      $$->desc.dimension.unit = "em";
-      $$->desc.dimension.value.sreal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.sreal = $2->value;
     }
   | unary_operator LENGTH_EX maybe_spaces {
-      if ($1 == '-') $2 = -$2;
+      if ($1 == '-') $2->value = -$2->value;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_LENGTH_EX);
       TEST_OBJ($$, @$);
-      $$->desc.dimension.unit = "ex";
-      $$->desc.dimension.value.sreal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.sreal = $2->value;
     }
   | unary_operator ANGLE_DEG maybe_spaces {
-      if ($1 == '-') $2 = -$2;
+      if ($1 == '-') $2->value = -$2->value;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_DEGREE);
       TEST_OBJ($$, @$);
-      $$->desc.dimension.unit = "deg";
-      $$->desc.dimension.value.sreal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.sreal = $2->value;
     }
   | unary_operator ANGLE_RAD maybe_spaces {
-      if ($1 == '-') $2 = -$2;
+      if ($1 == '-') $2->value = -$2->value;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_RADIAN);
       TEST_OBJ($$, @$);
-      $$->desc.dimension.unit = "rad";
-      $$->desc.dimension.value.sreal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.sreal = $2->value;
     }
   | unary_operator ANGLE_GRAD maybe_spaces {
-      if ($1 == '-') $2 = -$2;
+      if ($1 == '-') $2->value = -$2->value;
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_GRADIAN);
       TEST_OBJ($$, @$);
-      $$->desc.dimension.unit = "grad";
-      $$->desc.dimension.value.sreal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.sreal = $2->value;
     }
   | unary_operator TIME_MS maybe_spaces {
       if ($1 == '-') {
@@ -1253,8 +1255,8 @@ term
 
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_MILLISECOND);
       TEST_OBJ($$, @$);
-      $$->desc.dimension.unit = "ms";
-      $$->desc.dimension.value.ureal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.ureal = $2->value;
     }
   | unary_operator TIME_S maybe_spaces {
       if ($1 == '-') {
@@ -1264,8 +1266,8 @@ term
 
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_SECOND);
       TEST_OBJ($$, @$);
-      $$->desc.dimension.unit = "s";
-      $$->desc.dimension.value.ureal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.ureal = $2->value;
     }
   | unary_operator FREQ_HZ maybe_spaces {
       if ($1 == '-') {
@@ -1275,8 +1277,8 @@ term
 
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_HERTZ);
       TEST_OBJ($$, @$);
-      $$->desc.dimension.unit = "Hz";
-      $$->desc.dimension.value.ureal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.ureal = $2->value;
     }
   | unary_operator FREQ_KHZ maybe_spaces {
       if ($1 == '-') {
@@ -1286,8 +1288,8 @@ term
 
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_KILOHERTZ);
       TEST_OBJ($$, @$);
-      $$->desc.stringValue = "kHz";
-      $$->desc.dimension.value.ureal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.ureal = $2->value;
     }
   | unary_operator RESOLUTION_DPI maybe_spaces {
       if ($1 == '-') {
@@ -1297,8 +1299,8 @@ term
 
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_DOTS_PER_INCH);
       TEST_OBJ($$, @$);
-      $$->desc.stringValue = "dpi";
-      $$->desc.dimension.value.ureal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.ureal = $2->value;
     }
   | unary_operator RESOLUTION_DPCM maybe_spaces {
       if ($1 == '-') {
@@ -1309,8 +1311,8 @@ term
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner),
         SAC_DOTS_PER_CENTIMETER);
       TEST_OBJ($$, @$);
-      $$->desc.stringValue = "dpcm";
-      $$->desc.dimension.value.ureal = $2;
+      $$->desc.dimension.unit = $2->unit;
+      $$->desc.dimension.value.ureal = $2->value;
     }
   | STRING maybe_spaces {
       $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
