@@ -343,86 +343,191 @@ typedef struct _SAC_LexicalUnit SAC_LexicalUnit;
 struct _SAC_LexicalUnit {
   SAC_LexicalUnitCode lexicalUnitType;
   union _SAC_unit {
-    /* SAC_OPERATOR_COMMA */
-    /* SAC_OPERATOR_PLUS */
-    /* SAC_OPERATOR_MINUS */
-    /* SAC_OPERATOR_MULTIPLY */
-    /* SAC_OPERATOR_SLASH */
-    /* SAC_OPERATOR_MOD */
-    /* SAC_OPERATOR_EXP */
-    /* SAC_OPERATOR_LT */
-    /* SAC_OPERATOR_GT */
-    /* SAC_OPERATOR_LE */
-    /* SAC_OPERATOR_GE */
-    /* SAC_OPERATOR_TILDE */
+    /**
+     * SAC_OPERATOR_COMMA
+     * SAC_OPERATOR_PLUS
+     * SAC_OPERATOR_MINUS
+     * SAC_OPERATOR_MULTIPLY
+     * SAC_OPERATOR_SLASH
+     * SAC_OPERATOR_MOD
+     * SAC_OPERATOR_EXP
+     * SAC_OPERATOR_LT
+     * SAC_OPERATOR_GT
+     * SAC_OPERATOR_LE
+     * SAC_OPERATOR_GE
+     * SAC_OPERATOR_TILDE
+     */
+
     /* empty */
 
-    /* SAC_INHERIT */
+
+
+    /**
+     * SAC_INHERIT
+     */
+
     /* empty */
 
-    /* SAC_INTEGER */
+
+
+    /**
+     * SAC_INTEGER
+     */
+
+    /**
+     * The integer value.
+     */
     signed long integer;
 
-    /* SAC_REAL */
-    /* signed */ double real;
 
-    /* SAC_DIMENSION, etc. */
+
+    /**
+     * SAC_REAL
+     */
+
+    /**
+     * Signed float value.
+     */
+    double real;
+
+
+
+    /**
+     * SAC_DIMENSION, etc.
+     */
+
     struct _SAC_Dimension {
-      SAC_STRING unit;    /* The string representation of the unit */
-      union _SAC_DimensionValue {
-        /* SAC_DIMENSION */
-        /* SAC_LENGTH_EM */
-        /* SAC_LENGTH_EX */
-        /* SAC_LENGTH_PIXEL */
-        /* SAC_LENGTH_INCH */
-        /* SAC_LENGTH_CENTIMETER */
-        /* SAC_LENGTH_MILLIMETER */
-        /* SAC_LENGTH_POINT */
-        /* SAC_LENGTH_PICA */
-        /* SAC_DEGREE */
-        /* SAC_GRADIAN */
-        /* SAC_RADIAN */
-        /* SAC_PERCENTAGE */
-        double sreal; /* signed */
+      /**
+       * The string representation of the unit.
+       */
+      SAC_STRING unit;
 
-        /* SAC_MILLISECOND */
-        /* SAC_SECOND */
-        /* SAC_HERTZ */
-        /* SAC_KILOHERTZ */
-        /* SAC_DOTS_PER_INCH */
-        /* SAC_DOTS_PER_CENTIMETER */
-        double ureal; /* unsigned */
+      union _SAC_DimensionValue {
+        /**
+         * SAC_DIMENSION
+         * SAC_LENGTH_EM
+         * SAC_LENGTH_EX
+         * SAC_LENGTH_PIXEL
+         * SAC_LENGTH_INCH
+         * SAC_LENGTH_CENTIMETER
+         * SAC_LENGTH_MILLIMETER
+         * SAC_LENGTH_POINT
+         * SAC_LENGTH_PICA
+         * SAC_DEGREE
+         * SAC_GRADIAN
+         * SAC_RADIAN
+         * SAC_PERCENTAGE
+         */
+
+        /**
+         * Signed float value.
+         */
+        double sreal;
+
+
+
+        /**
+         * SAC_MILLISECOND
+         * SAC_SECOND
+         * SAC_HERTZ
+         * SAC_KILOHERTZ
+         * SAC_DOTS_PER_INCH
+         * SAC_DOTS_PER_CENTIMETER
+         */
+
+        /**
+         * Unsigned float value.
+         */
+        double ureal;
       } value;
     } dimension;
 
-    /* SAC_URI */
+
+
+    /**
+     * SAC_URI
+     */
+
+    /**
+     * URI.
+     *
+     * The value doesn't contain uri(...) or quotes.
+     */
     SAC_STRING uri;
 
-    /* SAC_COUNTER_FUNCTION */
-    /* SAC_COUNTERS_FUNCTION */
-    /* SAC_RGBCOLOR */
-    /* SAC_FUNCTION */
-    /* SAC_RECT_FUNCTION */
+
+
+    /**
+     * SAC_COUNTER_FUNCTION
+     * SAC_COUNTERS_FUNCTION
+     * SAC_RGBCOLOR
+     * SAC_FUNCTION
+     * SAC_RECT_FUNCTION
+     */
+
     struct _SAC_Function {
-      SAC_STRING name;
       /**
-       * including operators, like the comma
+       * The name of the function.
+       */
+      SAC_STRING name;
+
+      /**
+       * The function parameters including operators (like the comma).
        * #000 is converted to rgb(0, 0, 0)
+       * Can return null if SAC_FUNCTION.
        */
       SAC_LexicalUnit **parameters;
     } function;
 
-    /* SAC_IDENT */
+
+
+    /**
+     * SAC_IDENT
+     */
+
     SAC_STRING ident;
-    /* SAC_STRING_VALUE */
+
+
+
+    /**
+     * SAC_STRING_VALUE
+     */
+
     SAC_STRING stringValue;
-    /* SAC_ATTR */
+
+
+
+    /**
+     * SAC_ATTR
+     */
+
+    /**
+     * Attribute name.
+     *
+     * The value doesn't contain attr(...).
+     */
     SAC_STRING attrName;
 
-    /* SAC_UNICODERANGE */
-    SAC_STRING unicodeRange; /* @@TO BE DEFINED */
 
-    /* SAC_SUB_EXPRESSION */
+
+    /**
+     * SAC_UNICODERANGE
+     */
+
+    /**
+     * TODO: TO BE DEFINED
+     */
+    SAC_STRING unicodeRange;
+
+
+
+    /**
+     * SAC_SUB_EXPRESSION
+     */
+
+    /**
+     * A list of values inside the sub expression.
+     */
     SAC_LexicalUnit **subValues;
   } desc;
 };
