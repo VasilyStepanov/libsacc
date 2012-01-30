@@ -28,8 +28,7 @@ libsacc_la_SOURCES = parser.c \
                      lexical_unit.c \
                      condition.c \
                      selector.c \
-                     media_query.c \
-                     dimen_value.c
+                     media_query.c
 
 libsacc_la_LIBADD = libgrammar.la
 

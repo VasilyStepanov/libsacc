@@ -172,94 +172,76 @@ range        \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h}
 
 
 {num}{E}{M}             {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return LENGTH_EM;
                         }
 {num}{E}{X}             {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return LENGTH_EX;
                         }
 {num}{P}{X}             {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return LENGTH_PIXEL;
                         }
 {num}{C}{M}             {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return LENGTH_CENTIMETER;
                         }
 {num}{M}{M}             {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return LENGTH_MILLIMETER;
                         }
 {num}{I}{N}             {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return LENGTH_INCH;
                         }
 {num}{P}{T}             {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return LENGTH_POINT;
                         }
 {num}{P}{C}             {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return LENGTH_PICA;
                         }
 {num}{D}{E}{G}          {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return ANGLE_DEG;
                         }
 {num}{R}{A}{D}          {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return ANGLE_RAD;
                         }
 {num}{G}{R}{A}{D}       {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return ANGLE_GRAD;
                         }
 {num}{M}{S}             {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return TIME_MS;
                         }
 {num}{S}                {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return TIME_S;
                         }
 {num}{H}{Z}             {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return FREQ_HZ;
                         }
 {num}{K}{H}{Z}          {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return FREQ_KHZ;
                         }
 {num}{D}{P}{I}          {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return RESOLUTION_DPI;
                         }
 {num}{D}{P}{C}{M}       {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return RESOLUTION_DPCM;
                         }
 {num}{ident}            {return DIMEN;}
 {num}%                  {
-                          yylval->dimen = SAC_dimen_value_alloc(
-                            YY_SCANNER_MPOOL(yyscanner), yytext);
+                          yylval->real = strtod(yytext, NULL);
                           return PERCENTAGE;
                         }
 {int}                 {
