@@ -1,9 +1,3 @@
-/**
- * TODO: The next example works not as expected. So the 'all' medium will be
- *       parsed.
- *       http://www.w3.org/TR/css3-mediaqueries/#error-handling
- *       http://www.w3.org/TR/CSS21/syndata.html#at-rules
- */
 @media (example, all,), speech { /* only applicable to speech devices */ }
 @media &test, screen           { /* only applicable to screen devices */ }
 @media all and(color)          { /* treated as not all */ }

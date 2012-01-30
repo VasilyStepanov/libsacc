@@ -307,6 +307,13 @@ closing_brace
         "closing brace not found");
     }
   ;
+closing_bracket
+  : ')'
+  | EOF_TOKEN {
+      SAC_SYNTAX_ERROR(@1,
+        "closing bracket not found");
+    }
+  ;
 maybe_rulesets
   :
   | maybe_rulesets ruleset maybe_spaces
@@ -598,6 +605,7 @@ media_query_list
   ;
 bad_media_query
   : media_query_errors
+  | invalid_bracket_block
   ;
 media_query_errors
   : error
@@ -1441,4 +1449,8 @@ invalid_block
 invalid_blocks
   : invalid_block
   | invalid_blocks error invalid_block
+  ;
+invalid_bracket_block
+  : '(' error invalid_blocks error closing_bracket
+  | '(' error closing_bracket
   ;

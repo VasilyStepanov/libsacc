@@ -1,18 +1,15 @@
 <?xml version="1.0"?>
 <document>
-  <error type="SYNTAX" line="7" column="22">unexpected token while parsing media query</error>
-  <error type="SYNTAX" line="7" column="8">unexpected token while parsing media query</error>
+  <error type="SYNTAX" line="1" column="8">unexpected token while parsing media query</error>
   <media>
     <start_media_queries>
-      <media_query type="type">all</media_query>
       <media_query type="type">speech</media_query>
     </start_media_queries>
     <end_media_queries>
-      <media_query type="type">all</media_query>
       <media_query type="type">speech</media_query>
     </end_media_queries>
   </media>
-  <error type="SYNTAX" line="8" column="8">unexpected token while parsing media query</error>
+  <error type="SYNTAX" line="2" column="8">unexpected token while parsing media query</error>
   <media>
     <start_media_queries>
       <media_query type="type">screen</media_query>
@@ -21,9 +18,9 @@
       <media_query type="type">screen</media_query>
     </end_media_queries>
   </media>
-  <error type="SYNTAX" line="9" column="12">unexpected token while parsing 'media' rule</error>
-  <error type="SYNTAX" line="10" column="12">unexpected 'semicolon' while parsing 'media' rule</error>
-  <error type="SYNTAX" line="10" column="13">unexpected token while parsing selectors</error>
+  <error type="SYNTAX" line="3" column="12">unexpected token while parsing 'media' rule</error>
+  <error type="SYNTAX" line="4" column="12">unexpected 'semicolon' while parsing 'media' rule</error>
+  <error type="SYNTAX" line="4" column="13">unexpected token while parsing selectors</error>
   <style>
     <start_selectors>
       <selector type="element_node" localName="p"/>
