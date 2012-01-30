@@ -431,52 +431,153 @@ struct _SAC_Selector {
   SAC_SelectorType selectorType;
 
   union _SAC_Sdesc {
-    /* SAC_CONDITIONAL_SELECTOR */
+    /**
+     * SAC_CONDITIONAL_SELECTOR
+     */
+
     struct _SAC_Conditional {
-      /* can't be a combinator or a conditional selector */
+      /**
+       * The simple selector.
+       *
+       * Can't be a combinator or a conditional selector
+       */
       SAC_Selector  *simpleSelector;
+
+      /**
+       * The condition to be applied on the simple selector.
+       */
       SAC_Condition *condition;
     } conditional;
 
-    /* SAC_ANY_NODE_SELECTOR */
-    /* SAC_ROOT_NODE_SELECTOR */
+
+
+    /**
+     * SAC_ANY_NODE_SELECTOR
+     * SAC_ROOT_NODE_SELECTOR
+     */
+
     /* empty */
 
-    /* SAC_NEGATIVE_SELECTOR */
+
+
+    /**
+     * SAC_NEGATIVE_SELECTOR
+     */
+
+    /**
+     * The simple selector.
+     */
     SAC_Selector *simpleSelector;
 
-    /* SAC_DESCENDANT_SELECTOR */
-    /* SAC_CHILD_SELECTOR */
+
+
+    /**
+     * SAC_DESCENDANT_SELECTOR
+     * SAC_CHILD_SELECTOR
+     */
+
     struct _SAC_Sdescendant {
-      /* not exactly a "parentSelector", "parentOrAdjacentSelector" */
+      /**
+       * The parent selector.
+       *
+       * Not exactly a "parentSelector", "parentOrAdjacentSelector".
+       */
       SAC_Selector *descendantSelector;
-      /* can't be a descendant or sibling selector */
+
+      /**
+       * Can't be a descendant or sibling selector.
+       */
       SAC_Selector *simpleSelector;
     } descendant;
 
-    /* SAC_DIRECT_ADJACENT_SELECTOR */
+
+
+    /**
+     * SAC_DIRECT_ADJACENT_SELECTOR
+     */
+
     struct _SAC_Ssibling {
+      /**
+       * Node type to considered in the siblings list.
+       *
+       * All DOM node types are supported. In order to support the "any" node
+       * type, the code ANY_NODE is added to the DOM node types.
+       */
       SAC_NodeType nodeType;
+
+      /**
+       * The first selector.
+       */
       SAC_Selector *firstSelector;
-      /* can't be a descendant or sibling selector */
+
+      /**
+       * Can't be a descendant or sibling selector
+       */
       SAC_Selector *secondSelector;
     } sibling;
 
-    /* SAC_ELEMENT_NODE_SELECTOR */
-    /* SAC_PSEUDO_ELEMENT_SELECTOR */
+
+
+    /**
+     * SAC_ELEMENT_NODE_SELECTOR
+     * SAC_PSEUDO_ELEMENT_SELECTOR
+     */
+
     struct _SAC_Element {
-      SAC_STRING namespaceURI; /* NULL if any */
-      SAC_STRING localName; /* NULL if any */
+      /**
+       * The namespace URI of this element selector.
+       * NULL if this element selector can match any namespace.
+       *
+       * [namespace URI](http://www.w3.org/TR/REC-xml-names/#dt-NSName)
+       */
+      SAC_STRING namespaceURI;
+
+      /**
+       * The local part of the qualified name of this element.
+       * NULL if this element selector can match any element.
+       *
+       * [local part](http://www.w3.org/TR/REC-xml-names/#NT-LocalPart)
+       * [qualified name](http://www.w3.org/TR/REC-xml-names/#ns-qualnames)
+       */
+      SAC_STRING localName;
     } element;
 
-    /* SAC_TEXT_NODE_SELECTOR */
-    /* SAC_CDATA_SECTION_NODE_SELECTOR */
-    /* SAC_COMMENT_NODE_SELECTOR */
-    SAC_STRING data; /* NULL if any */
 
-    /* SAC_PROCESSING_INSTRUCTION_NODE_SELECTOR */
+
+    /**
+     * SAC_TEXT_NODE_SELECTOR
+     * SAC_CDATA_SECTION_NODE_SELECTOR
+     * SAC_COMMENT_NODE_SELECTOR
+     */
+
+    /**
+     * The character data.
+     *
+     * NULL if any.
+     */
+    SAC_STRING data;
+
+
+
+    /**
+     * SAC_PROCESSING_INSTRUCTION_NODE_SELECTOR
+     */
+
     struct _SAC_Pi {
-      SAC_STRING target; /* NULL if any */
+      /**
+       * The target of the processing instruction.
+       *
+       * NULL if any.
+       *
+       * [target](http://www.w3.org/TR/REC-xml#NT-PITarget)
+       */
+      SAC_STRING target;
+
+      /**
+       * The character data.
+       *
+       * NULL if any.
+       */
       SAC_STRING data; /* NULL if no data */
     } pi;
   } desc;
