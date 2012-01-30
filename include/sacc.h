@@ -31,73 +31,311 @@ typedef enum SAC_Boolean {
 typedef enum _SAC_LexicalUnitCode {
 
   /**
-   * Operators
+   * Operators.
    *
    * Note that these operators have no meaning for the parser,
    * it's up to the user to interpret each operators.
    */
-  SAC_OPERATOR_COMMA,     /* , */
-  SAC_OPERATOR_PLUS,      /* + */
-  SAC_OPERATOR_MINUS,     /* - */
-  SAC_OPERATOR_MULTIPLY,  /* * */
-  SAC_OPERATOR_SLASH,     /* / */
-  SAC_OPERATOR_MOD,       /* % */
-  SAC_OPERATOR_EXP,       /* ^ */
-  SAC_OPERATOR_LT,        /* < */
-  SAC_OPERATOR_GT,        /* > */
-  SAC_OPERATOR_LE,        /* <= */
-  SAC_OPERATOR_GE,        /* >= */
-  SAC_OPERATOR_TILDE,     /* ~ */
+  
+  /**
+   * Example: ,
+   */
+  SAC_OPERATOR_COMMA,
 
-  SAC_INHERIT,            /* identifier inherit */
-  /* Integers and reals numbers */
+  /**
+   * Example: +
+   */
+  SAC_OPERATOR_PLUS,
+
+  /**
+   * Example: -
+   */
+  SAC_OPERATOR_MINUS,
+  
+  /**
+   * Example: *
+   */
+  SAC_OPERATOR_MULTIPLY,
+  
+  /**
+   * Example: /
+   */
+  SAC_OPERATOR_SLASH,
+  
+  /**
+   * Example: %
+   */
+  SAC_OPERATOR_MOD,
+
+  /**
+   * Example: ^
+   */
+  SAC_OPERATOR_EXP,
+
+  /**
+   * Example: <
+   */
+  SAC_OPERATOR_LT,
+
+  /**
+   * Example: >
+   */
+  SAC_OPERATOR_GT,
+
+  /**
+   * Example: <=
+   */
+  SAC_OPERATOR_LE,
+
+  /**
+   * Example: >=
+   */
+  SAC_OPERATOR_GE,
+
+  /**
+   * Example: ~
+   */
+  SAC_OPERATOR_TILDE,
+
+
+
+  /**
+   * Identifier inherit.
+   */
+  SAC_INHERIT,
+
+
+
+  /**
+   * Integers.
+   */
   SAC_INTEGER,
+
+  /**
+   * Reals.
+   */
   SAC_REAL,
-  /* Relative lengths */
+
+
+
+  /**
+   * Relative lengths.
+   */
+
+  /**
+   * Relative length em.
+   */
   SAC_LENGTH_EM,
+
+  /**
+   * Relative length ex.
+   */
   SAC_LENGTH_EX,
+
+  /**
+   * Relative length px.
+   */
   SAC_LENGTH_PIXEL,
-  /* Absolute lengths */
+
+
+
+  /**
+   * Absolute lengths.
+   */
+
+  /**
+   * Absolute length in.
+   */
   SAC_LENGTH_INCH,
+
+  /**
+   * Absolute length cm.
+   */
   SAC_LENGTH_CENTIMETER,
+
+  /**
+   * Absolute length mm.
+   */
   SAC_LENGTH_MILLIMETER,
+
+  /**
+   * Absolute length pt.
+   */
   SAC_LENGTH_POINT,
+
+  /**
+   * Absolute length pc.
+   */
   SAC_LENGTH_PICA,
-  /* Percentages */
+
+
+
+  /**
+   * Percentage.
+   */
   SAC_PERCENTAGE,
-  /* URI */
+
+  /**
+   * URI.
+   *
+   * Example:
+   *   uri(...)
+   */
   SAC_URI,
-  /* Counters */
+
+
+
+  /**
+   * Counters.
+   */
+
+  /**
+   * Function counter.
+   */
   SAC_COUNTER_FUNCTION,
+
+  /**
+   * Function counters.
+   */
   SAC_COUNTERS_FUNCTION,
-  /* RGB Colors */
-  SAC_RGBCOLOR,           /* rgb(0, 0, 0) and #000 */
-  /* Angles */
+
+
+
+  /**
+   * RGB Colors.
+   *
+   * Examples:
+   *   rgb(0, 0, 0)
+   *   #000
+   */
+  SAC_RGBCOLOR,
+
+
+
+  /**
+   * Angles.
+   */
+
+  /**
+   * Angle deg.
+   */
   SAC_DEGREE,
+
+  /**
+   * Angle grad.
+   */
   SAC_GRADIAN,
+
+  /**
+   * Angle rad.
+   */
   SAC_RADIAN,
-  /* Times */
+
+
+
+  /**
+   * Times.
+   */
+
+  /**
+   * Time ms.
+   */
   SAC_MILLISECOND,
+
+  /**
+   * Time s.
+   */
   SAC_SECOND,
-  /* Frequencies */
+
+
+
+  /**
+   * Frequencies.
+   */
+
+  /**
+   * Frequency Hz.
+   */
   SAC_HERTZ,
+
+  /**
+   * Frequency kHz.
+   */
   SAC_KILOHERTZ,
-  /* Resolution */
+
+
+
+  /**
+   * Resolutions.
+   */
+
+  /**
+   * Resolution dpi.
+   */
   SAC_DOTS_PER_INCH,
+
+  /**
+   * Resolution dpcm.
+   */
   SAC_DOTS_PER_CENTIMETER,
-  /* Misc */
-  SAC_IDENT,              /* any ident except inherit ! */
+
+
+
+  /**
+   * Misc.
+   */
+
+  /**
+   * Any identifier except inherit.
+   */
+  SAC_IDENT,
+
+  /**
+   * A string.
+   */
   SAC_STRING_VALUE,
-  SAC_ATTR,               /* attribute */
-  SAC_RECT_FUNCTION,      /* rect shape function */
+
+  /**
+   * Attribute.
+   * Example: attr(...)
+   */
+  SAC_ATTR,
+
+  /**
+   * Function rect.
+   */
+  SAC_RECT_FUNCTION,
+
+  /**
+   * A unicode range.
+   */
   SAC_UNICODERANGE,
 
-  /* sub expressions */
-  SAC_SUB_EXPRESSION,     /* (a) (a + b) (normal/none) */
 
-  /* Unknown values */
-  SAC_FUNCTION,           /* unknown function */
-  SAC_DIMENSION           /* unknown dimension */
+
+  /**
+   * Sub expressions.
+   *
+   * Example:
+   *   (a) (a + b) (normal/none)
+   */
+  SAC_SUB_EXPRESSION,
+
+
+
+  /**
+   * Unknown values.
+   */
+
+  /**
+   * Unknown function.
+   */
+  SAC_FUNCTION,
+
+  /**
+   * unknown dimension.
+   */
+  SAC_DIMENSION
 } SAC_LexicalUnitCode;
 
 typedef struct _SAC_LexicalUnit SAC_LexicalUnit;
