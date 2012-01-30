@@ -15,6 +15,7 @@ test_suite_SOURCES = test_utils.c \
                      test_condition.c \
                      test_selector.c \
                      test_media_query.c \
+                     test_dimen_value.c \
                      test_suite.c
 
 test_suite_LDADD = $(top_srcdir)/src/libsacc.la
