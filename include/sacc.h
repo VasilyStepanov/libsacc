@@ -309,19 +309,106 @@ typedef enum {
 } SAC_SelectorType;
 
 typedef enum {
+  /**
+   * This condition checks exactly two conditions.
+   *
+   * Example:
+   *   .part1:lang(fr)
+   */
   SAC_AND_CONDITION,
+
+  /**
+   * This condition checks one of two conditions.
+   */
   SAC_OR_CONDITION,
+
+  /**
+   * This condition checks that a condition can't be applied to a node.
+   */
   SAC_NEGATIVE_CONDITION,
+
+  /**
+   * This condition checks a specified position.
+   *
+   * Example:
+   *   :first-child
+   */
   SAC_POSITIONAL_CONDITION,
+
+  /**
+   * This condition checks an attribute.
+   *
+   * Example:
+   *   [simple]
+   *   [restart="never"]
+   */
   SAC_ATTRIBUTE_CONDITION,
+
+  /**
+   * This condition checks an id attribute.
+   *
+   * Example:
+   *   #myId
+   */
   SAC_ID_CONDITION,
+
+  /**
+   * This condition checks the language of the node.
+   *
+   * Example:
+   *   :lang(fr)
+   */
   SAC_LANG_CONDITION,
+
+  /**
+   * This condition checks for a value in a space-separated values in a
+   * specified attribute.
+   *
+   * Example:
+   *    [values~="10"]
+   */
   SAC_ONE_OF_ATTRIBUTE_CONDITION,
+
+  /**
+   * This condition checks if the value is in a hypen-separated list of values
+   * in a specified attribute.
+   *
+   * Example:
+   *   [languages|="fr"]
+   */
   SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION,
+
+  /**
+   * This condition checks for a specified class.
+   *
+   * Example:
+   *    .example
+   */
   SAC_CLASS_CONDITION,
+
+  /**
+   * This condition checks for the link pseudo class.
+   *
+   * Example:
+   *   :link
+   *   :visited
+   *   :hover
+   */
   SAC_PSEUDO_CLASS_CONDITION,
+
+  /**
+   * This condition checks if a node is the only one in the node list.
+   */
   SAC_ONLY_CHILD_CONDITION,
+
+  /**
+   * This condition checks if a node is the only one of his type.
+   */
   SAC_ONLY_TYPE_CONDITION,
+
+  /**
+   * This condition checks the content of a node.
+   */
   SAC_CONTENT_CONDITION
 } SAC_ConditionType;
 
