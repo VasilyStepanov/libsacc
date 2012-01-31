@@ -431,10 +431,28 @@ SAC_LexicalUnit* SAC_lexical_unit_function(SAC_MPool mpool,
 {
   SAC_LexicalUnit *value;
 
+  SAC_CHECK_STRING_NOT_EQUALS(name, "attr");
+
   value = SAC_lexical_unit_alloc(mpool, SAC_FUNCTION);
   if (value == NULL) return value;
 
   value->desc.function.name = name;
+  value->desc.function.parameters = parameters;
+
+  return value;
+}
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_attr(SAC_MPool mpool,
+  SAC_LexicalUnit **parameters)
+{
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_ATTR);
+  if (value == NULL) return value;
+
+  value->desc.function.name = "attr";
   value->desc.function.parameters = parameters;
 
   return value;

@@ -151,14 +151,14 @@
   </property>
   <property name="prop-func">
     <sub>
-      <func name="foo">
+      <func type="generic" name="foo">
         <arg>
           <str>arg</str>
         </arg>
       </func>
     </sub>
     <sub>
-      <func name="bar">
+      <func type="generic" name="bar">
         <arg>
           <str>arg1</str>
         </arg>
@@ -173,10 +173,10 @@
   </property>
   <property name="prop-color">
     <sub>
-      <func name="rgb"/>
+      <func type="rgb" name="rgb"/>
     </sub>
     <sub>
-      <func name="rgb">
+      <func type="rgb" name="rgb">
         <arg>
           <int>10</int>
         </arg>
@@ -195,10 +195,10 @@
       </func>
     </sub>
     <sub>
-      <func name="rgb"/>
+      <func type="rgb" name="rgb"/>
     </sub>
     <sub>
-      <func name="rgb">
+      <func type="rgb" name="rgb">
         <arg>
           <int>171</int>
         </arg>
@@ -232,5 +232,24 @@
     <sub>
       <dpcm dimension="dpcm">300.5</dpcm>
     </sub>
+  </property>
+  <property name="prop-attr">
+    <func type="attr" name="attr">
+      <arg>
+        <ident>length</ident>
+      </arg>
+      <arg>
+        <comma/>
+      </arg>
+      <arg>
+        <ident>em</ident>
+      </arg>
+      <arg>
+        <comma/>
+      </arg>
+      <arg>
+        <int>10</int>
+      </arg>
+    </func>
   </property>
 </document>

@@ -162,12 +162,29 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
         fprintf(out, "<uri>%s</uri>", value->desc.uri);
         break;
       case SAC_RGBCOLOR:
+      case SAC_ATTR:
       case SAC_FUNCTION:
         {
           SAC_LexicalUnit **arg;
 
-          fprintf(out,
-            "<func name=\"%s\">", value->desc.function.name);
+          fprintf(out, "<func type=");
+          switch (value->lexicalUnitType) {
+            case SAC_RGBCOLOR:
+              fprintf(out, "\"rgb\"");
+              break;
+            case SAC_ATTR:
+              fprintf(out, "\"attr\"");
+              break;
+            case SAC_FUNCTION:
+              fprintf(out, "\"generic\"");
+              break;
+            default:
+              fprintf(out, "\"unknown_%i\"", value->lexicalUnitType);
+              break;
+          }
+
+          fprintf(out, " name=\"%s\">", value->desc.function.name);
+
           for (arg = value->desc.function.parameters; *arg != NULL; ++arg) {
             fprintf(out, "<arg>");
             dump_lexical_unit(out, *arg);
@@ -209,7 +226,6 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_OPERATOR_TILDE:
       case SAC_COUNTER_FUNCTION:
       case SAC_COUNTERS_FUNCTION:
-      case SAC_ATTR:
       case SAC_RECT_FUNCTION:
       case SAC_DIMENSION:
         fprintf(out,
