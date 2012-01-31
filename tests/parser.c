@@ -163,6 +163,7 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
         break;
       case SAC_RGBCOLOR:
       case SAC_ATTR_FUNCTION:
+      case SAC_RECT_FUNCTION:
       case SAC_FUNCTION:
         {
           SAC_LexicalUnit **arg;
@@ -174,6 +175,9 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
               break;
             case SAC_ATTR_FUNCTION:
               fprintf(out, "\"attr\"");
+              break;
+            case SAC_RECT_FUNCTION:
+              fprintf(out, "\"rect\"");
               break;
             case SAC_FUNCTION:
               fprintf(out, "\"generic\"");
@@ -217,7 +221,6 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
         fprintf(out, "<dimen type=\"%s\">%g</dimen>",
           value->desc.dimension.unit, value->desc.dimension.value.sreal);
         break;
-        break;
       case SAC_OPERATOR_PLUS:
       case SAC_OPERATOR_MINUS:
       case SAC_OPERATOR_MULTIPLY:
@@ -231,7 +234,6 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_OPERATOR_TILDE:
       case SAC_COUNTER_FUNCTION:
       case SAC_COUNTERS_FUNCTION:
-      case SAC_RECT_FUNCTION:
         fprintf(out,
           "<value type=\"unknown_%d\"/>", value->lexicalUnitType);
         break;

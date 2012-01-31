@@ -1286,6 +1286,8 @@ function
         $$ = SAC_lexical_unit_attr(YY_SCANNER_MPOOL(scanner), parameters);
       } else if (strcasecmp($1, "rgb") == 0) {
         $$ = SAC_lexical_unit_rgbcolor(YY_SCANNER_MPOOL(scanner), parameters);
+      } else if (strcasecmp($1, "rect") == 0) {
+        $$ = SAC_lexical_unit_rect(YY_SCANNER_MPOOL(scanner), parameters);
       } else {
         $$ = SAC_lexical_unit_function(YY_SCANNER_MPOOL(scanner),
           $1, parameters);

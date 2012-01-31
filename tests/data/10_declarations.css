@@ -22,4 +22,5 @@ prop-func : foo('arg') bar('arg1', 2);
 prop-color : #ab #aBc #abcde #aBCdef rgb(1, 2, 3);
 prop-res : 300.5dpi 300.5dpcm -300.5dpi -300.5dpcm;
 prop-attr : attr(length, em, 10);
+prop-rect : rect(0px, 60px, 200px, 0px);
 prop-dimen : 1.5foo -2.5bar;

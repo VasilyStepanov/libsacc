@@ -271,6 +271,31 @@
       </arg>
     </func>
   </property>
+  <property name="prop-rect">
+    <func type="rect" name="rect">
+      <arg>
+        <pixel dimension="px">0</pixel>
+      </arg>
+      <arg>
+        <comma/>
+      </arg>
+      <arg>
+        <pixel dimension="px">60</pixel>
+      </arg>
+      <arg>
+        <comma/>
+      </arg>
+      <arg>
+        <pixel dimension="px">200</pixel>
+      </arg>
+      <arg>
+        <comma/>
+      </arg>
+      <arg>
+        <pixel dimension="px">0</pixel>
+      </arg>
+    </func>
+  </property>
   <property name="prop-dimen">
     <sub>
       <dimen type="foo">1.5</dimen>

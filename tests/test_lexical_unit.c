@@ -209,6 +209,19 @@ static void test_lexical_unit_factory() {
   ASSERT_EQUAL_STRINGS("attr", value->desc.function.name);
   assert(value->desc.function.parameters == params);
 
+  params = SAC_vector_open(mpool, 7);
+  params[0] = SAC_lexical_unit_pixel(mpool, 1);
+  params[1] = SAC_lexical_unit_operator_comma(mpool);
+  params[2] = SAC_lexical_unit_pixel(mpool, 2);
+  params[3] = SAC_lexical_unit_operator_comma(mpool);
+  params[4] = SAC_lexical_unit_pixel(mpool, 3);
+  params[5] = SAC_lexical_unit_operator_comma(mpool);
+  params[6] = SAC_lexical_unit_pixel(mpool, 4);
+  value = SAC_lexical_unit_rect(mpool, params);
+  assert(value->lexicalUnitType == SAC_RECT_FUNCTION);
+  ASSERT_EQUAL_STRINGS("rect", value->desc.function.name);
+  assert(value->desc.function.parameters == params);
+
   SAC_mpool_close(mpool);
 }
 
