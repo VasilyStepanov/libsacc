@@ -31,6 +31,8 @@ SAC_LexicalUnit* SAC_lexical_unit_kilohertz(SAC_MPool mpool, double ureal);
 SAC_LexicalUnit* SAC_lexical_unit_dots_per_inch(SAC_MPool mpool, double ureal);
 SAC_LexicalUnit* SAC_lexical_unit_dots_per_centimeter(SAC_MPool mpool,
   double ureal);
+SAC_LexicalUnit* SAC_lexical_unit_dimension(SAC_MPool mpool,
+  SAC_STRING unit, double sreal);
 SAC_LexicalUnit* SAC_lexical_unit_string(SAC_MPool mpool, SAC_STRING string);
 SAC_LexicalUnit* SAC_lexical_unit_ident(SAC_MPool mpool, SAC_STRING ident);
 SAC_LexicalUnit* SAC_lexical_unit_inherit(SAC_MPool mpool);

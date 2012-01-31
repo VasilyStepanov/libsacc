@@ -239,7 +239,11 @@ range        \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h}
                           yylval->real = strtod(yytext, NULL);
                           return RESOLUTION_DPCM;
                         }
-{num}{ident}            {return DIMEN;}
+{num}{ident}            {
+                          yylval->str = SAC_mpool_strndup(
+                            YY_SCANNER_MPOOL(yyscanner), yytext, yyleng);
+                          return DIMEN;
+                        }
 {num}%                  {
                           yylval->real = strtod(yytext, NULL);
                           return PERCENTAGE;

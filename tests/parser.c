@@ -213,6 +213,11 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
           }
         }
         break;
+      case SAC_DIMENSION:
+        fprintf(out, "<dimen type=\"%s\">%g</dimen>",
+          value->desc.dimension.unit, value->desc.dimension.value.sreal);
+        break;
+        break;
       case SAC_OPERATOR_PLUS:
       case SAC_OPERATOR_MINUS:
       case SAC_OPERATOR_MULTIPLY:
@@ -227,7 +232,6 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_COUNTER_FUNCTION:
       case SAC_COUNTERS_FUNCTION:
       case SAC_RECT_FUNCTION:
-      case SAC_DIMENSION:
         fprintf(out,
           "<value type=\"unknown_%d\"/>", value->lexicalUnitType);
         break;

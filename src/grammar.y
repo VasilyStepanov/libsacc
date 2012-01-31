@@ -136,7 +136,7 @@ SAC_Pair pair;
 %token <real> FREQ_KHZ
 %token <real> RESOLUTION_DPI
 %token <real> RESOLUTION_DPCM
-%token DIMEN
+%token <str> DIMEN
 %token <real> PERCENTAGE
 %token <real> REAL
 %token <integer> INT
@@ -1169,6 +1169,15 @@ term
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_gradian(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
+    }
+  | unary_operator DIMEN maybe_spaces {
+      double value;
+      char *unit;
+
+      value = strtod($2, &unit);
+      if ($1 == '-') value = -value;
+
+      $$ = SAC_lexical_unit_dimension(YY_SCANNER_MPOOL(scanner), unit, value);
     }
   | unary_operator TIME_MS maybe_spaces {
       if ($1 == '-') {

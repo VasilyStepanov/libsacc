@@ -154,6 +154,11 @@ static void test_lexical_unit_factory() {
   ASSERT_EQUAL_STRINGS("dpcm", value->desc.dimension.unit);
   ASSERT_EQUAL_REALS(3.14, value->desc.dimension.value.ureal);
 
+  value = SAC_lexical_unit_dimension(mpool, "foo", 3.14);
+  assert(value->lexicalUnitType == SAC_DIMENSION);
+  ASSERT_EQUAL_STRINGS("foo", value->desc.dimension.unit);
+  ASSERT_EQUAL_REALS(3.14, value->desc.dimension.value.sreal);
+
   value = SAC_lexical_unit_string(mpool, "foo");
   assert(value->lexicalUnitType == SAC_STRING_VALUE);
   ASSERT_EQUAL_STRINGS("foo", value->desc.stringValue);

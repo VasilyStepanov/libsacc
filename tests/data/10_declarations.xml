@@ -271,4 +271,12 @@
       </arg>
     </func>
   </property>
+  <property name="prop-dimen">
+    <sub>
+      <dimen type="foo">1.5</dimen>
+    </sub>
+    <sub>
+      <dimen type="bar">-2.5</dimen>
+    </sub>
+  </property>
 </document>

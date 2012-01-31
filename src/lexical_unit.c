@@ -337,6 +337,41 @@ SAC_LexicalUnit* SAC_lexical_unit_dots_per_centimeter(SAC_MPool mpool,
 
 
 
+SAC_LexicalUnit* SAC_lexical_unit_dimension(SAC_MPool mpool,
+  SAC_STRING unit, double sreal)
+{
+  SAC_LexicalUnit *value;
+
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "%");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "px");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "in");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "cm");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "mm");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "pt");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "pc");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "em");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "ex");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "deg");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "rad");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "grad");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "ms");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "s");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "Hz");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "kHz");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "dpi");
+  SAC_CHECK_STRING_NOT_EQUALS(unit, "dpcm");
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_DIMENSION);
+  if (value == NULL) return value;
+
+  value->desc.dimension.unit = unit;
+  value->desc.dimension.value.sreal = sreal;
+
+  return value;
+}
+
+
+
 SAC_LexicalUnit* SAC_lexical_unit_string(SAC_MPool mpool, SAC_STRING string) {
   SAC_LexicalUnit *value;
 
