@@ -32,7 +32,7 @@ static void test_condition_factory() {
   assert(condition->desc.attribute.specified == SAC_TRUE);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.value);
 
-  condition = SAC_condition_attribute(mpool, "foo", SAC_TRUE, "bar");
+  condition = SAC_condition_attribute(mpool, "foo", "bar");
   assert(condition->conditionType == SAC_ATTRIBUTE_CONDITION);
   assert(condition->desc.attribute.namespaceURI == NULL);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.localName);
@@ -43,14 +43,14 @@ static void test_condition_factory() {
   assert(condition->conditionType == SAC_ONE_OF_ATTRIBUTE_CONDITION);
   assert(condition->desc.attribute.namespaceURI == NULL);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.localName);
-  assert(condition->desc.attribute.specified == SAC_TRUE);
+  assert(condition->desc.attribute.specified == SAC_FALSE);
   ASSERT_EQUAL_STRINGS("bar", condition->desc.attribute.value);
 
   condition = SAC_condition_begin_hypen_attribute(mpool, "foo", "bar");
   assert(condition->conditionType == SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION);
   assert(condition->desc.attribute.namespaceURI == NULL);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.localName);
-  assert(condition->desc.attribute.specified == SAC_TRUE);
+  assert(condition->desc.attribute.specified == SAC_FALSE);
   ASSERT_EQUAL_STRINGS("bar", condition->desc.attribute.value);
 
   condition = SAC_condition_pseudo_class(mpool, "foo");

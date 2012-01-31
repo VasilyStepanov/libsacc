@@ -930,11 +930,11 @@ element_name
 attrib
   : '[' maybe_spaces attrib_name ']' {
       $$ = SAC_condition_attribute(YY_SCANNER_MPOOL(scanner),
-        $3, SAC_FALSE, NULL);
+        $3, NULL);
       TEST_OBJ($$, @$);
     }
   | '[' maybe_spaces attrib_name '=' maybe_spaces attrib_value ']' {
-      $$ = SAC_condition_attribute(YY_SCANNER_MPOOL(scanner), $3, SAC_TRUE, $6);
+      $$ = SAC_condition_attribute(YY_SCANNER_MPOOL(scanner), $3, $6);
       TEST_OBJ($$, @$);
     }
   | '[' maybe_spaces attrib_name INCLUDES maybe_spaces attrib_value ']' {

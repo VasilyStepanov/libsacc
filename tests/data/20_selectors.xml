@@ -29,14 +29,14 @@
       <condition type="and">
         <condition type="and">
           <condition type="and">
-            <condition type="attr" localName="attr" specified="false"/>
+            <condition type="attr" localName="attr" specified="true"/>
             <condition type="attr" localName="iattr" specified="true" value="ident"/>
           </condition>
           <condition type="attr" localName="sattr" specified="true" value="str"/>
         </condition>
-        <condition type="one_of" localName="oneof" specified="true" value="inc"/>
+        <condition type="one_of" localName="oneof" specified="false" value="inc"/>
       </condition>
-      <condition type="begin_hypen" localName="hypen" specified="true" value="dash"/>
+      <condition type="begin_hypen" localName="hypen" specified="false" value="dash"/>
     </condition>
   </selector>
   <selector type="conditional">
