@@ -216,6 +216,25 @@
         </arg>
       </func>
     </sub>
+    <sub>
+      <func type="rgb" name="rgb">
+        <arg>
+          <int>1</int>
+        </arg>
+        <arg>
+          <comma/>
+        </arg>
+        <arg>
+          <int>2</int>
+        </arg>
+        <arg>
+          <comma/>
+        </arg>
+        <arg>
+          <int>3</int>
+        </arg>
+      </func>
+    </sub>
   </property>
   <error type="SYNTAX" line="23" column="31">negative resolution not allowed</error>
   <error type="SYNTAX" line="23" column="41">negative resolution not allowed</error>

@@ -432,6 +432,7 @@ SAC_LexicalUnit* SAC_lexical_unit_function(SAC_MPool mpool,
   SAC_LexicalUnit *value;
 
   SAC_CHECK_STRING_NOT_EQUALS(name, "attr");
+  SAC_CHECK_STRING_NOT_EQUALS(name, "rgb");
 
   value = SAC_lexical_unit_alloc(mpool, SAC_FUNCTION);
   if (value == NULL) return value;
