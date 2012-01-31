@@ -178,6 +178,7 @@ SAC_Pair pair;
 %type <cond> class;
 %type <cond> attrib;
 %type <value> hexcolor;
+%type <str> attrib_name;
 %type <str> attrib_value;
 %type <cond> pseudo;
 %type <str> pseudo_page;
@@ -186,7 +187,6 @@ SAC_Pair pair;
 %type <boolean> prio;
 %type <boolean> maybe_prio;
 
-%type <cond_type> attrib_match;
 %type <ch> unary_operator;
 %type <value> maybe_operator;
 
@@ -920,20 +920,14 @@ attribute_conditions
       $$ = $1;
     }
   | attribute_conditions attribute_condition {
-      $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_AND_CONDITION);
+      $$ = SAC_condition_and(YY_SCANNER_MPOOL(scanner), $1, $2);
       TEST_OBJ($$, @$);
-      $$->desc.combinator.firstCondition = $1;
-      $$->desc.combinator.secondCondition = $2;
     }
   ;
 attribute_condition
   : HASH {
-      $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_ID_CONDITION);
+      $$ = SAC_condition_id(YY_SCANNER_MPOOL(scanner), $1);
       TEST_OBJ($$, @$);
-      $$->desc.attribute.namespaceURI = NULL;
-      $$->desc.attribute.localName = "id";
-      $$->desc.attribute.specified = SAC_TRUE;
-      $$->desc.attribute.value = $1;
     }
   | class {
       $$ = $1;
@@ -947,12 +941,8 @@ attribute_condition
   ;
 class
   : '.' IDENT {
-      $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner), SAC_CLASS_CONDITION);
+      $$ = SAC_condition_class(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
-      $$->desc.attribute.namespaceURI = NULL;
-      $$->desc.attribute.localName = "class";
-      $$->desc.attribute.specified = SAC_TRUE;
-      $$->desc.attribute.value = $2;
     }
   ;
 element_name
@@ -969,42 +959,35 @@ element_name
     }
   ;
 attrib
-  : '[' maybe_spaces IDENT maybe_spaces ']' {
-      $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner),
-        SAC_ATTRIBUTE_CONDITION);
+  : '[' maybe_spaces attrib_name ']' {
+      $$ = SAC_condition_attribute(YY_SCANNER_MPOOL(scanner),
+        $3, SAC_FALSE, NULL);
       TEST_OBJ($$, @$);
-      $$->desc.attribute.namespaceURI = NULL;
-      $$->desc.attribute.localName = $3;
-      $$->desc.attribute.specified = SAC_FALSE;
-      $$->desc.attribute.value = NULL;
     }
-  | '[' maybe_spaces IDENT maybe_spaces attrib_match
-    maybe_spaces attrib_value maybe_spaces ']'
-    {
-      $$ = SAC_condition_alloc(YY_SCANNER_MPOOL(scanner), $5);
+  | '[' maybe_spaces attrib_name '=' maybe_spaces attrib_value ']' {
+      $$ = SAC_condition_attribute(YY_SCANNER_MPOOL(scanner), $3, SAC_TRUE, $6);
       TEST_OBJ($$, @$);
-      $$->desc.attribute.namespaceURI = NULL;
-      $$->desc.attribute.localName = $3;
-      $$->desc.attribute.specified = SAC_TRUE;
-      $$->desc.attribute.value = $7;
+    }
+  | '[' maybe_spaces attrib_name INCLUDES maybe_spaces attrib_value ']' {
+      $$ = SAC_condition_one_of_attribute(YY_SCANNER_MPOOL(scanner), $3, $6);
+      TEST_OBJ($$, @$);
+    }
+  | '[' maybe_spaces attrib_name DASHMATCH maybe_spaces attrib_value ']' {
+      $$ = SAC_condition_begin_hypen_attribute(YY_SCANNER_MPOOL(scanner),
+        $3, $6);
+      TEST_OBJ($$, @$);
     }
   ;
-attrib_match
-  : '=' {
-      $$ = SAC_ATTRIBUTE_CONDITION;
-    }
-  | INCLUDES {
-      $$ = SAC_ONE_OF_ATTRIBUTE_CONDITION;
-    }
-  | DASHMATCH {
-      $$ = SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION;
+attrib_name
+  : IDENT maybe_spaces {
+      $$ = $1;
     }
   ;
 attrib_value
-  : IDENT {
+  : IDENT maybe_spaces {
       $$ = $1;
     }
-  | STRING {
+  | STRING maybe_spaces {
       $$ = $1;
     }
   | BAD_STRING EOF_TOKEN {
@@ -1016,13 +999,8 @@ attrib_value
   ;
 pseudo
   : ':' IDENT {
-      $$ = SAC_condition_alloc(
-        YY_SCANNER_MPOOL(scanner), SAC_PSEUDO_CLASS_CONDITION);
+      $$ = SAC_condition_pseudo_class(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
-      $$->desc.attribute.namespaceURI = NULL;
-      $$->desc.attribute.localName = $2;
-      $$->desc.attribute.specified = SAC_FALSE;
-      $$->desc.attribute.value = NULL;
     }
 /*
   | ':' FUNCTION maybe_spaces maybe_ident ')'

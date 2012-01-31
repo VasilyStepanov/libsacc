@@ -41,13 +41,13 @@
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
-    <condition type="pseudo_class" localName="pseudo-class" specified="false"/>
+    <condition type="pseudo_class" specified="true" value="pseudo-class"/>
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
     <condition type="and">
       <condition type="class" localName="class" specified="true" value="foo"/>
-      <condition type="pseudo_class" localName="bar" specified="false"/>
+      <condition type="pseudo_class" specified="true" value="bar"/>
     </condition>
   </selector>
   <selector type="descendant">
