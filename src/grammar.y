@@ -851,7 +851,7 @@ selector
     }
   | selector '+' maybe_spaces simple_selector {
       $$ = SAC_selector_direct_adjacent(YY_SCANNER_MPOOL(scanner),
-        ANY_NODE, $1, $4);
+        SAC_ANY_NODE, $1, $4);
       TEST_OBJ($$, @$);
     }
   | selector '>' maybe_spaces simple_selector {

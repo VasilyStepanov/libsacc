@@ -377,14 +377,14 @@ static void dump_condition(FILE *out, const SAC_Condition *condition) {
 
 static const char* node_type(SAC_NodeType type) {
   switch (type) {
-    case ELEMENT_NODE: return "ELEMENT";
-    case ATTRIBUTE_NODE: return "ATTRIBUTE";
-    case TEXT_NODE: return "TEXT";
-    case CDATA_NODE: return "CDATA";
-    case ENTITY_REFERENCE_NODE: return "ENTITY_REFERENCE";
-    case PROCESSING_INSTRUCTION_NODE: return "PROCESSING_INSTRUCTION";
-    case COMMENT_NODE: return "COMMENT";
-    case ANY_NODE: return "ANY";
+    case SAC_ELEMENT_NODE: return "ELEMENT";
+    case SAC_ATTRIBUTE_NODE: return "ATTRIBUTE";
+    case SAC_TEXT_NODE: return "TEXT";
+    case SAC_CDATA_NODE: return "CDATA";
+    case SAC_ENTITY_REFERENCE_NODE: return "ENTITY_REFERENCE";
+    case SAC_PROCESSING_INSTRUCTION_NODE: return "PROCESSING_INSTRUCTION";
+    case SAC_COMMENT_NODE: return "COMMENT";
+    case SAC_ANY_NODE: return "ANY";
   }
   return "UNKNOWN";
 }
