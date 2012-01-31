@@ -463,6 +463,7 @@ struct _SAC_LexicalUnit {
      * SAC_RGBCOLOR
      * SAC_FUNCTION
      * SAC_RECT_FUNCTION
+     * SAC_ATTR
      */
 
     struct _SAC_Function {
@@ -494,19 +495,6 @@ struct _SAC_LexicalUnit {
      */
 
     SAC_STRING stringValue;
-
-
-
-    /**
-     * SAC_ATTR
-     */
-
-    /**
-     * Attribute name.
-     *
-     * The value doesn't contain attr(...).
-     */
-    SAC_STRING attrName;
 
 
 
