@@ -7,7 +7,18 @@
 
 
 
-SAC_Selector* SAC_selector_alloc(SAC_MPool mpool, SAC_SelectorType type);
+SAC_Selector* SAC_selector_any_node(SAC_MPool mpool);
+SAC_Selector* SAC_selector_element_node(SAC_MPool mpool,
+  SAC_STRING namespaceURI, SAC_STRING localName);
+SAC_Selector* SAC_selector_conditional(SAC_MPool mpool,
+  SAC_Selector *simpleSelector, SAC_Condition *condition);
+SAC_Selector* SAC_selector_descendant(SAC_MPool mpool,
+  SAC_Selector *descendantSelector, SAC_Selector *simpleSelector);
+SAC_Selector* SAC_selector_child(SAC_MPool mpool,
+  SAC_Selector *descendantSelector, SAC_Selector *simpleSelector);
+SAC_Selector* SAC_selector_direct_adjacent(SAC_MPool mpool,
+  SAC_NodeType nodeType,
+  SAC_Selector *firstSelector, SAC_Selector *secondSelector);
 
 
 

@@ -864,46 +864,36 @@ selector
       $$ = $1;
     }
   | selector S simple_selector {
-      $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner),
-        SAC_DESCENDANT_SELECTOR);
+      $$ = SAC_selector_descendant(YY_SCANNER_MPOOL(scanner), $1, $3);
       TEST_OBJ($$, @$);
-      $$->desc.descendant.descendantSelector = $1;
-      $$->desc.descendant.simpleSelector = $3;
     }
   | selector '+' maybe_spaces simple_selector {
-      $$ = SAC_selector_alloc(
-        YY_SCANNER_MPOOL(scanner), SAC_DIRECT_ADJACENT_SELECTOR);
+      $$ = SAC_selector_direct_adjacent(YY_SCANNER_MPOOL(scanner),
+        ANY_NODE, $1, $4);
       TEST_OBJ($$, @$);
-      $$->desc.sibling.nodeType = ANY_NODE;
-      $$->desc.sibling.firstSelector = $1;
-      $$->desc.sibling.secondSelector = $4;
     }
   | selector '>' maybe_spaces simple_selector {
-      $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_CHILD_SELECTOR);
+      $$ = SAC_selector_child(YY_SCANNER_MPOOL(scanner), $1, $4);
       TEST_OBJ($$, @$);
-      $$->desc.descendant.descendantSelector = $1;
-      $$->desc.descendant.simpleSelector = $4;
     }
   ;
 simple_selector
   : attribute_conditions {
-      $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner),
-        SAC_CONDITIONAL_SELECTOR);
+      SAC_Selector *anyNodeSelector;
+
+      anyNodeSelector = SAC_selector_any_node(YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(anyNodeSelector, @$);
+
+      $$ = SAC_selector_conditional(YY_SCANNER_MPOOL(scanner),
+        anyNodeSelector, $1);
       TEST_OBJ($$, @$);
-      $$->desc.conditional.simpleSelector = SAC_selector_alloc(
-        YY_SCANNER_MPOOL(scanner), SAC_ANY_NODE_SELECTOR);
-      TEST_OBJ($$->desc.conditional.simpleSelector, @$);
-      $$->desc.conditional.condition = $1;
     }
   | element_name maybe_attribute_conditions {
       if ($2 == NULL) {
         $$ = $1;
       } else {
-        $$ = SAC_selector_alloc(
-          YY_SCANNER_MPOOL(scanner), SAC_CONDITIONAL_SELECTOR);
+        $$ = SAC_selector_conditional(YY_SCANNER_MPOOL(scanner), $1, $2);
         TEST_OBJ($$, @$);
-        $$->desc.conditional.simpleSelector = $1;
-        $$->desc.conditional.condition = $2;
       }
     }
   ;
@@ -947,14 +937,11 @@ class
   ;
 element_name
   : IDENT {
-      $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner),
-        SAC_ELEMENT_NODE_SELECTOR);
+      $$ = SAC_selector_element_node(YY_SCANNER_MPOOL(scanner), NULL, $1);
       TEST_OBJ($$, @$);
-      $$->desc.element.namespaceURI = NULL;
-      $$->desc.element.localName = $1;
     }
   | '*' {
-      $$ = SAC_selector_alloc(YY_SCANNER_MPOOL(scanner), SAC_ANY_NODE_SELECTOR);
+      $$ = SAC_selector_any_node(YY_SCANNER_MPOOL(scanner));
       TEST_OBJ($$, @$);
     }
   ;
