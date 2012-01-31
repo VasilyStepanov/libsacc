@@ -162,7 +162,7 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
         fprintf(out, "<uri>%s</uri>", value->desc.uri);
         break;
       case SAC_RGBCOLOR:
-      case SAC_ATTR:
+      case SAC_ATTR_FUNCTION:
       case SAC_FUNCTION:
         {
           SAC_LexicalUnit **arg;
@@ -172,7 +172,7 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
             case SAC_RGBCOLOR:
               fprintf(out, "\"rgb\"");
               break;
-            case SAC_ATTR:
+            case SAC_ATTR_FUNCTION:
               fprintf(out, "\"attr\"");
               break;
             case SAC_FUNCTION:

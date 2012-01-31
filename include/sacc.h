@@ -299,7 +299,7 @@ typedef enum _SAC_LexicalUnitCode {
    * Attribute.
    * Example: attr(...)
    */
-  SAC_ATTR,
+  SAC_ATTR_FUNCTION,
 
   /**
    * Function rect.

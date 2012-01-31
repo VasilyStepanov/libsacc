@@ -485,7 +485,7 @@ SAC_LexicalUnit* SAC_lexical_unit_attr(SAC_MPool mpool,
 {
   SAC_LexicalUnit *value;
 
-  value = SAC_lexical_unit_alloc(mpool, SAC_ATTR);
+  value = SAC_lexical_unit_alloc(mpool, SAC_ATTR_FUNCTION);
   if (value == NULL) return value;
 
   value->desc.function.name = "attr";

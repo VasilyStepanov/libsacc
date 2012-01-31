@@ -205,7 +205,7 @@ static void test_lexical_unit_factory() {
   params = SAC_vector_open(mpool, 1);
   params[0] = SAC_lexical_unit_ident(mpool, "foo");
   value = SAC_lexical_unit_attr(mpool, params);
-  assert(value->lexicalUnitType == SAC_ATTR);
+  assert(value->lexicalUnitType == SAC_ATTR_FUNCTION);
   ASSERT_EQUAL_STRINGS("attr", value->desc.function.name);
   assert(value->desc.function.parameters == params);
 
