@@ -2,26 +2,13 @@
 
 #include "lexical_unit.h"
 #include "mpool.h"
+#include "vector.h"
 #include "test_utils.h"
 
 #include <sacc.h>
 
 #include <assert.h>
 #include <math.h>
-
-
-
-static void test_lexical_unit_alloc() {
-  SAC_MPool mpool;
-  SAC_LexicalUnit *value;
-
-  mpool = SAC_mpool_open(256);
-  value = SAC_lexical_unit_alloc(mpool, SAC_STRING_VALUE);
-
-  assert(value->lexicalUnitType == SAC_STRING_VALUE);
-
-  SAC_mpool_close(mpool);
-}
 
 
 
@@ -33,9 +20,9 @@ static void test_lexical_unit_from_list() {
 
   mpool = SAC_mpool_open(256);
 
-  a = SAC_lexical_unit_alloc(mpool, SAC_INTEGER);
-  b = SAC_lexical_unit_alloc(mpool, SAC_INTEGER);
-  c = SAC_lexical_unit_alloc(mpool, SAC_INTEGER);
+  a = SAC_lexical_unit_int(mpool, 1);
+  b = SAC_lexical_unit_int(mpool, 2);
+  c = SAC_lexical_unit_int(mpool, 3);
 
   list = SAC_list_open(mpool);
   SAC_list_push_back(list, mpool, a);
@@ -65,6 +52,7 @@ static void test_lexical_unit_from_list() {
 static void test_lexical_unit_factory() {
   SAC_MPool mpool;
   SAC_LexicalUnit *value;
+  SAC_LexicalUnit **params;
 
   mpool = SAC_mpool_open(256);
 
@@ -170,13 +158,51 @@ static void test_lexical_unit_factory() {
   assert(value->lexicalUnitType == SAC_STRING_VALUE);
   ASSERT_EQUAL_STRINGS("foo", value->desc.stringValue);
 
+  value = SAC_lexical_unit_ident(mpool, "foo");
+  assert(value->lexicalUnitType == SAC_IDENT);
+  ASSERT_EQUAL_STRINGS("foo", value->desc.ident);
+
+  value = SAC_lexical_unit_inherit(mpool);
+  assert(value->lexicalUnitType == SAC_INHERIT);
+
+  value = SAC_lexical_unit_uri(mpool, "example.com");
+  assert(value->lexicalUnitType == SAC_URI);
+  ASSERT_EQUAL_STRINGS("example.com", value->desc.uri);
+
+  value = SAC_lexical_unit_unicode_range(mpool, "U+4E00-9FFF");
+  assert(value->lexicalUnitType == SAC_UNICODERANGE);
+  ASSERT_EQUAL_STRINGS("U+4E00-9FFF", value->desc.unicodeRange);
+
+  value = SAC_lexical_unit_operator_slash(mpool);
+  assert(value->lexicalUnitType == SAC_OPERATOR_SLASH);
+
+  value = SAC_lexical_unit_operator_comma(mpool);
+  assert(value->lexicalUnitType == SAC_OPERATOR_COMMA);
+
+  params = SAC_vector_open(mpool, 1);
+  params[0] = SAC_lexical_unit_string(mpool, "bar");
+  value = SAC_lexical_unit_function(mpool, "foo", params);
+  assert(value->lexicalUnitType == SAC_FUNCTION);
+  ASSERT_EQUAL_STRINGS("foo", value->desc.function.name);
+  assert(value->desc.function.parameters == params);
+
+  params = SAC_vector_open(mpool, 5);
+  params[0] = SAC_lexical_unit_int(mpool, 1);
+  params[1] = SAC_lexical_unit_operator_comma(mpool);
+  params[2] = SAC_lexical_unit_int(mpool, 2);
+  params[3] = SAC_lexical_unit_operator_comma(mpool);
+  params[4] = SAC_lexical_unit_int(mpool, 3);
+  value = SAC_lexical_unit_rgbcolor(mpool, params);
+  assert(value->lexicalUnitType == SAC_RGBCOLOR);
+  ASSERT_EQUAL_STRINGS("rgb", value->desc.function.name);
+  assert(value->desc.function.parameters == params);
+
   SAC_mpool_close(mpool);
 }
 
 
 
 void test_lexical_unit() {
-  test_lexical_unit_alloc();
   test_lexical_unit_from_list();
   test_lexical_unit_factory();
 }

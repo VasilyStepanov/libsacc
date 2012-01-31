@@ -785,13 +785,11 @@ ignorable_at_rule
     }
 maybe_operator
   : '/' maybe_spaces {
-      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner),
-        SAC_OPERATOR_SLASH);
+      $$ = SAC_lexical_unit_operator_slash(YY_SCANNER_MPOOL(scanner));
       TEST_OBJ($$, @$);
     }
   | ',' maybe_spaces {
-      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner),
-        SAC_OPERATOR_COMMA);
+      $$ = SAC_lexical_unit_operator_comma(YY_SCANNER_MPOOL(scanner));
       TEST_OBJ($$, @$);
     }
   | /* empty */ {
@@ -1292,26 +1290,23 @@ term
     }
   | IDENT maybe_spaces {
       if (strcasecmp($1, "inherit") != 0) {
-        $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_IDENT);
+        $$ = SAC_lexical_unit_ident(YY_SCANNER_MPOOL(scanner), $1);
         TEST_OBJ($$, @$);
-        $$->desc.ident = $1;
       } else {
-        $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_INHERIT);
+        $$ = SAC_lexical_unit_inherit(YY_SCANNER_MPOOL(scanner));
         TEST_OBJ($$, @$);
       }
     }
   | URI maybe_spaces {
-      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_URI);
+      $$ = SAC_lexical_unit_uri(YY_SCANNER_MPOOL(scanner), $1);
       TEST_OBJ($$, @$);
-      $$->desc.uri = $1;
     }
   | BAD_URI EOF_TOKEN {
       SAC_SYNTAX_ERROR(@1,
         "closing bracket not found");
 
-      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_URI);
+      $$ = SAC_lexical_unit_uri(YY_SCANNER_MPOOL(scanner), $1);
       TEST_OBJ($$, @$);
-      $$->desc.uri = $1;
     }
   | function {
       $$ = $1;
@@ -1320,20 +1315,19 @@ term
       $$ = $1;
     }
   | UNICODERANGE maybe_spaces {
-      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_UNICODERANGE);
+      $$ = SAC_lexical_unit_unicode_range(YY_SCANNER_MPOOL(scanner), $1);
       TEST_OBJ($$, @$);
-      $$->desc.unicodeRange = $1;
     }
   ;
 function
   : FUNCTION maybe_spaces expr ')' maybe_spaces {
-      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_FUNCTION);
-      TEST_OBJ($$, @$);
-      $$->desc.function.name = $1;
+      SAC_LexicalUnit **parameters;
 
-      $$->desc.function.parameters = SAC_vector_from_list(
-        $3, YY_SCANNER_MPOOL(scanner));
-      TEST_OBJ($$->desc.function.parameters, @3);
+      parameters = SAC_vector_from_list($3, YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(parameters, @3);
+
+      $$ = SAC_lexical_unit_function(YY_SCANNER_MPOOL(scanner), $1, parameters);
+      TEST_OBJ($$, @$);
     }
   ;
 /*
@@ -1346,10 +1340,7 @@ hexcolor
       unsigned int r, g, b;
       int ok;
       size_t len;
-
-      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_RGBCOLOR);
-      TEST_OBJ($$, @$);
-      $$->desc.function.name = "rgb";
+      SAC_LexicalUnit **parameters;
 
       len = strlen($1);
       
@@ -1362,36 +1353,33 @@ hexcolor
       }
 
       if (ok) {
-        SAC_LexicalUnit **raw;
-        
-        $$->desc.function.parameters = SAC_vector_open(
-          YY_SCANNER_MPOOL(scanner), 5);
-        TEST_OBJ($$->desc.function.parameters, @$);
-        raw = (SAC_LexicalUnit**)$$->desc.function.parameters;
+        parameters = SAC_vector_open(YY_SCANNER_MPOOL(scanner), 5);
+        TEST_OBJ(parameters, @$);
 
-        raw[0] = SAC_lexical_unit_int(YY_SCANNER_MPOOL(scanner), r);
-        TEST_OBJ(raw[0], @$);
+        parameters[0] = SAC_lexical_unit_int(YY_SCANNER_MPOOL(scanner), r);
+        TEST_OBJ(parameters[0], @$);
 
-        raw[1] = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner),
-          SAC_OPERATOR_COMMA);
-        TEST_OBJ(raw[1], @$);
+        parameters[1] = SAC_lexical_unit_operator_comma(
+          YY_SCANNER_MPOOL(scanner));
+        TEST_OBJ(parameters[1], @$);
 
-        raw[2] = SAC_lexical_unit_int(YY_SCANNER_MPOOL(scanner), g);
-        TEST_OBJ(raw[2], @$);
+        parameters[2] = SAC_lexical_unit_int(YY_SCANNER_MPOOL(scanner), g);
+        TEST_OBJ(parameters[2], @$);
 
-        raw[3] = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner),
-          SAC_OPERATOR_COMMA);
-        TEST_OBJ(raw[3], @$);
+        parameters[3] = SAC_lexical_unit_operator_comma(
+          YY_SCANNER_MPOOL(scanner));
+        TEST_OBJ(parameters[3], @$);
 
-        raw[4] = SAC_lexical_unit_int(YY_SCANNER_MPOOL(scanner), b);
-        TEST_OBJ(raw[4], @$);
+        parameters[4] = SAC_lexical_unit_int(YY_SCANNER_MPOOL(scanner), b);
+        TEST_OBJ(parameters[4], @$);
 
       } else {
-        $$->desc.function.parameters = SAC_vector_open(
-          YY_SCANNER_MPOOL(scanner), 0
-        );
-        TEST_OBJ($$->desc.function.parameters, @$);
+        parameters = SAC_vector_open(YY_SCANNER_MPOOL(scanner), 0);
+        TEST_OBJ(parameters, @$);
       }
+
+      $$ = SAC_lexical_unit_rgbcolor(YY_SCANNER_MPOOL(scanner), parameters);
+      TEST_OBJ($$, @$);
     }
   ;
 invalid_block

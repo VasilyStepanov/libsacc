@@ -6,8 +6,8 @@
 
 
 
-SAC_LexicalUnit* SAC_lexical_unit_alloc(
-  SAC_MPool mpool, SAC_LexicalUnitCode type)
+static SAC_LexicalUnit* SAC_lexical_unit_alloc(SAC_MPool mpool,
+  SAC_LexicalUnitCode type)
 {
   SAC_LexicalUnit *value = (SAC_LexicalUnit*)SAC_mpool_alloc(
     mpool, sizeof(SAC_LexicalUnit)
@@ -337,14 +337,121 @@ SAC_LexicalUnit* SAC_lexical_unit_dots_per_centimeter(SAC_MPool mpool,
 
 
 
-SAC_LexicalUnit* SAC_lexical_unit_string(SAC_MPool mpool, SAC_STRING string)
-{
+SAC_LexicalUnit* SAC_lexical_unit_string(SAC_MPool mpool, SAC_STRING string) {
   SAC_LexicalUnit *value;
 
   value = SAC_lexical_unit_alloc(mpool, SAC_STRING_VALUE);
   if (value == NULL) return value;
 
   value->desc.stringValue = string;
+
+  return value;
+}
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_ident(SAC_MPool mpool, SAC_STRING ident) {
+  SAC_LexicalUnit *value;
+
+  SAC_CHECK_STRING_NOT_EQUALS(ident, "inherit");
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_IDENT);
+  if (value == NULL) return value;
+
+  value->desc.ident = ident;
+
+  return value;
+}
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_inherit(SAC_MPool mpool) {
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_INHERIT);
+  if (value == NULL) return value;
+
+  return value;
+}
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_uri(SAC_MPool mpool, SAC_STRING uri) {
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_URI);
+  if (value == NULL) return value;
+
+  value->desc.uri = uri;
+
+  return value;
+}
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_unicode_range(SAC_MPool mpool,
+  SAC_STRING unicode_range)
+{
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_UNICODERANGE);
+  if (value == NULL) return value;
+
+  value->desc.unicodeRange = unicode_range;
+
+  return value;
+}
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_operator_slash(SAC_MPool mpool) {
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_OPERATOR_SLASH);
+  if (value == NULL) return value;
+
+  return value;
+}
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_operator_comma(SAC_MPool mpool) {
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_OPERATOR_COMMA);
+  if (value == NULL) return value;
+
+  return value;
+}
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_function(SAC_MPool mpool,
+  SAC_STRING name, SAC_LexicalUnit **parameters)
+{
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_FUNCTION);
+  if (value == NULL) return value;
+
+  value->desc.function.name = name;
+  value->desc.function.parameters = parameters;
+
+  return value;
+}
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_rgbcolor(SAC_MPool mpool,
+  SAC_LexicalUnit **parameters)
+{
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_RGBCOLOR);
+  if (value == NULL) return value;
+
+  value->desc.function.name = "rgb";
+  value->desc.function.parameters = parameters;
 
   return value;
 }
