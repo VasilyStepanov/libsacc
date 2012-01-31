@@ -1280,17 +1280,15 @@ term
       TEST_OBJ($$, @$);
     }
   | STRING maybe_spaces {
-      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
+      $$ = SAC_lexical_unit_string(YY_SCANNER_MPOOL(scanner), $1);
       TEST_OBJ($$, @$);
-      $$->desc.stringValue = $1;
     }
   | BAD_STRING EOF_TOKEN {
       SAC_SYNTAX_ERROR(@1,
         "closing quote not found");
 
-      $$ = SAC_lexical_unit_alloc(YY_SCANNER_MPOOL(scanner), SAC_STRING_VALUE);
+      $$ = SAC_lexical_unit_string(YY_SCANNER_MPOOL(scanner), $1);
       TEST_OBJ($$, @$);
-      $$->desc.stringValue = $1;
     }
   | IDENT maybe_spaces {
       if (strcasecmp($1, "inherit") != 0) {

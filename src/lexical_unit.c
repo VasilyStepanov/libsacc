@@ -281,3 +281,15 @@ SAC_LexicalUnit* SAC_lexical_unit_dots_per_centimeter(SAC_MPool mpool,
 
   return value;
 }
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_string(SAC_MPool mpool, SAC_STRING string)
+{
+  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_STRING_VALUE);
+  if (value == NULL) return value;
+
+  value->desc.stringValue = string;
+
+  return value;
+}

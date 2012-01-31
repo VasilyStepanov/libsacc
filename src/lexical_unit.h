@@ -33,6 +33,7 @@ SAC_LexicalUnit* SAC_lexical_unit_hertz(SAC_MPool, double ureal);
 SAC_LexicalUnit* SAC_lexical_unit_kilohertz(SAC_MPool, double ureal);
 SAC_LexicalUnit* SAC_lexical_unit_dots_per_inch(SAC_MPool, double ureal);
 SAC_LexicalUnit* SAC_lexical_unit_dots_per_centimeter(SAC_MPool, double ureal);
+SAC_LexicalUnit* SAC_lexical_unit_string(SAC_MPool, SAC_STRING string);
 
 
 
