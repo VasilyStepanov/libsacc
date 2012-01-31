@@ -23,7 +23,7 @@ SAC_Condition* SAC_condition_class(SAC_MPool mpool, SAC_STRING value) {
   if (condition == NULL) return condition;
 
   condition->desc.attribute.namespaceURI = NULL;
-  condition->desc.attribute.localName = "class";
+  condition->desc.attribute.localName = NULL;
   condition->desc.attribute.specified = SAC_TRUE;
   condition->desc.attribute.value = value;
 
@@ -39,7 +39,7 @@ SAC_Condition* SAC_condition_id(SAC_MPool mpool, SAC_STRING value) {
   if (condition == NULL) return condition;
 
   condition->desc.attribute.namespaceURI = NULL;
-  condition->desc.attribute.localName = "id";
+  condition->desc.attribute.localName = NULL;
   condition->desc.attribute.specified = SAC_TRUE;
   condition->desc.attribute.value = value;
 

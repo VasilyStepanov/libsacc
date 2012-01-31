@@ -29,7 +29,7 @@
     <start_selectors>
       <selector type="conditional">
         <selector type="any_node"/>
-        <condition type="class" localName="class" specified="true" value="demo1"/>
+        <condition type="class" specified="true" value="demo1"/>
       </selector>
     </start_selectors>
     <property name="color">
@@ -38,7 +38,7 @@
     <end_selectors>
       <selector type="conditional">
         <selector type="any_node"/>
-        <condition type="class" localName="class" specified="true" value="demo1"/>
+        <condition type="class" specified="true" value="demo1"/>
       </selector>
     </end_selectors>
   </style>
@@ -47,7 +47,7 @@
     <start_selectors>
       <selector type="conditional">
         <selector type="any_node"/>
-        <condition type="class" localName="class" specified="true" value="demo1"/>
+        <condition type="class" specified="true" value="demo1"/>
       </selector>
     </start_selectors>
     <property name="color">
@@ -56,7 +56,7 @@
     <end_selectors>
       <selector type="conditional">
         <selector type="any_node"/>
-        <condition type="class" localName="class" specified="true" value="demo1"/>
+        <condition type="class" specified="true" value="demo1"/>
       </selector>
     </end_selectors>
   </style>

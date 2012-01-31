@@ -3,24 +3,24 @@
   <document/>
   <selector type="conditional">
     <selector type="any_node"/>
-    <condition type="id" localName="id" specified="true" value="some-id"/>
+    <condition type="id" specified="true" value="some-id"/>
   </selector>
   <selector type="conditional">
     <selector type="element_node" localName="div"/>
-    <condition type="class" localName="class" specified="true" value="some-class"/>
+    <condition type="class" specified="true" value="some-class"/>
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
-    <condition type="class" localName="class" specified="true" value="some-class"/>
+    <condition type="class" specified="true" value="some-class"/>
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
     <condition type="and">
       <condition type="and">
-        <condition type="class" localName="class" specified="true" value="class1"/>
-        <condition type="id" localName="id" specified="true" value="some-id"/>
+        <condition type="class" specified="true" value="class1"/>
+        <condition type="id" specified="true" value="some-id"/>
       </condition>
-      <condition type="class" localName="class" specified="true" value="class2"/>
+      <condition type="class" specified="true" value="class2"/>
     </condition>
   </selector>
   <selector type="conditional">
@@ -46,7 +46,7 @@
   <selector type="conditional">
     <selector type="any_node"/>
     <condition type="and">
-      <condition type="class" localName="class" specified="true" value="foo"/>
+      <condition type="class" specified="true" value="foo"/>
       <condition type="pseudo_class" specified="true" value="bar"/>
     </condition>
   </selector>

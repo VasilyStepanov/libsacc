@@ -9,7 +9,10 @@
 
 #define ASSERT_EQUAL_STRINGS(lhs, rhs) \
   do { \
-    int eq = strcmp(lhs, rhs); \
+    int eq; \
+    assert(lhs != NULL); \
+    assert(rhs != NULL); \
+    eq = strcmp(lhs, rhs); \
     if (eq != 0) { \
       printf( \
 "Expected: %s\n" \

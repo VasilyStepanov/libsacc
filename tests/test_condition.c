@@ -21,14 +21,14 @@ static void test_condition_factory() {
   condition = SAC_condition_class(mpool, "foo");
   assert(condition->conditionType == SAC_CLASS_CONDITION);
   assert(condition->desc.attribute.namespaceURI == NULL);
-  ASSERT_EQUAL_STRINGS("class", condition->desc.attribute.localName);
+  assert(condition->desc.attribute.localName == NULL);
   assert(condition->desc.attribute.specified == SAC_TRUE);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.value);
 
   condition = SAC_condition_id(mpool, "foo");
   assert(condition->conditionType == SAC_ID_CONDITION);
   assert(condition->desc.attribute.namespaceURI == NULL);
-  ASSERT_EQUAL_STRINGS("id", condition->desc.attribute.localName);
+  assert(condition->desc.attribute.localName == NULL);
   assert(condition->desc.attribute.specified == SAC_TRUE);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.value);
 
