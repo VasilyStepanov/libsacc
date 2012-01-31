@@ -7,8 +7,7 @@ AM_CFLAGS = -Wall -Wextra -Werror -ansi -pedantic -D_XOPEN_SOURCE=700 \
 XML_FORMAT =xmllint --format
 
 
-test_suite_SOURCES = test_utils.c \
-                     test_mpool.c \
+test_suite_SOURCES = test_mpool.c \
                      test_list.c \
                      test_vector.c \
                      test_lexical_unit.c \

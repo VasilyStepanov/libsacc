@@ -87,10 +87,10 @@ static void test_mpool_realloc() {
 
 static void test_mpool_strdup() {
   SAC_MPool mpool;
-  void *s;
+  char *s;
   mpool = SAC_mpool_open(256);
   s = SAC_mpool_strdup(mpool, "foobar");
-  assert_equals("foobar", s);
+  ASSERT_EQUAL_STRINGS("foobar", s);
 
   SAC_mpool_close(mpool);
 }
@@ -99,10 +99,10 @@ static void test_mpool_strdup() {
 
 static void test_mpool_strndup() {
   SAC_MPool mpool;
-  void *s;
+  char *s;
   mpool = SAC_mpool_open(256);
   s = SAC_mpool_strndup(mpool, "foobar", 3);
-  assert_equals("foo", s);
+  ASSERT_EQUAL_STRINGS("foo", s);
 
   SAC_mpool_close(mpool);
 }
