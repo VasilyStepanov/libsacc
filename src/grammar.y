@@ -614,16 +614,12 @@ media_query
       $$ = $1;
     }
   | ONLY maybe_spaces media_type_selector {
-      $$ = SAC_media_query_alloc(YY_SCANNER_MPOOL(scanner),
-        SAC_ONLY_MEDIA_QUERY);
+      $$ = SAC_media_query_only(YY_SCANNER_MPOOL(scanner), $3);
       TEST_OBJ($$, @$);
-      $$->desc.subQuery = $3;
     }
   | NOT maybe_spaces media_type_selector {
-      $$ = SAC_media_query_alloc(YY_SCANNER_MPOOL(scanner),
-        SAC_NOT_MEDIA_QUERY);
+      $$ = SAC_media_query_not(YY_SCANNER_MPOOL(scanner), $3);
       TEST_OBJ($$, @$);
-      $$->desc.subQuery = $3;
     }
   | media_exprs {
       $$ = $1;
@@ -634,11 +630,8 @@ media_type_selector
       $$ = $1;
     }
   | media_type AND maybe_spaces media_exprs {
-      $$ = SAC_media_query_alloc(YY_SCANNER_MPOOL(scanner),
-        SAC_AND_MEDIA_QUERY);
+      $$ = SAC_media_query_and(YY_SCANNER_MPOOL(scanner), $1, $4);
       TEST_OBJ($$, @$);
-      $$->desc.combinator.firstMediaQuery = $1;
-      $$->desc.combinator.secondMediaQuery = $4;
     }
   ;
 media_exprs
@@ -646,40 +639,29 @@ media_exprs
       $$ = $1;
     }
   | media_exprs AND maybe_spaces media_expr {
-      $$ = SAC_media_query_alloc(YY_SCANNER_MPOOL(scanner),
-        SAC_AND_MEDIA_QUERY);
+      $$ = SAC_media_query_and(YY_SCANNER_MPOOL(scanner), $1, $4);
       TEST_OBJ($$, @$);
-      $$->desc.combinator.firstMediaQuery = $1;
-      $$->desc.combinator.secondMediaQuery = $4;
     }
   ;
 media_type
   : IDENT maybe_spaces {
-      $$ = SAC_media_query_alloc(YY_SCANNER_MPOOL(scanner),
-        SAC_TYPE_MEDIA_QUERY);
+      $$ = SAC_media_query_type(YY_SCANNER_MPOOL(scanner), $1);
       TEST_OBJ($$, @$);
-      $$->desc.type = $1;
     }
   ;
 media_expr
   : '(' maybe_spaces media_feature ')' maybe_spaces {
-      $$ = SAC_media_query_alloc(YY_SCANNER_MPOOL(scanner),
-        SAC_FEATURE_MEDIA_QUERY);
+      $$ = SAC_media_query_feature(YY_SCANNER_MPOOL(scanner), $3, NULL);
       TEST_OBJ($$, @$);
-      $$->desc.feature.name = $3;
-      $$->desc.feature.value = NULL;
     }
   | '(' maybe_spaces media_feature ':' maybe_spaces expr ')' maybe_spaces {
-      SAC_LexicalUnit *expr;
+      SAC_LexicalUnit *value;
       
-      expr = SAC_lexical_unit_from_list($6, YY_SCANNER_MPOOL(scanner));
-      TEST_OBJ(expr, @6);
+      value = SAC_lexical_unit_from_list($6, YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(value, @6);
 
-      $$ = SAC_media_query_alloc(YY_SCANNER_MPOOL(scanner),
-        SAC_FEATURE_MEDIA_QUERY);
+      $$ = SAC_media_query_feature(YY_SCANNER_MPOOL(scanner), $3, value);
       TEST_OBJ($$, @$);
-      $$->desc.feature.name = $3;
-      $$->desc.feature.value = expr;
     }
   ;
 media_feature

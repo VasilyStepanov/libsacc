@@ -1107,8 +1107,8 @@ struct _SAC_MediaQuery {
 
     /* SAC_AND_MEDIA_QUERY */
     struct _SAC_MQcombinator {
-      SAC_MediaQuery *firstMediaQuery;
-      SAC_MediaQuery *secondMediaQuery;
+      SAC_MediaQuery *firstQuery;
+      SAC_MediaQuery *secondQuery;
     } combinator;
 
     /* SAC_ONLY_MEDIA_QUERY */
