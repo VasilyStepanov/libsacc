@@ -2,6 +2,8 @@
 
 #include "vector_extra.h"
 
+#include "checks.h"
+
 
 
 SAC_LexicalUnit* SAC_lexical_unit_alloc(
@@ -44,7 +46,9 @@ SAC_LexicalUnit* SAC_lexical_unit_from_list(SAC_List list, SAC_MPool mpool) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_int(SAC_MPool mpool, int integer) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_INTEGER);
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_INTEGER);
   if (value == NULL) return value;
 
   value->desc.integer = integer;
@@ -55,7 +59,9 @@ SAC_LexicalUnit* SAC_lexical_unit_int(SAC_MPool mpool, int integer) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_real(SAC_MPool mpool, double real) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_REAL);
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_REAL);
   if (value == NULL) return value;
 
   value->desc.real = real;
@@ -66,7 +72,9 @@ SAC_LexicalUnit* SAC_lexical_unit_real(SAC_MPool mpool, double real) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_percentage(SAC_MPool mpool, double sreal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_PERCENTAGE);
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_PERCENTAGE);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "%";
@@ -78,7 +86,9 @@ SAC_LexicalUnit* SAC_lexical_unit_percentage(SAC_MPool mpool, double sreal) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_pixel(SAC_MPool mpool, double sreal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_LENGTH_PIXEL);
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_LENGTH_PIXEL);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "px";
@@ -90,7 +100,9 @@ SAC_LexicalUnit* SAC_lexical_unit_pixel(SAC_MPool mpool, double sreal) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_inch(SAC_MPool mpool, double sreal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_LENGTH_INCH);
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_LENGTH_INCH);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "in";
@@ -102,7 +114,9 @@ SAC_LexicalUnit* SAC_lexical_unit_inch(SAC_MPool mpool, double sreal) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_centimeter(SAC_MPool mpool, double sreal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_LENGTH_CENTIMETER);
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_LENGTH_CENTIMETER);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "cm";
@@ -114,7 +128,9 @@ SAC_LexicalUnit* SAC_lexical_unit_centimeter(SAC_MPool mpool, double sreal) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_millimeter(SAC_MPool mpool, double sreal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_LENGTH_MILLIMETER);
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_LENGTH_MILLIMETER);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "mm";
@@ -126,7 +142,9 @@ SAC_LexicalUnit* SAC_lexical_unit_millimeter(SAC_MPool mpool, double sreal) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_point(SAC_MPool mpool, double sreal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_LENGTH_POINT);
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_LENGTH_POINT);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "pt";
@@ -138,7 +156,9 @@ SAC_LexicalUnit* SAC_lexical_unit_point(SAC_MPool mpool, double sreal) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_pica(SAC_MPool mpool, double sreal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_LENGTH_PICA);
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_LENGTH_PICA);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "pc";
@@ -150,7 +170,9 @@ SAC_LexicalUnit* SAC_lexical_unit_pica(SAC_MPool mpool, double sreal) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_em(SAC_MPool mpool, double sreal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_LENGTH_EM);
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_LENGTH_EM);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "em";
@@ -162,7 +184,9 @@ SAC_LexicalUnit* SAC_lexical_unit_em(SAC_MPool mpool, double sreal) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_ex(SAC_MPool mpool, double sreal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_LENGTH_EX);
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_LENGTH_EX);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "ex";
@@ -174,7 +198,9 @@ SAC_LexicalUnit* SAC_lexical_unit_ex(SAC_MPool mpool, double sreal) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_degree(SAC_MPool mpool, double sreal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_DEGREE);
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_DEGREE);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "deg";
@@ -186,7 +212,9 @@ SAC_LexicalUnit* SAC_lexical_unit_degree(SAC_MPool mpool, double sreal) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_radian(SAC_MPool mpool, double sreal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_RADIAN);
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_RADIAN);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "rad";
@@ -198,7 +226,9 @@ SAC_LexicalUnit* SAC_lexical_unit_radian(SAC_MPool mpool, double sreal) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_gradian(SAC_MPool mpool, double sreal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_GRADIAN);
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_GRADIAN);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "grad";
@@ -210,7 +240,11 @@ SAC_LexicalUnit* SAC_lexical_unit_gradian(SAC_MPool mpool, double sreal) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_millisecond(SAC_MPool mpool, double ureal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_MILLISECOND);
+  SAC_LexicalUnit *value;
+
+  SAC_CHECK_UNSIGNED(ureal);
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_MILLISECOND);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "ms";
@@ -222,7 +256,11 @@ SAC_LexicalUnit* SAC_lexical_unit_millisecond(SAC_MPool mpool, double ureal) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_second(SAC_MPool mpool, double ureal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_SECOND);
+  SAC_LexicalUnit *value;
+
+  SAC_CHECK_UNSIGNED(ureal);
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_SECOND);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "s";
@@ -234,7 +272,11 @@ SAC_LexicalUnit* SAC_lexical_unit_second(SAC_MPool mpool, double ureal) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_hertz(SAC_MPool mpool, double ureal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_HERTZ);
+  SAC_LexicalUnit *value;
+
+  SAC_CHECK_UNSIGNED(ureal);
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_HERTZ);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "Hz";
@@ -246,7 +288,11 @@ SAC_LexicalUnit* SAC_lexical_unit_hertz(SAC_MPool mpool, double ureal) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_kilohertz(SAC_MPool mpool, double ureal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_KILOHERTZ);
+  SAC_LexicalUnit *value;
+
+  SAC_CHECK_UNSIGNED(ureal);
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_KILOHERTZ);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "kHz";
@@ -258,7 +304,11 @@ SAC_LexicalUnit* SAC_lexical_unit_kilohertz(SAC_MPool mpool, double ureal) {
 
 
 SAC_LexicalUnit* SAC_lexical_unit_dots_per_inch(SAC_MPool mpool, double ureal) {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_DOTS_PER_INCH);
+  SAC_LexicalUnit *value;
+
+  SAC_CHECK_UNSIGNED(ureal);
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_DOTS_PER_INCH);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "dpi";
@@ -272,8 +322,11 @@ SAC_LexicalUnit* SAC_lexical_unit_dots_per_inch(SAC_MPool mpool, double ureal) {
 SAC_LexicalUnit* SAC_lexical_unit_dots_per_centimeter(SAC_MPool mpool,
   double ureal)
 {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool,
-    SAC_DOTS_PER_CENTIMETER);
+  SAC_LexicalUnit *value;
+
+  SAC_CHECK_UNSIGNED(ureal);
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_DOTS_PER_CENTIMETER);
   if (value == NULL) return value;
 
   value->desc.dimension.unit = "dpcm";
@@ -286,7 +339,9 @@ SAC_LexicalUnit* SAC_lexical_unit_dots_per_centimeter(SAC_MPool mpool,
 
 SAC_LexicalUnit* SAC_lexical_unit_string(SAC_MPool mpool, SAC_STRING string)
 {
-  SAC_LexicalUnit *value = SAC_lexical_unit_alloc(mpool, SAC_STRING_VALUE);
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_STRING_VALUE);
   if (value == NULL) return value;
 
   value->desc.stringValue = string;
