@@ -98,6 +98,14 @@ SAC_Pair pair;
 
 %token INCLUDES
 %token DASHMATCH
+%token PREFIXMATCH
+%token SUFFIXMATCH
+%token SUBSTRINGMATCH
+
+%token PLUS
+%token GREATER
+%token COMMA
+%token TILDE
 
 %token <str> STRING
 %right <str> IDENT
@@ -113,6 +121,7 @@ SAC_Pair pair;
 %token FONT_FACE_SYM
 %token CHARSET_SYM
 %token NAMESPACE_SYM
+%token <str> ATKEYWORD_SYM
 
 %token IMPORTANT_SYM
 %token AND
@@ -567,17 +576,17 @@ some_media_query_list
       TEST_OBJ($$, @1);
       TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1), @1);
     }
-  | some_media_query_list ',' maybe_spaces media_query {
+  | some_media_query_list COMMA maybe_spaces media_query {
       $$ = $1;
       TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4), @4);
     }
-  | some_media_query_list ',' maybe_spaces media_query media_query_errors {
+  | some_media_query_list COMMA maybe_spaces media_query media_query_errors {
       SAC_SYNTAX_ERROR(@5,
         "unexpected token while parsing media query");
 
       $$ = $1;
     }
-  | some_media_query_list ',' maybe_spaces bad_media_query {
+  | some_media_query_list COMMA maybe_spaces bad_media_query {
       SAC_SYNTAX_ERROR(@4,
         "unexpected token while parsing media query");
 
@@ -588,13 +597,13 @@ media_query_list
   : some_media_query_list {
       $$ = $1;
     }
-  | media_query media_query_errors ',' maybe_spaces some_media_query_list {
+  | media_query media_query_errors COMMA maybe_spaces some_media_query_list {
       SAC_SYNTAX_ERROR(@2,
         "unexpected token while parsing media query");
 
       $$ = $5;
     }
-  | bad_media_query ',' maybe_spaces some_media_query_list {
+  | bad_media_query COMMA maybe_spaces some_media_query_list {
       SAC_SYNTAX_ERROR(@1,
         "unexpected token while parsing media query");
 
@@ -759,18 +768,18 @@ font_face_start
     }
   ;
 ignorable_at_rule
-  : '@' IDENT maybe_spaces error invalid_block {
-      SAC_parser_ignorable_at_rule_handler(YY_SCANNER_PARSER(scanner), $2);
+  : ATKEYWORD_SYM maybe_spaces error invalid_block {
+      SAC_parser_ignorable_at_rule_handler(YY_SCANNER_PARSER(scanner), $1);
     }
-  | '@' IDENT maybe_spaces error ';' {
-      SAC_parser_ignorable_at_rule_handler(YY_SCANNER_PARSER(scanner), $2);
+  | ATKEYWORD_SYM maybe_spaces error ';' {
+      SAC_parser_ignorable_at_rule_handler(YY_SCANNER_PARSER(scanner), $1);
     }
 maybe_operator
   : '/' maybe_spaces {
       $$ = SAC_lexical_unit_operator_slash(YY_SCANNER_MPOOL(scanner));
       TEST_OBJ($$, @$);
     }
-  | ',' maybe_spaces {
+  | COMMA maybe_spaces {
       $$ = SAC_lexical_unit_operator_comma(YY_SCANNER_MPOOL(scanner));
       TEST_OBJ($$, @$);
     }
@@ -782,7 +791,7 @@ unary_operator
   : '-' {
       $$ = '-';
     }
-  | '+' {
+  | PLUS {
       $$ = '+';
     }
   | /* empty */ {
@@ -816,7 +825,7 @@ selectors_group
       TEST_OBJ($$, @$);
       TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1), @1);
     }
-  | selectors_group ',' maybe_spaces selector {
+  | selectors_group COMMA maybe_spaces selector {
       $$ = $1;
       TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4), @4);
     }
@@ -826,7 +835,7 @@ bad_selectors_group
       SAC_SYNTAX_ERROR(@1,
         "unexpected token while parsing selectors group");
     }
-  | selectors_group ',' maybe_spaces selectors_errors {
+  | selectors_group COMMA maybe_spaces selectors_errors {
       SAC_SYNTAX_ERROR(@4,
         "unexpected token while parsing selectors group");
     }
@@ -849,12 +858,12 @@ selector
       $$ = SAC_selector_descendant(YY_SCANNER_MPOOL(scanner), $1, $3);
       TEST_OBJ($$, @$);
     }
-  | selector '+' maybe_spaces simple_selector {
+  | selector PLUS maybe_spaces simple_selector {
       $$ = SAC_selector_direct_adjacent(YY_SCANNER_MPOOL(scanner),
         SAC_ANY_NODE, $1, $4);
       TEST_OBJ($$, @$);
     }
-  | selector '>' maybe_spaces simple_selector {
+  | selector GREATER maybe_spaces simple_selector {
       $$ = SAC_selector_child(YY_SCANNER_MPOOL(scanner), $1, $4);
       TEST_OBJ($$, @$);
     }
@@ -1180,55 +1189,43 @@ term
       $$ = SAC_lexical_unit_dimension(YY_SCANNER_MPOOL(scanner), unit, value);
     }
   | unary_operator TIME_MS maybe_spaces {
-      if ($1 == '-') {
-        SAC_SYNTAX_ERROR(@1,
-          "negative time not allowed");
-      }
+      if ($1 == '-') SAC_SYNTAX_ERROR(@1,
+        "negative time not allowed");
 
       $$ = SAC_lexical_unit_millisecond(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
   | unary_operator TIME_S maybe_spaces {
-      if ($1 == '-') {
-        SAC_SYNTAX_ERROR(@1,
-          "negative time not allowed");
-      }
+      if ($1 == '-') SAC_SYNTAX_ERROR(@1,
+        "negative time not allowed");
 
       $$ = SAC_lexical_unit_second(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
   | unary_operator FREQ_HZ maybe_spaces {
-      if ($1 == '-') {
-        SAC_SYNTAX_ERROR(@1,
-          "negative frequency not allowed");
-      }
+      if ($1 == '-') SAC_SYNTAX_ERROR(@1,
+        "negative frequency not allowed");
 
       $$ = SAC_lexical_unit_hertz(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
   | unary_operator FREQ_KHZ maybe_spaces {
-      if ($1 == '-') {
-        SAC_SYNTAX_ERROR(@1,
-          "negative frequency not allowed");
-      }
+      if ($1 == '-') SAC_SYNTAX_ERROR(@1,
+        "negative frequency not allowed");
 
       $$ = SAC_lexical_unit_kilohertz(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
   | unary_operator RESOLUTION_DPI maybe_spaces {
-      if ($1 == '-') {
-        SAC_SYNTAX_ERROR(@1,
-          "negative resolution not allowed");
-      }
+      if ($1 == '-') SAC_SYNTAX_ERROR(@1,
+        "negative resolution not allowed");
 
       $$ = SAC_lexical_unit_dots_per_inch(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
   | unary_operator RESOLUTION_DPCM maybe_spaces {
-      if ($1 == '-') {
-        SAC_SYNTAX_ERROR(@1,
-          "negative resolution not allowed");
-      }
+      if ($1 == '-') SAC_SYNTAX_ERROR(@1,
+        "negative resolution not allowed");
 
       $$ = SAC_lexical_unit_dots_per_centimeter(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);

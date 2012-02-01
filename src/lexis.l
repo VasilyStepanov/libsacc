@@ -43,25 +43,25 @@
 %}
 
 h            [0-9a-f]
-nonascii     [\240-\377]
-unicode      \\{h}{1,6}(\r\n|[ \t\r\n\f])?
-escape       {unicode}|\\[^\r\n\f0-9a-f]
+nonascii     [^\0-\177]
+unicode      \\{h}{1,6}(\r\n|[ \n\r\t\f])?
+escape       {unicode}|\\[^\n\r\f0-9a-f]
 nmstart      [_a-z]|{nonascii}|{escape}
 nmchar       [_a-z0-9-]|{nonascii}|{escape}
-string1      \"([^\n\r\f\\"]|\\{nl}|{escape})*\"
-string2      \'([^\n\r\f\\']|\\{nl}|{escape})*\'
-badstring1   \"([^\n\r\f\\"]|\\{nl}|{escape})*\\?
-badstring2   \'([^\n\r\f\\']|\\{nl}|{escape})*\\?
+string1      \"([^\n\r\f\\"]|\\{nl}|{nonascii}|{escape})*\"
+string2      \'([^\n\r\f\\']|\\{nl}|{nonascii}|{escape})*\'
+badstring1   \"([^\n\r\f\\"]|\\{nl}|{nonascii}|{escape})*
+badstring2   \'([^\n\r\f\\']|\\{nl}|{nonascii}|{escape})*
 badcomment1  \/\*[^*]*\*+([^/*][^*]*\*+)*
 badcomment2  \/\*[^*]*(\*+[^/*][^*]*)*
 baduri1      url\({w}([!#$%&*-@A-Z\[\]-`a-z{-~]|{nonascii}|{escape})*{w}
 baduri2      url\({w}{string}{w}
 baduri3      url\({w}{badstring}
 comment      \/\*[^*]*\*+([^/*][^*]*\*+)*\/
-ident        -?{nmstart}{nmchar}*
+ident        [-]?{nmstart}{nmchar}*
 name         {nmchar}+
 int          [0-9]+
-real         [0-9]*"."[0-9]+
+real         [0-9]*\.[0-9]+
 num          {int}|{real}
 string       {string1}|{string2}
 badstring    {badstring1}|{badstring2}
@@ -72,10 +72,10 @@ s            [ \t\r\n\f]+
 w            {s}?
 nl           \n|\r\n|\r|\f
 
-A            a|\\0{0,4}(41|61)(\r\n|[ \t\r\n\f])?
-C            c|\\0{0,4}(43|63)(\r\n|[ \t\r\n\f])?
-D            d|\\0{0,4}(44|64)(\r\n|[ \t\r\n\f])?
-E            e|\\0{0,4}(45|65)(\r\n|[ \t\r\n\f])?
+A            a|\\0{0,4}(41|61)(\r\n|[ \t\r\n\f])?|\\a
+C            c|\\0{0,4}(43|63)(\r\n|[ \t\r\n\f])?|\\c
+D            d|\\0{0,4}(44|64)(\r\n|[ \t\r\n\f])?|\\d
+E            e|\\0{0,4}(45|65)(\r\n|[ \t\r\n\f])?|\\e
 G            g|\\0{0,4}(47|67)(\r\n|[ \t\r\n\f])?|\\g
 H            h|\\0{0,4}(48|68)(\r\n|[ \t\r\n\f])?|\\h
 I            i|\\0{0,4}(49|69)(\r\n|[ \t\r\n\f])?|\\i
@@ -89,6 +89,7 @@ R            r|\\0{0,4}(52|72)(\r\n|[ \t\r\n\f])?|\\r
 S            s|\\0{0,4}(53|73)(\r\n|[ \t\r\n\f])?|\\s
 T            t|\\0{0,4}(54|74)(\r\n|[ \t\r\n\f])?|\\t
 U            u|\\0{0,4}(55|75)(\r\n|[ \t\r\n\f])?|\\u
+V            v|\\0{0,4}(58|78)(\r\n|[ \t\r\n\f])?|\\v
 X            x|\\0{0,4}(58|78)(\r\n|[ \t\r\n\f])?|\\x
 Y            y|\\0{0,4}(59|79)(\r\n|[ \t\r\n\f])?|\\y
 Z            z|\\0{0,4}(5a|7a)(\r\n|[ \t\r\n\f])?|\\z
@@ -115,6 +116,9 @@ range        \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h}
 "-->"                   {return CDC;}
 "~="                    {return INCLUDES;}
 "|="                    {return DASHMATCH;}
+"^="                    {return PREFIXMATCH;}
+"$="                    {return SUFFIXMATCH;}
+"*="                    {return SUBSTRINGMATCH;}
 
 {O}{N}{L}{Y}            {return ONLY;}
 {N}{O}{T}               {return NOT;}
@@ -161,12 +165,27 @@ range        \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h}
                           return HASH;
                         }
 
+{w}"+"                  {return PLUS;}
+{w}">"                  {return GREATER;}
+{w}","                  {return COMMA;}
+{w}"~"                  {return TILDE;}
+
+":"{N}{O}{T}"("         {return NOT;}
+
 @{I}{M}{P}{O}{R}{T}     {return IMPORT_SYM;}
 @{P}{A}{G}{E}           {return PAGE_SYM;}
 @{M}{E}{D}{I}{A}        {return MEDIA_SYM;}
 "@font-face"            {return FONT_FACE_SYM;}
 "@charset "             {return CHARSET_SYM;}
 @{N}{A}{M}{E}{S}{P}{A}{C}{E}  {return NAMESPACE_SYM;}
+@{ident}                {
+                          yylval->str = SAC_mpool_strndup(
+                            YY_SCANNER_MPOOL(yyscanner),
+                            yytext + 1, yyleng - 1);
+                          if (yylval->str == NULL)
+                            YY_FATAL_ERROR("out of dynamic memory");
+                          return ATKEYWORD_SYM;
+                        }
 
 "!"({w}|{comment})*{I}{M}{P}{O}{R}{T}{A}{N}{T}  {return IMPORTANT_SYM;}
 
