@@ -171,7 +171,7 @@ SAC_Pair pair;
 
 %type <sel> simple_selector;
 %type <sel> selector;
-%type <list> selectors;
+%type <list> selectors_group;
 %type <cond> maybe_attribute_conditions;
 %type <cond> attribute_condition;
 %type <cond> attribute_conditions;
@@ -233,14 +233,14 @@ start
   | style_declarations_start maybe_declarations {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
     }
-  | selectors_start selectors {
+  | selectors_start selectors_group {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
 
       YY_SCANNER_OUTPUT(scanner) = SAC_vector_from_list(
         $2, YY_SCANNER_MPOOL(scanner));
       TEST_OBJ(YY_SCANNER_OUTPUT(scanner), @2);
     }
-  | selectors_start bad_selectors {
+  | selectors_start bad_selectors_group {
       SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
 
       YY_SCANNER_OUTPUT(scanner) = NULL;
@@ -798,10 +798,10 @@ ruleset
   : style_start maybe_declarations closing_brace {
       SAC_parser_end_style_handler(YY_SCANNER_PARSER(scanner), $1);
     }
-  | bad_selectors invalid_block
+  | bad_selectors_group invalid_block
   ;
 style_start
-  : selectors '{' maybe_spaces {
+  : selectors_group '{' maybe_spaces {
       SAC_Vector vector;
       
       vector = SAC_vector_from_list($1, YY_SCANNER_MPOOL(scanner));
@@ -810,29 +810,29 @@ style_start
       $$ = vector;
     }
   ;
-selectors
+selectors_group
   : selector {
       $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
       TEST_OBJ($$, @$);
       TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1), @1);
     }
-  | selectors ',' maybe_spaces selector {
+  | selectors_group ',' maybe_spaces selector {
       $$ = $1;
       TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $4), @4);
     }
   ;
-bad_selectors
+bad_selectors_group
   : selectors_errors {
       SAC_SYNTAX_ERROR(@1,
-        "unexpected token while parsing selectors");
+        "unexpected token while parsing selectors group");
     }
-  | selectors ',' maybe_spaces selectors_errors {
+  | selectors_group ',' maybe_spaces selectors_errors {
       SAC_SYNTAX_ERROR(@4,
-        "unexpected token while parsing selectors");
+        "unexpected token while parsing selectors group");
     }
-  | selectors selectors_errors {
+  | selectors_group selectors_errors {
       SAC_SYNTAX_ERROR(@2,
-        "unexpected token while parsing selectors");
+        "unexpected token while parsing selectors group");
     }
 selectors_errors
   : error

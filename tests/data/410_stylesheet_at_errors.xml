@@ -49,9 +49,9 @@
   </style>
   <error type="SYNTAX" line="12" column="21">unexpected 'opening brace' token while parsing 'import' rule</error>
   <error type="SYNTAX" line="13" column="26">unexpected 'opening brace' token while parsing 'import' rule</error>
-  <error type="SYNTAX" line="13" column="39">unexpected token while parsing selectors</error>
+  <error type="SYNTAX" line="13" column="39">unexpected token while parsing selectors group</error>
   <error type="SYNTAX" line="15" column="26">unexpected 'opening brace' token while parsing 'import' rule</error>
-  <error type="SYNTAX" line="15" column="47">unexpected token while parsing selectors</error>
+  <error type="SYNTAX" line="15" column="47">unexpected token while parsing selectors group</error>
   <error type="SYNTAX" line="17" column="12">unexpected 'opening brace' token while parsing 'namespace' rule</error>
   <error type="SYNTAX" line="18" column="15">unexpected token while parsing 'namespace' rule</error>
   <error type="SYNTAX" line="20" column="17">unexpected 'semicolon' while parsing 'font-face' rule</error>

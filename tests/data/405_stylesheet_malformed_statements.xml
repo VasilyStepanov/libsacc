@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <document>
-  <error type="SYNTAX" line="1" column="3">unexpected token while parsing selectors</error>
+  <error type="SYNTAX" line="1" column="3">unexpected token while parsing selectors group</error>
   <ignorable_at_rule name="foo"/>
-  <error type="SYNTAX" line="3" column="1">unexpected token while parsing selectors</error>
-  <error type="SYNTAX" line="4" column="1">unexpected token while parsing selectors</error>
-  <error type="SYNTAX" line="4" column="8">unexpected token while parsing selectors</error>
+  <error type="SYNTAX" line="3" column="1">unexpected token while parsing selectors group</error>
+  <error type="SYNTAX" line="4" column="1">unexpected token while parsing selectors group</error>
+  <error type="SYNTAX" line="4" column="8">unexpected token while parsing selectors group</error>
   <style>
     <start_selectors>
       <selector type="element_node" localName="p"/>

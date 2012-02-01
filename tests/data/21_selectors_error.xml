@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <selectors>
   <document>
-    <error type="SYNTAX" line="1" column="5">unexpected token while parsing selectors</error>
+    <error type="SYNTAX" line="1" column="5">unexpected token while parsing selectors group</error>
   </document>
   <selectors/>
 </selectors>
