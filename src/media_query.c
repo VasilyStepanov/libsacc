@@ -1,5 +1,7 @@
 #include "media_query.h"
 
+#include "checks.h"
+
 
 
 static SAC_MediaQuery* SAC_media_query_alloc(SAC_MPool mpool,
@@ -50,6 +52,9 @@ SAC_MediaQuery* SAC_media_query_and(SAC_MPool mpool,
   SAC_MediaQuery *firstQuery, SAC_MediaQuery *secondQuery)
 {
   SAC_MediaQuery *query;
+
+  SAC_CHECK_FIRST_QUERY_FOR_AND_MEDIA_QUERY(secondQuery);
+  SAC_CHECK_SECOND_QUERY_FOR_AND_MEDIA_QUERY(secondQuery);
 
   query = SAC_media_query_alloc(mpool, SAC_AND_MEDIA_QUERY);
   if (query == NULL) return query;

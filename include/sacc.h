@@ -463,7 +463,7 @@ struct _SAC_LexicalUnit {
      * SAC_RGBCOLOR
      * SAC_FUNCTION
      * SAC_RECT_FUNCTION
-     * SAC_ATTR
+     * SAC_ATTR_FUNCTION
      */
 
     struct _SAC_Function {
@@ -832,7 +832,7 @@ struct _SAC_Selector {
        * Node type to considered in the siblings list.
        *
        * All DOM node types are supported. In order to support the "any" node
-       * type, the code ANY_NODE is added to the DOM node types.
+       * type, the code SAC_ANY_NODE is added to the DOM node types.
        */
       SAC_NodeType nodeType;
 
@@ -842,7 +842,7 @@ struct _SAC_Selector {
       SAC_Selector *firstSelector;
 
       /**
-       * Can't be a descendant or sibling selector
+       * Can't be a descendant or sibling selector.
        */
       SAC_Selector *secondSelector;
     } sibling;
@@ -857,6 +857,7 @@ struct _SAC_Selector {
     struct _SAC_Element {
       /**
        * The namespace URI of this element selector.
+       *
        * NULL if this element selector can match any namespace.
        *
        * [namespace URI](http://www.w3.org/TR/REC-xml-names/#dt-NSName)
@@ -865,6 +866,7 @@ struct _SAC_Selector {
 
       /**
        * The local part of the qualified name of this element.
+       *
        * NULL if this element selector can match any element.
        *
        * [local part](http://www.w3.org/TR/REC-xml-names/#NT-LocalPart)
@@ -956,6 +958,7 @@ struct _SAC_Condition {
     struct _SAC_CPositional {
       /**
        * The position in the tree.
+       *
        * A negative value means from the end of child node list.
        * The child node list begins at 0.
        */
@@ -1036,6 +1039,7 @@ struct _SAC_Condition {
 
     /**
      * The language.
+     *
      * NULL if any.
      */
     SAC_STRING lang;
@@ -1057,6 +1061,7 @@ struct _SAC_Condition {
 
     /**
      * The content.
+     *
      * Can't be NULL.
      */
     SAC_STRING data;
@@ -1070,10 +1075,37 @@ struct _SAC_Condition {
  */
 
 typedef enum {
+  /**
+   * Example:
+   *   @media screen {...}
+   */
   SAC_TYPE_MEDIA_QUERY,
+
+  /**
+   * Example:
+   *   @media (min-width: 400px) {...}
+   */
   SAC_FEATURE_MEDIA_QUERY,
+
+  /**
+   * Example:
+   *   @media screen and (min-width: 400px) {...}
+   *   @media screen and (min-width: 400px) and (max-width: 700px) {...}
+   */
   SAC_AND_MEDIA_QUERY,
+
+  /**
+   * Example:
+   *   @media only screen {...}
+   *   @media only screen and (min-width: 400px) {...}
+   */
   SAC_ONLY_MEDIA_QUERY,
+
+  /**
+   * Example:
+   *   @media not screen {...}
+   *   @media not screen and (min-width: 400px) {...}
+   */
   SAC_NOT_MEDIA_QUERY
 } SAC_MediaQueryType;
 
@@ -1095,7 +1127,15 @@ struct _SAC_MediaQuery {
 
     /* SAC_AND_MEDIA_QUERY */
     struct _SAC_MQcombinator {
+      /**
+       * Can't be an 'only' media query or a 'not' media query.
+       */
       SAC_MediaQuery *firstQuery;
+
+      /**
+       * Can't be a 'type' media query, an 'only' media query or a 'not' media
+       * query.
+       */
       SAC_MediaQuery *secondQuery;
     } combinator;
 

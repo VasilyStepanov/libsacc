@@ -89,4 +89,39 @@
 
 
 
+#ifdef SAC_CHECKS
+#  define SAC_CHECK_FIRST_QUERY_FOR_AND_MEDIA_QUERY(query) \
+     do { \
+       switch (query->mediaQueryType) { \
+         case SAC_TYPE_MEDIA_QUERY: \
+         case SAC_FEATURE_MEDIA_QUERY: \
+         case SAC_AND_MEDIA_QUERY: \
+           break; \
+         default: \
+           assert(0); \
+       } \
+     } while (0)
+#else
+#  define SAC_CHECK_SECOND_QUERY_FOR_AND_MEDIA_QUERY(query) SAC_NOP
+#endif
+
+
+
+#ifdef SAC_CHECKS
+#  define SAC_CHECK_SECOND_QUERY_FOR_AND_MEDIA_QUERY(query) \
+     do { \
+       switch (query->mediaQueryType) { \
+         case SAC_FEATURE_MEDIA_QUERY: \
+         case SAC_AND_MEDIA_QUERY: \
+           break; \
+         default: \
+           assert(0); \
+       } \
+     } while (0)
+#else
+#  define SAC_CHECK_SECOND_QUERY_FOR_AND_MEDIA_QUERY(query) SAC_NOP
+#endif
+
+
+
 #endif
