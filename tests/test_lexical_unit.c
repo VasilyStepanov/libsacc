@@ -222,6 +222,20 @@ static void test_lexical_unit_factory() {
   ASSERT_EQUAL_STRINGS("rect", value->desc.function.name);
   assert(value->desc.function.parameters == params);
 
+  params = SAC_vector_open(mpool, 1);
+  params[0] = SAC_lexical_unit_ident(mpool, "foo");
+  value = SAC_lexical_unit_counter(mpool, params);
+  assert(value->lexicalUnitType == SAC_COUNTER_FUNCTION);
+  ASSERT_EQUAL_STRINGS("counter", value->desc.function.name);
+  assert(value->desc.function.parameters == params);
+
+  params = SAC_vector_open(mpool, 1);
+  params[0] = SAC_lexical_unit_ident(mpool, "foo");
+  value = SAC_lexical_unit_counters(mpool, params);
+  assert(value->lexicalUnitType == SAC_COUNTERS_FUNCTION);
+  ASSERT_EQUAL_STRINGS("counters", value->desc.function.name);
+  assert(value->desc.function.parameters == params);
+
   SAC_mpool_close(mpool);
 }
 

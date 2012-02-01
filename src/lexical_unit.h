@@ -49,6 +49,10 @@ SAC_LexicalUnit* SAC_lexical_unit_rect(SAC_MPool mpool,
   SAC_LexicalUnit **parameters);
 SAC_LexicalUnit* SAC_lexical_unit_rgbcolor(SAC_MPool mpool,
   SAC_LexicalUnit **parameters);
+SAC_LexicalUnit* SAC_lexical_unit_counter(SAC_MPool mpool,
+  SAC_LexicalUnit **parameters);
+SAC_LexicalUnit* SAC_lexical_unit_counters(SAC_MPool mpool,
+  SAC_LexicalUnit **parameters);
 
 
 

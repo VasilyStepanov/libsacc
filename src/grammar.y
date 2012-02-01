@@ -1288,6 +1288,10 @@ function
         $$ = SAC_lexical_unit_rgbcolor(YY_SCANNER_MPOOL(scanner), parameters);
       } else if (strcasecmp($1, "rect") == 0) {
         $$ = SAC_lexical_unit_rect(YY_SCANNER_MPOOL(scanner), parameters);
+      } else if (strcasecmp($1, "counter") == 0) {
+        $$ = SAC_lexical_unit_counter(YY_SCANNER_MPOOL(scanner), parameters);
+      } else if (strcasecmp($1, "counters") == 0) {
+        $$ = SAC_lexical_unit_counters(YY_SCANNER_MPOOL(scanner), parameters);
       } else {
         $$ = SAC_lexical_unit_function(YY_SCANNER_MPOOL(scanner),
           $1, parameters);

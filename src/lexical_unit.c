@@ -469,6 +469,8 @@ SAC_LexicalUnit* SAC_lexical_unit_function(SAC_MPool mpool,
   SAC_CHECK_STRING_NOT_EQUALS(name, "attr");
   SAC_CHECK_STRING_NOT_EQUALS(name, "rgb");
   SAC_CHECK_STRING_NOT_EQUALS(name, "rect");
+  SAC_CHECK_STRING_NOT_EQUALS(name, "counter");
+  SAC_CHECK_STRING_NOT_EQUALS(name, "counters");
 
   value = SAC_lexical_unit_alloc(mpool, SAC_FUNCTION);
   if (value == NULL) return value;
@@ -522,6 +524,38 @@ SAC_LexicalUnit* SAC_lexical_unit_rgbcolor(SAC_MPool mpool,
   if (value == NULL) return value;
 
   value->desc.function.name = "rgb";
+  value->desc.function.parameters = parameters;
+
+  return value;
+}
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_counter(SAC_MPool mpool,
+  SAC_LexicalUnit **parameters)
+{
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_COUNTER_FUNCTION);
+  if (value == NULL) return value;
+
+  value->desc.function.name = "counter";
+  value->desc.function.parameters = parameters;
+
+  return value;
+}
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_counters(SAC_MPool mpool,
+  SAC_LexicalUnit **parameters)
+{
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_COUNTERS_FUNCTION);
+  if (value == NULL) return value;
+
+  value->desc.function.name = "counters";
   value->desc.function.parameters = parameters;
 
   return value;

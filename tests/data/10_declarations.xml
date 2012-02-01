@@ -304,4 +304,30 @@
       <dimen type="bar">-2.5</dimen>
     </sub>
   </property>
+  <property name="prop-counter">
+    <func type="counter" name="counter">
+      <arg>
+        <ident>chno</ident>
+      </arg>
+      <arg>
+        <comma/>
+      </arg>
+      <arg>
+        <ident>upper-latin</ident>
+      </arg>
+    </func>
+  </property>
+  <property name="prop-counters">
+    <func type="counters" name="counters">
+      <arg>
+        <ident>item</ident>
+      </arg>
+      <arg>
+        <comma/>
+      </arg>
+      <arg>
+        <str>.</str>
+      </arg>
+    </func>
+  </property>
 </document>

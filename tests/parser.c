@@ -164,6 +164,8 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_RGBCOLOR:
       case SAC_ATTR_FUNCTION:
       case SAC_RECT_FUNCTION:
+      case SAC_COUNTER_FUNCTION:
+      case SAC_COUNTERS_FUNCTION:
       case SAC_FUNCTION:
         {
           SAC_LexicalUnit **arg;
@@ -178,6 +180,12 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
               break;
             case SAC_RECT_FUNCTION:
               fprintf(out, "\"rect\"");
+              break;
+            case SAC_COUNTER_FUNCTION:
+              fprintf(out, "\"counter\"");
+              break;
+            case SAC_COUNTERS_FUNCTION:
+              fprintf(out, "\"counters\"");
               break;
             case SAC_FUNCTION:
               fprintf(out, "\"generic\"");
@@ -232,8 +240,6 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_OPERATOR_LE:
       case SAC_OPERATOR_GE:
       case SAC_OPERATOR_TILDE:
-      case SAC_COUNTER_FUNCTION:
-      case SAC_COUNTERS_FUNCTION:
         fprintf(out,
           "<value type=\"unknown_%d\"/>", value->lexicalUnitType);
         break;
