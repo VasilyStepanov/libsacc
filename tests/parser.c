@@ -77,6 +77,9 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_OPERATOR_COMMA:
         fprintf(out, "<comma/>");
         break;
+      case SAC_OPERATOR_SLASH:
+        fprintf(out, "<slash/>");
+        break;
       case SAC_INHERIT:
         fprintf(out, "<inherit/>");
         break;
@@ -232,7 +235,6 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_OPERATOR_PLUS:
       case SAC_OPERATOR_MINUS:
       case SAC_OPERATOR_MULTIPLY:
-      case SAC_OPERATOR_SLASH:
       case SAC_OPERATOR_MOD:
       case SAC_OPERATOR_EXP:
       case SAC_OPERATOR_LT:

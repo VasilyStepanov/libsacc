@@ -330,4 +330,21 @@
       </arg>
     </func>
   </property>
+  <property name="prop-operators">
+    <sub>
+      <int>1</int>
+    </sub>
+    <sub>
+      <comma/>
+    </sub>
+    <sub>
+      <int>2</int>
+    </sub>
+    <sub>
+      <slash/>
+    </sub>
+    <sub>
+      <int>3</int>
+    </sub>
+  </property>
 </document>
