@@ -116,3 +116,23 @@ SAC_Selector* SAC_selector_direct_adjacent(SAC_MPool mpool,
 
   return selector;
 }
+
+
+
+SAC_Selector* SAC_selector_general_adjacent(SAC_MPool mpool,
+  SAC_NodeType nodeType,
+  SAC_Selector *firstSelector, SAC_Selector *secondSelector)
+{
+  SAC_Selector *selector;
+
+  SAC_CHECK_SIMPLE_FOR_GENERAL_ADJACENT_SELECTOR(secondSelector);
+
+  selector = SAC_selector_alloc(mpool, SAC_GENERAL_ADJACENT_SELECTOR);
+  if (selector == NULL) return NULL;
+
+  selector->desc.sibling.nodeType = nodeType;
+  selector->desc.sibling.firstSelector = firstSelector;
+  selector->desc.sibling.secondSelector = secondSelector;
+
+  return selector;
+}

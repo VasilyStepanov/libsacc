@@ -869,6 +869,11 @@ selector
       $$ = SAC_selector_child(YY_SCANNER_MPOOL(scanner), $1, $4);
       TEST_OBJ($$, @$);
     }
+  | selector TILDE maybe_spaces simple_selector_sequence {
+      $$ = SAC_selector_general_adjacent(YY_SCANNER_MPOOL(scanner),
+        SAC_ANY_NODE, $1, $4);
+      TEST_OBJ($$, @$);
+    }
   ;
 simple_selector_sequence
   : attribute_conditions {

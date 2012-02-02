@@ -629,14 +629,25 @@ typedef enum {
    */
 
   /**
-   * This selector matches two selectors who shared the same parent in the
-   * document tree and the element represented by the first sequence immediately
-   * precedes the element represented by the second one.
+   * The elements represented by the two sequences share the same parent in
+   * the document tree and the element represented by the first sequence
+   * immediately precedes the element represented by the second one.
    *
    * Examples:
    *   E + F
    */
-  SAC_DIRECT_ADJACENT_SELECTOR
+  SAC_DIRECT_ADJACENT_SELECTOR,
+
+  /**
+   * The elements represented by the two sequences share the same parent in
+   * the document tree and the element represented by the first sequence
+   * precedes (not necessarily immediately) the element represented by the
+   * second one.
+   *
+   * Examples:
+   *   h1 ~ pre
+   */
+  SAC_GENERAL_ADJACENT_SELECTOR
 } SAC_SelectorType;
 
 typedef enum {
@@ -825,6 +836,7 @@ struct _SAC_Selector {
 
     /**
      * SAC_DIRECT_ADJACENT_SELECTOR
+     * SAC_GENERAL_ADJACENT_SELECTOR
      */
 
     struct _SAC_Ssibling {

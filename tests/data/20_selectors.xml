@@ -57,8 +57,8 @@
     </selector>
     <selector type="element_node" localName="c"/>
   </selector>
-  <selector type="sibling" nodeType="ANY">
-    <selector type="sibling" nodeType="ANY">
+  <selector type="direct-adjacent" nodeType="ANY">
+    <selector type="direct-adjacent" nodeType="ANY">
       <selector type="element_node" localName="a"/>
       <selector type="element_node" localName="b"/>
     </selector>
@@ -66,6 +66,13 @@
   </selector>
   <selector type="child">
     <selector type="child">
+      <selector type="element_node" localName="a"/>
+      <selector type="element_node" localName="b"/>
+    </selector>
+    <selector type="element_node" localName="c"/>
+  </selector>
+  <selector type="general-adjacent" nodeType="ANY">
+    <selector type="general-adjacent" nodeType="ANY">
       <selector type="element_node" localName="a"/>
       <selector type="element_node" localName="b"/>
     </selector>

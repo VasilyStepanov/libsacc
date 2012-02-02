@@ -465,7 +465,14 @@ static void dump_selector(FILE *out, const SAC_Selector *selector) {
       fprintf(out, "</selector>");
       break;
     case SAC_DIRECT_ADJACENT_SELECTOR:
-      fprintf(out, "<selector type=\"sibling\" nodeType=\"%s\">",
+      fprintf(out, "<selector type=\"direct-adjacent\" nodeType=\"%s\">",
+        node_type(selector->desc.sibling.nodeType));
+      dump_selector(out, selector->desc.sibling.firstSelector);
+      dump_selector(out, selector->desc.sibling.secondSelector);
+      fprintf(out, "</selector>");
+      break;
+    case SAC_GENERAL_ADJACENT_SELECTOR:
+      fprintf(out, "<selector type=\"general-adjacent\" nodeType=\"%s\">",
         node_type(selector->desc.sibling.nodeType));
       dump_selector(out, selector->desc.sibling.firstSelector);
       dump_selector(out, selector->desc.sibling.secondSelector);

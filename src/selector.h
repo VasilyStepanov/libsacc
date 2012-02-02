@@ -19,6 +19,9 @@ SAC_Selector* SAC_selector_child(SAC_MPool mpool,
 SAC_Selector* SAC_selector_direct_adjacent(SAC_MPool mpool,
   SAC_NodeType nodeType,
   SAC_Selector *firstSelector, SAC_Selector *secondSelector);
+SAC_Selector* SAC_selector_general_adjacent(SAC_MPool mpool,
+  SAC_NodeType nodeType,
+  SAC_Selector *firstSelector, SAC_Selector *secondSelector);
 
 
 
