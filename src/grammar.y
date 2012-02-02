@@ -178,7 +178,7 @@ SAC_Pair pair;
 
 %type <str> property;
 
-%type <sel> simple_selector;
+%type <sel> simple_selector_sequence;
 %type <sel> selector;
 %type <list> selectors_group;
 %type <cond> maybe_attribute_conditions;
@@ -203,7 +203,8 @@ SAC_Pair pair;
 %type <value> term;
 %type <value> function;
 
-%type <sel> element_name;
+%type <sel> type_selector;
+%type <sel> universal;
 
 %%
 
@@ -848,27 +849,27 @@ selectors_errors
   | selectors_errors error
   ;
 selector
-  : simple_selector {
+  : simple_selector_sequence {
       $$ = $1;
     }
   | selector S {
       $$ = $1;
     }
-  | selector S simple_selector {
+  | selector S simple_selector_sequence {
       $$ = SAC_selector_descendant(YY_SCANNER_MPOOL(scanner), $1, $3);
       TEST_OBJ($$, @$);
     }
-  | selector PLUS maybe_spaces simple_selector {
+  | selector PLUS maybe_spaces simple_selector_sequence {
       $$ = SAC_selector_direct_adjacent(YY_SCANNER_MPOOL(scanner),
         SAC_ANY_NODE, $1, $4);
       TEST_OBJ($$, @$);
     }
-  | selector GREATER maybe_spaces simple_selector {
+  | selector GREATER maybe_spaces simple_selector_sequence {
       $$ = SAC_selector_child(YY_SCANNER_MPOOL(scanner), $1, $4);
       TEST_OBJ($$, @$);
     }
   ;
-simple_selector
+simple_selector_sequence
   : attribute_conditions {
       SAC_Selector *anyNodeSelector;
 
@@ -879,7 +880,15 @@ simple_selector
         anyNodeSelector, $1);
       TEST_OBJ($$, @$);
     }
-  | element_name maybe_attribute_conditions {
+  | type_selector maybe_attribute_conditions {
+      if ($2 == NULL) {
+        $$ = $1;
+      } else {
+        $$ = SAC_selector_conditional(YY_SCANNER_MPOOL(scanner), $1, $2);
+        TEST_OBJ($$, @$);
+      }
+    }
+  | universal maybe_attribute_conditions {
       if ($2 == NULL) {
         $$ = $1;
       } else {
@@ -905,6 +914,18 @@ attribute_conditions
       TEST_OBJ($$, @$);
     }
   ;
+type_selector
+  : IDENT {
+      $$ = SAC_selector_element_node(YY_SCANNER_MPOOL(scanner), NULL, $1);
+      TEST_OBJ($$, @$);
+    }
+  ;
+universal
+  : '*' {
+      $$ = SAC_selector_any_node(YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ($$, @$);
+    }
+  ;
 attribute_condition
   : HASH {
       $$ = SAC_condition_id(YY_SCANNER_MPOOL(scanner), $1);
@@ -923,16 +944,6 @@ attribute_condition
 class
   : '.' IDENT {
       $$ = SAC_condition_class(YY_SCANNER_MPOOL(scanner), $2);
-      TEST_OBJ($$, @$);
-    }
-  ;
-element_name
-  : IDENT {
-      $$ = SAC_selector_element_node(YY_SCANNER_MPOOL(scanner), NULL, $1);
-      TEST_OBJ($$, @$);
-    }
-  | '*' {
-      $$ = SAC_selector_any_node(YY_SCANNER_MPOOL(scanner));
       TEST_OBJ($$, @$);
     }
   ;
