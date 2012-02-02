@@ -205,6 +205,7 @@ SAC_Pair pair;
 
 %type <sel> type_selector;
 %type <sel> universal;
+%type <str> selector_namespace_prefix;
 
 %%
 
@@ -919,11 +920,32 @@ type_selector
       $$ = SAC_selector_element_node(YY_SCANNER_MPOOL(scanner), NULL, $1);
       TEST_OBJ($$, @$);
     }
+  | selector_namespace_prefix IDENT {
+      $$ = SAC_selector_element_node(YY_SCANNER_MPOOL(scanner), $1, $2);
+      TEST_OBJ($$, @$);
+    }
+  ;
+selector_namespace_prefix
+  : IDENT '|' {
+      $$ = $1;
+    }
+  | '*' '|' {
+      $$ = NULL;
+    }
   ;
 universal
   : '*' {
       $$ = SAC_selector_any_node(YY_SCANNER_MPOOL(scanner));
       TEST_OBJ($$, @$);
+    }
+  | selector_namespace_prefix '*' {
+      if ($1 != NULL) {
+        $$ = SAC_selector_element_node(YY_SCANNER_MPOOL(scanner), $1, NULL);
+        TEST_OBJ($$, @$);
+      } else {
+        $$ = SAC_selector_any_node(YY_SCANNER_MPOOL(scanner));
+        TEST_OBJ($$, @$);
+      }
     }
   ;
 attribute_condition

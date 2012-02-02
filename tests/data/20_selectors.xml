@@ -71,4 +71,14 @@
     </selector>
     <selector type="element_node" localName="c"/>
   </selector>
+  <selector type="descendant">
+    <selector type="descendant">
+      <selector type="descendant">
+        <selector type="any_node"/>
+        <selector type="element_node" localName="a"/>
+      </selector>
+      <selector type="element_node" namespaceURI="ns"/>
+    </selector>
+    <selector type="element_node" namespaceURI="ns" localName="b"/>
+  </selector>
 </selectors>
