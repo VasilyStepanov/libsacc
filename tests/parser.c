@@ -405,22 +405,6 @@ static void dump_condition(FILE *out, const SAC_Condition *condition) {
 
 
 
-static const char* node_type(SAC_NodeType type) {
-  switch (type) {
-    case SAC_ELEMENT_NODE: return "ELEMENT";
-    case SAC_ATTRIBUTE_NODE: return "ATTRIBUTE";
-    case SAC_TEXT_NODE: return "TEXT";
-    case SAC_CDATA_NODE: return "CDATA";
-    case SAC_ENTITY_REFERENCE_NODE: return "ENTITY_REFERENCE";
-    case SAC_PROCESSING_INSTRUCTION_NODE: return "PROCESSING_INSTRUCTION";
-    case SAC_COMMENT_NODE: return "COMMENT";
-    case SAC_ANY_NODE: return "ANY";
-  }
-  return "UNKNOWN";
-}
-
-
-
 static void dump_selector(FILE *out, const SAC_Selector *selector) {
   switch (selector->selectorType) {
     case SAC_CONDITIONAL_SELECTOR:
@@ -465,15 +449,13 @@ static void dump_selector(FILE *out, const SAC_Selector *selector) {
       fprintf(out, "</selector>");
       break;
     case SAC_DIRECT_ADJACENT_SELECTOR:
-      fprintf(out, "<selector type=\"direct-adjacent\" nodeType=\"%s\">",
-        node_type(selector->desc.sibling.nodeType));
+      fprintf(out, "<selector type=\"direct-adjacent\">");
       dump_selector(out, selector->desc.sibling.firstSelector);
       dump_selector(out, selector->desc.sibling.secondSelector);
       fprintf(out, "</selector>");
       break;
     case SAC_GENERAL_ADJACENT_SELECTOR:
-      fprintf(out, "<selector type=\"general-adjacent\" nodeType=\"%s\">",
-        node_type(selector->desc.sibling.nodeType));
+      fprintf(out, "<selector type=\"general-adjacent\">");
       dump_selector(out, selector->desc.sibling.firstSelector);
       dump_selector(out, selector->desc.sibling.secondSelector);
       fprintf(out, "</selector>");

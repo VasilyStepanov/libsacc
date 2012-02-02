@@ -861,8 +861,7 @@ selector
       TEST_OBJ($$, @$);
     }
   | selector PLUS maybe_spaces simple_selector_sequence {
-      $$ = SAC_selector_direct_adjacent(YY_SCANNER_MPOOL(scanner),
-        SAC_ANY_NODE, $1, $4);
+      $$ = SAC_selector_direct_adjacent(YY_SCANNER_MPOOL(scanner), $1, $4);
       TEST_OBJ($$, @$);
     }
   | selector GREATER maybe_spaces simple_selector_sequence {
@@ -870,8 +869,7 @@ selector
       TEST_OBJ($$, @$);
     }
   | selector TILDE maybe_spaces simple_selector_sequence {
-      $$ = SAC_selector_general_adjacent(YY_SCANNER_MPOOL(scanner),
-        SAC_ANY_NODE, $1, $4);
+      $$ = SAC_selector_general_adjacent(YY_SCANNER_MPOOL(scanner), $1, $4);
       TEST_OBJ($$, @$);
     }
   ;

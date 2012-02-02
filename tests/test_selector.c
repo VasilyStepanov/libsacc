@@ -54,18 +54,16 @@ static void test_selector_factory() {
   firstSelector = SAC_selector_any_node(mpool);
   secondSelector = SAC_selector_any_node(mpool);
   selector = SAC_selector_direct_adjacent(mpool,
-    SAC_ANY_NODE, firstSelector, secondSelector);
+    firstSelector, secondSelector);
   assert(selector->selectorType == SAC_DIRECT_ADJACENT_SELECTOR);
-  assert(selector->desc.sibling.nodeType == SAC_ANY_NODE);
   assert(selector->desc.sibling.firstSelector == firstSelector);
   assert(selector->desc.sibling.secondSelector == secondSelector);
 
   firstSelector = SAC_selector_any_node(mpool);
   secondSelector = SAC_selector_any_node(mpool);
   selector = SAC_selector_general_adjacent(mpool,
-    SAC_ANY_NODE, firstSelector, secondSelector);
+    firstSelector, secondSelector);
   assert(selector->selectorType == SAC_GENERAL_ADJACENT_SELECTOR);
-  assert(selector->desc.sibling.nodeType == SAC_ANY_NODE);
   assert(selector->desc.sibling.firstSelector == firstSelector);
   assert(selector->desc.sibling.secondSelector == secondSelector);
   

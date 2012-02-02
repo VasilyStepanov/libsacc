@@ -754,17 +754,6 @@ typedef enum {
   SAC_CONTENT_CONDITION
 } SAC_ConditionType;
 
-typedef enum {
-  SAC_ELEMENT_NODE,
-  SAC_ATTRIBUTE_NODE,
-  SAC_TEXT_NODE,
-  SAC_CDATA_NODE,
-  SAC_ENTITY_REFERENCE_NODE,
-  SAC_PROCESSING_INSTRUCTION_NODE,
-  SAC_COMMENT_NODE,
-  SAC_ANY_NODE
-} SAC_NodeType;
-
 typedef struct _SAC_Selector SAC_Selector;
 typedef struct _SAC_Condition SAC_Condition;
 
@@ -840,14 +829,6 @@ struct _SAC_Selector {
      */
 
     struct _SAC_Ssibling {
-      /**
-       * Node type to considered in the siblings list.
-       *
-       * All DOM node types are supported. In order to support the "any" node
-       * type, the code SAC_ANY_NODE is added to the DOM node types.
-       */
-      SAC_NodeType nodeType;
-
       /**
        * The first selector.
        */
