@@ -2,6 +2,7 @@
 
 #include "condition.h"
 #include "mpool.h"
+#include "selector.h"
 #include "test_utils.h"
 
 #include <sacc.h>
@@ -15,6 +16,7 @@ static void test_condition_factory() {
   SAC_Condition *condition;
   SAC_Condition *firstCondition;
   SAC_Condition *secondCondition;
+  SAC_Selector *selector;
 
   mpool = SAC_mpool_open(256);
 
@@ -63,8 +65,14 @@ static void test_condition_factory() {
   firstCondition = SAC_condition_class(mpool, "foo");
   secondCondition = SAC_condition_class(mpool, "bar");
   condition = SAC_condition_and(mpool, firstCondition, secondCondition);
+  assert(condition->conditionType == SAC_AND_CONDITION);
   assert(condition->desc.combinator.firstCondition == firstCondition);
   assert(condition->desc.combinator.secondCondition == secondCondition);
+
+  selector = SAC_selector_any_node(mpool);
+  condition = SAC_condition_negation(mpool, selector);
+  assert(condition->conditionType == SAC_NEGATIVE_CONDITION);
+  assert(condition->desc.selector == selector);
   
   SAC_mpool_close(mpool);
 }

@@ -131,3 +131,16 @@ SAC_Condition* SAC_condition_and(SAC_MPool mpool,
 
   return condition;
 }
+
+
+
+SAC_Condition* SAC_condition_negation(SAC_MPool mpool, SAC_Selector *selector) {
+  SAC_Condition *condition;
+
+  condition = SAC_condition_alloc(mpool, SAC_NEGATIVE_CONDITION);
+  if (condition == NULL) return condition;
+
+  condition->desc.selector = selector;
+
+  return condition;
+}

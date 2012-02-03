@@ -18,6 +18,7 @@ SAC_Condition* SAC_condition_begin_hypen_attribute(SAC_MPool mpool,
 SAC_Condition* SAC_condition_pseudo_class(SAC_MPool mpool, SAC_STRING value);
 SAC_Condition* SAC_condition_and(SAC_MPool mpool,
   SAC_Condition *firstCondition, SAC_Condition *secondCondition);
+SAC_Condition* SAC_condition_negation(SAC_MPool mpool, SAC_Selector *selector);
 
 
 

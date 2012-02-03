@@ -559,11 +559,6 @@ typedef enum {
   SAC_ROOT_NODE_SELECTOR,
 
   /**
-   * This selector matches only node that are different from a specified one.
-   */
-  SAC_NEGATIVE_SELECTOR,
-
-  /**
    * This selector matches only element node.
    *
    * Examples:
@@ -790,18 +785,6 @@ struct _SAC_Selector {
     /* empty */
 
 
-
-    /**
-     * SAC_NEGATIVE_SELECTOR
-     */
-
-    /**
-     * The simple selector.
-     */
-    SAC_Selector *simpleSelector;
-
-
-
     /**
      * SAC_DESCENDANT_SELECTOR
      * SAC_CHILD_SELECTOR
@@ -934,13 +917,13 @@ struct _SAC_Condition {
 
 
     /**
-     * SAC_NEGATIVE_SELECTOR
+     * SAC_NEGATIVE_CONDITION
      */
 
     /**
-     * The condition.
+     * The selector.
      */
-    SAC_Condition *condition;
+    SAC_Selector *selector;
 
 
 

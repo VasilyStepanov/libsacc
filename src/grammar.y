@@ -106,6 +106,7 @@ SAC_Pair pair;
 %token GREATER
 %token COMMA
 %token TILDE
+%token NOT
 
 %token <str> STRING
 %right <str> IDENT
@@ -124,9 +125,9 @@ SAC_Pair pair;
 %token <str> ATKEYWORD_SYM
 
 %token IMPORTANT_SYM
-%token AND
-%token NOT
-%token ONLY
+%token MEDIA_AND
+%token MEDIA_NOT
+%token MEDIA_ONLY
 
 %token <real> LENGTH_EM
 %token <real> LENGTH_EX
@@ -185,7 +186,9 @@ SAC_Pair pair;
 %type <cond> attribute_condition;
 %type <cond> attribute_conditions;
 %type <cond> class;
+%type <cond> hash;
 %type <cond> attrib;
+%type <cond> negation;
 %type <value> hexcolor;
 %type <str> attrib_name;
 %type <str> attrib_value;
@@ -624,11 +627,11 @@ media_query
   : media_type_selector {
       $$ = $1;
     }
-  | ONLY maybe_spaces media_type_selector {
+  | MEDIA_ONLY maybe_spaces media_type_selector {
       $$ = SAC_media_query_only(YY_SCANNER_MPOOL(scanner), $3);
       TEST_OBJ($$, @$);
     }
-  | NOT maybe_spaces media_type_selector {
+  | MEDIA_NOT maybe_spaces media_type_selector {
       $$ = SAC_media_query_not(YY_SCANNER_MPOOL(scanner), $3);
       TEST_OBJ($$, @$);
     }
@@ -640,7 +643,7 @@ media_type_selector
   : media_type {
       $$ = $1;
     }
-  | media_type AND maybe_spaces media_exprs {
+  | media_type MEDIA_AND maybe_spaces media_exprs {
       $$ = SAC_media_query_and(YY_SCANNER_MPOOL(scanner), $1, $4);
       TEST_OBJ($$, @$);
     }
@@ -649,7 +652,7 @@ media_exprs
   : media_expr {
       $$ = $1;
     }
-  | media_exprs AND maybe_spaces media_expr {
+  | media_exprs MEDIA_AND maybe_spaces media_expr {
       $$ = SAC_media_query_and(YY_SCANNER_MPOOL(scanner), $1, $4);
       TEST_OBJ($$, @$);
     }
@@ -952,9 +955,8 @@ universal
     }
   ;
 attribute_condition
-  : HASH {
-      $$ = SAC_condition_id(YY_SCANNER_MPOOL(scanner), $1);
-      TEST_OBJ($$, @$);
+  : hash {
+      $$ = $1;
     }
   | class {
       $$ = $1;
@@ -964,6 +966,15 @@ attribute_condition
     }
   | pseudo {
       $$ = $1;
+    }
+  | negation {
+      $$ = $1;
+    }
+  ;
+hash
+  : HASH {
+      $$ = SAC_condition_id(YY_SCANNER_MPOOL(scanner), $1);
+      TEST_OBJ($$, @$);
     }
   ;
 class
@@ -1019,6 +1030,76 @@ pseudo
 /*
   | ':' FUNCTION maybe_spaces maybe_ident ')'
 */
+  ;
+negation
+  : NOT maybe_spaces type_selector maybe_spaces ')' {
+      $$ = SAC_condition_negation(YY_SCANNER_MPOOL(scanner), $3);
+      TEST_OBJ($$, @$);
+    }
+  | NOT maybe_spaces universal maybe_spaces ')' {
+      $$ = SAC_condition_negation(YY_SCANNER_MPOOL(scanner), $3);
+      TEST_OBJ($$, @$);
+    }
+  | NOT maybe_spaces hash maybe_spaces ')' {
+      SAC_Selector *anyNodeSelector;
+      SAC_Selector *conditionalSelector;
+
+      anyNodeSelector = SAC_selector_any_node(YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(anyNodeSelector, @3);
+
+      conditionalSelector = SAC_selector_conditional(YY_SCANNER_MPOOL(scanner),
+        anyNodeSelector, $3);
+      TEST_OBJ(conditionalSelector, @3);
+
+      $$ = SAC_condition_negation(YY_SCANNER_MPOOL(scanner),
+        conditionalSelector);
+      TEST_OBJ($$, @$);
+    }
+  | NOT maybe_spaces class maybe_spaces ')' {
+      SAC_Selector *anyNodeSelector;
+      SAC_Selector *conditionalSelector;
+
+      anyNodeSelector = SAC_selector_any_node(YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(anyNodeSelector, @3);
+
+      conditionalSelector = SAC_selector_conditional(YY_SCANNER_MPOOL(scanner),
+        anyNodeSelector, $3);
+      TEST_OBJ(conditionalSelector, @3);
+
+      $$ = SAC_condition_negation(YY_SCANNER_MPOOL(scanner),
+        conditionalSelector);
+      TEST_OBJ($$, @$);
+    }
+  | NOT maybe_spaces attrib maybe_spaces ')' {
+      SAC_Selector *anyNodeSelector;
+      SAC_Selector *conditionalSelector;
+
+      anyNodeSelector = SAC_selector_any_node(YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(anyNodeSelector, @3);
+
+      conditionalSelector = SAC_selector_conditional(YY_SCANNER_MPOOL(scanner),
+        anyNodeSelector, $3);
+      TEST_OBJ(conditionalSelector, @3);
+
+      $$ = SAC_condition_negation(YY_SCANNER_MPOOL(scanner),
+        conditionalSelector);
+      TEST_OBJ($$, @$);
+    }
+  | NOT maybe_spaces pseudo maybe_spaces ')' {
+      SAC_Selector *anyNodeSelector;
+      SAC_Selector *conditionalSelector;
+
+      anyNodeSelector = SAC_selector_any_node(YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(anyNodeSelector, @3);
+
+      conditionalSelector = SAC_selector_conditional(YY_SCANNER_MPOOL(scanner),
+        anyNodeSelector, $3);
+      TEST_OBJ(conditionalSelector, @3);
+
+      $$ = SAC_condition_negation(YY_SCANNER_MPOOL(scanner),
+        conditionalSelector);
+      TEST_OBJ($$, @$);
+    }
   ;
 maybe_declarations
   : /* empty */

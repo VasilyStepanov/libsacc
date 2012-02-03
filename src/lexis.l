@@ -120,9 +120,9 @@ range        \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h}
 "$="                    {return SUFFIXMATCH;}
 "*="                    {return SUBSTRINGMATCH;}
 
-{O}{N}{L}{Y}            {return ONLY;}
-{N}{O}{T}               {return NOT;}
-{A}{N}{D}               {return AND;}
+{O}{N}{L}{Y}            {return MEDIA_ONLY;}
+{N}{O}{T}               {return MEDIA_NOT;}
+{A}{N}{D}               {return MEDIA_AND;}
 
 {string}                {
                           yylval->str = SAC_mpool_strndup(

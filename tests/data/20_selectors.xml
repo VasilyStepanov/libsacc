@@ -88,4 +88,68 @@
     </selector>
     <selector type="element_node" namespaceURI="ns" localName="b"/>
   </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="and">
+      <condition type="and">
+        <condition type="and">
+          <condition type="negative">
+            <selector type="conditional">
+              <selector type="any_node"/>
+              <condition type="id" specified="true" value="foo"/>
+            </selector>
+          </condition>
+          <condition type="negative">
+            <selector type="conditional">
+              <selector type="any_node"/>
+              <condition type="class" specified="true" value="bar"/>
+            </selector>
+          </condition>
+        </condition>
+        <condition type="negative">
+          <selector type="conditional">
+            <selector type="any_node"/>
+            <condition type="attr" localName="sattr" specified="true" value="str"/>
+          </selector>
+        </condition>
+      </condition>
+      <condition type="negative">
+        <selector type="conditional">
+          <selector type="any_node"/>
+          <condition type="pseudo_class" specified="true" value="pseudo-class"/>
+        </selector>
+      </condition>
+    </condition>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="and">
+      <condition type="and">
+        <condition type="and">
+          <condition type="and">
+            <condition type="and">
+              <condition type="negative">
+                <selector type="any_node"/>
+              </condition>
+              <condition type="negative">
+                <selector type="element_node" localName="a"/>
+              </condition>
+            </condition>
+            <condition type="negative">
+              <selector type="element_node" namespaceURI="ns"/>
+            </condition>
+          </condition>
+          <condition type="negative">
+            <selector type="element_node" namespaceURI="ns" localName="b"/>
+          </condition>
+        </condition>
+        <condition type="negative">
+          <selector type="any_node"/>
+        </condition>
+      </condition>
+      <condition type="negative">
+        <selector type="element_node" localName="a"/>
+      </condition>
+    </condition>
+  </selector>
 </selectors>

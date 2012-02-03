@@ -10,3 +10,5 @@
 , a > b > c
 , a ~ b ~ c
 , *|* *|a ns|* ns|b 
+, :not(#foo):not(.bar):not([sattr="str"]):not(:pseudo-class)
+, :not(*|*):not(*|a):not(ns|*):not(ns|b):not(*):not(a)

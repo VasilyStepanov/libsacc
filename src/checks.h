@@ -41,7 +41,6 @@
      do { \
        switch (simpleSelector->selectorType) { \
          case SAC_ANY_NODE_SELECTOR: \
-         case SAC_NEGATIVE_SELECTOR: \
          case SAC_ELEMENT_NODE_SELECTOR: \
          case SAC_PSEUDO_ELEMENT_SELECTOR: \
          case SAC_TEXT_NODE_SELECTOR: \
@@ -65,7 +64,6 @@
        switch (simpleSelector->selectorType) { \
          case SAC_CONDITIONAL_SELECTOR: \
          case SAC_ANY_NODE_SELECTOR: \
-         case SAC_NEGATIVE_SELECTOR: \
          case SAC_ELEMENT_NODE_SELECTOR: \
          case SAC_PSEUDO_ELEMENT_SELECTOR: \
          case SAC_TEXT_NODE_SELECTOR: \

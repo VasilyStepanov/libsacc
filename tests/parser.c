@@ -334,6 +334,10 @@ static void end_media(void *userData, const SAC_MediaQuery *media[]) {
 
 
 
+static void dump_selector(FILE *out, const SAC_Selector *selector);
+
+
+
 static void dump_condition(FILE *out, const SAC_Condition *condition) {
   switch (condition->conditionType) {
     case SAC_ONE_OF_ATTRIBUTE_CONDITION:
@@ -390,8 +394,12 @@ static void dump_condition(FILE *out, const SAC_Condition *condition) {
       dump_condition(out, condition->desc.combinator.secondCondition);
       fprintf(out, "</condition>");
       break;
-    case SAC_OR_CONDITION:
     case SAC_NEGATIVE_CONDITION:
+      fprintf(out, "<condition type=\"negative\">");
+      dump_selector(out, condition->desc.selector);
+      fprintf(out, "</condition>");
+      break;
+    case SAC_OR_CONDITION:
     case SAC_POSITIONAL_CONDITION:
     case SAC_LANG_CONDITION:
     case SAC_ONLY_CHILD_CONDITION:
@@ -462,7 +470,6 @@ static void dump_selector(FILE *out, const SAC_Selector *selector) {
       break;
     case SAC_PSEUDO_ELEMENT_SELECTOR:
     case SAC_ROOT_NODE_SELECTOR:
-    case SAC_NEGATIVE_SELECTOR:
     case SAC_TEXT_NODE_SELECTOR:
     case SAC_CDATA_SECTION_NODE_SELECTOR:
     case SAC_PROCESSING_INSTRUCTION_NODE_SELECTOR:
