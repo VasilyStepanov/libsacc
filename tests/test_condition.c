@@ -41,6 +41,13 @@ static void test_condition_factory() {
   assert(condition->desc.attribute.specified == SAC_TRUE);
   ASSERT_EQUAL_STRINGS("bar", condition->desc.attribute.value);
 
+  condition = SAC_condition_attribute(mpool, "foo", NULL);
+  assert(condition->conditionType == SAC_ATTRIBUTE_CONDITION);
+  assert(condition->desc.attribute.namespaceURI == NULL);
+  ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.localName);
+  assert(condition->desc.attribute.specified == SAC_FALSE);
+  assert(condition->desc.attribute.value == NULL);
+
   condition = SAC_condition_one_of_attribute(mpool, "foo", "bar");
   assert(condition->conditionType == SAC_ONE_OF_ATTRIBUTE_CONDITION);
   assert(condition->desc.attribute.namespaceURI == NULL);

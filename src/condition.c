@@ -58,7 +58,7 @@ SAC_Condition* SAC_condition_attribute(SAC_MPool mpool,
 
   condition->desc.attribute.namespaceURI = NULL;
   condition->desc.attribute.localName = localName;
-  condition->desc.attribute.specified = SAC_TRUE;
+  condition->desc.attribute.specified = value != NULL ? SAC_TRUE : SAC_FALSE;
   condition->desc.attribute.value = value;
 
   return condition;
