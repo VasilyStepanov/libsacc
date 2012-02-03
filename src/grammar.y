@@ -986,20 +986,47 @@ class
 attrib
   : '[' maybe_spaces attrib_name ']' {
       $$ = SAC_condition_attribute(YY_SCANNER_MPOOL(scanner),
-        $3, NULL);
+        NULL, $3, NULL);
+      TEST_OBJ($$, @$);
+    }
+  | '[' maybe_spaces selector_namespace_prefix attrib_name ']' {
+      $$ = SAC_condition_attribute(YY_SCANNER_MPOOL(scanner),
+        $3, $4, NULL);
       TEST_OBJ($$, @$);
     }
   | '[' maybe_spaces attrib_name '=' maybe_spaces attrib_value ']' {
-      $$ = SAC_condition_attribute(YY_SCANNER_MPOOL(scanner), $3, $6);
+      $$ = SAC_condition_attribute(YY_SCANNER_MPOOL(scanner), NULL, $3, $6);
+      TEST_OBJ($$, @$);
+    }
+  | '[' maybe_spaces selector_namespace_prefix attrib_name '=' maybe_spaces
+    attrib_value ']'
+    {
+      $$ = SAC_condition_attribute(YY_SCANNER_MPOOL(scanner), $3, $4, $7);
       TEST_OBJ($$, @$);
     }
   | '[' maybe_spaces attrib_name INCLUDES maybe_spaces attrib_value ']' {
-      $$ = SAC_condition_one_of_attribute(YY_SCANNER_MPOOL(scanner), $3, $6);
+      $$ = SAC_condition_one_of_attribute(YY_SCANNER_MPOOL(scanner),
+        NULL, $3, $6);
       TEST_OBJ($$, @$);
     }
-  | '[' maybe_spaces attrib_name DASHMATCH maybe_spaces attrib_value ']' {
+  | '[' maybe_spaces selector_namespace_prefix attrib_name INCLUDES
+    maybe_spaces attrib_value ']'
+    {
+      $$ = SAC_condition_one_of_attribute(YY_SCANNER_MPOOL(scanner),
+        $3, $4, $7);
+      TEST_OBJ($$, @$);
+    }
+  | '[' maybe_spaces attrib_name DASHMATCH maybe_spaces attrib_value ']'
+    {
       $$ = SAC_condition_begin_hypen_attribute(YY_SCANNER_MPOOL(scanner),
-        $3, $6);
+        NULL, $3, $6);
+      TEST_OBJ($$, @$);
+    }
+  | '[' maybe_spaces selector_namespace_prefix attrib_name DASHMATCH
+    maybe_spaces attrib_value ']'
+    {
+      $$ = SAC_condition_begin_hypen_attribute(YY_SCANNER_MPOOL(scanner),
+        $3, $4, $7);
       TEST_OBJ($$, @$);
     }
   ;

@@ -41,6 +41,32 @@
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
+    <condition type="and">
+      <condition type="and">
+        <condition type="and">
+          <condition type="attr" namespaceURI="ns" localName="attr" specified="false"/>
+          <condition type="attr" namespaceURI="ns" localName="attr" specified="true" value="str"/>
+        </condition>
+        <condition type="one_of" namespaceURI="ns" localName="oneof" specified="false" value="inc"/>
+      </condition>
+      <condition type="begin_hypen" namespaceURI="ns" localName="hypen" specified="false" value="dash"/>
+    </condition>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="and">
+      <condition type="and">
+        <condition type="and">
+          <condition type="attr" localName="attr" specified="false"/>
+          <condition type="attr" localName="attr" specified="true" value="str"/>
+        </condition>
+        <condition type="one_of" localName="oneof" specified="false" value="inc"/>
+      </condition>
+      <condition type="begin_hypen" localName="hypen" specified="false" value="dash"/>
+    </condition>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
     <condition type="pseudo_class" specified="true" value="pseudo-class"/>
   </selector>
   <selector type="conditional">
