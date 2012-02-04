@@ -994,6 +994,39 @@ attrib
         $3, $4, NULL);
       TEST_OBJ($$, @$);
     }
+  | '[' maybe_spaces attrib_name PREFIXMATCH maybe_spaces attrib_value ']' {
+      $$ = SAC_condition_prefix_attribute(YY_SCANNER_MPOOL(scanner),
+        NULL, $3, $6);
+      TEST_OBJ($$, @$);
+    }
+  | '[' maybe_spaces selector_namespace_prefix attrib_name PREFIXMATCH
+    maybe_spaces attrib_value ']' {
+      $$ = SAC_condition_prefix_attribute(YY_SCANNER_MPOOL(scanner),
+        $3, $4, $7);
+      TEST_OBJ($$, @$);
+    }
+  | '[' maybe_spaces attrib_name SUFFIXMATCH maybe_spaces attrib_value ']' {
+      $$ = SAC_condition_suffix_attribute(YY_SCANNER_MPOOL(scanner),
+        NULL, $3, $6);
+      TEST_OBJ($$, @$);
+    }
+  | '[' maybe_spaces selector_namespace_prefix attrib_name SUFFIXMATCH
+    maybe_spaces attrib_value ']' {
+      $$ = SAC_condition_suffix_attribute(YY_SCANNER_MPOOL(scanner),
+        $3, $4, $7);
+      TEST_OBJ($$, @$);
+    }
+  | '[' maybe_spaces attrib_name SUBSTRINGMATCH maybe_spaces attrib_value ']' {
+      $$ = SAC_condition_substring_attribute(YY_SCANNER_MPOOL(scanner),
+        NULL, $3, $6);
+      TEST_OBJ($$, @$);
+    }
+  | '[' maybe_spaces selector_namespace_prefix attrib_name SUBSTRINGMATCH
+    maybe_spaces attrib_value ']' {
+      $$ = SAC_condition_substring_attribute(YY_SCANNER_MPOOL(scanner),
+        $3, $4, $7);
+      TEST_OBJ($$, @$);
+    }
   | '[' maybe_spaces attrib_name '=' maybe_spaces attrib_value ']' {
       $$ = SAC_condition_attribute(YY_SCANNER_MPOOL(scanner), NULL, $3, $6);
       TEST_OBJ($$, @$);

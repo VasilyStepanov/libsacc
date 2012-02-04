@@ -34,6 +34,27 @@ static void test_condition_factory() {
   assert(condition->desc.attribute.specified == SAC_TRUE);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.value);
 
+  condition = SAC_condition_prefix_attribute(mpool, "ns", "foo", "bar");
+  assert(condition->conditionType == SAC_PREFIX_ATTRIBUTE_CONDITION);
+  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.namespaceURI);
+  ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.localName);
+  assert(condition->desc.attribute.specified == SAC_FALSE);
+  ASSERT_EQUAL_STRINGS("bar", condition->desc.attribute.value);
+
+  condition = SAC_condition_suffix_attribute(mpool, "ns", "foo", "bar");
+  assert(condition->conditionType == SAC_SUFFIX_ATTRIBUTE_CONDITION);
+  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.namespaceURI);
+  ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.localName);
+  assert(condition->desc.attribute.specified == SAC_FALSE);
+  ASSERT_EQUAL_STRINGS("bar", condition->desc.attribute.value);
+
+  condition = SAC_condition_substring_attribute(mpool, "ns", "foo", "bar");
+  assert(condition->conditionType == SAC_SUBSTRING_ATTRIBUTE_CONDITION);
+  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.namespaceURI);
+  ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.localName);
+  assert(condition->desc.attribute.specified == SAC_FALSE);
+  ASSERT_EQUAL_STRINGS("bar", condition->desc.attribute.value);
+
   condition = SAC_condition_attribute(mpool, "ns", "foo", "bar");
   assert(condition->conditionType == SAC_ATTRIBUTE_CONDITION);
   ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.namespaceURI);

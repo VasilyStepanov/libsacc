@@ -342,6 +342,9 @@ static void dump_condition(FILE *out, const SAC_Condition *condition) {
   switch (condition->conditionType) {
     case SAC_ONE_OF_ATTRIBUTE_CONDITION:
     case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
+    case SAC_PREFIX_ATTRIBUTE_CONDITION:
+    case SAC_SUFFIX_ATTRIBUTE_CONDITION:
+    case SAC_SUBSTRING_ATTRIBUTE_CONDITION:
     case SAC_ATTRIBUTE_CONDITION:
     case SAC_CLASS_CONDITION:
     case SAC_PSEUDO_CLASS_CONDITION:
@@ -353,6 +356,15 @@ static void dump_condition(FILE *out, const SAC_Condition *condition) {
           break;
         case SAC_CLASS_CONDITION:
           fprintf(out, "\"class\"");
+          break;
+        case SAC_PREFIX_ATTRIBUTE_CONDITION:
+          fprintf(out, "\"prefix\"");
+          break;
+        case SAC_SUFFIX_ATTRIBUTE_CONDITION:
+          fprintf(out, "\"suffix\"");
+          break;
+        case SAC_SUBSTRING_ATTRIBUTE_CONDITION:
+          fprintf(out, "\"substr\"");
           break;
         case SAC_ATTRIBUTE_CONDITION:
           fprintf(out, "\"attr\"");

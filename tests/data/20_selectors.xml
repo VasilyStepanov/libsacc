@@ -29,14 +29,23 @@
       <condition type="and">
         <condition type="and">
           <condition type="and">
-            <condition type="attr" localName="attr" specified="false"/>
-            <condition type="attr" localName="iattr" specified="true" value="ident"/>
+            <condition type="and">
+              <condition type="and">
+                <condition type="and">
+                  <condition type="attr" localName="attr" specified="false"/>
+                  <condition type="attr" localName="iattr" specified="true" value="ident"/>
+                </condition>
+                <condition type="attr" localName="sattr" specified="true" value="str"/>
+              </condition>
+              <condition type="one_of" localName="oneof" specified="false" value="inc"/>
+            </condition>
+            <condition type="begin_hypen" localName="hypen" specified="false" value="dash"/>
           </condition>
-          <condition type="attr" localName="sattr" specified="true" value="str"/>
+          <condition type="prefix" localName="prefix" specified="false" value="val"/>
         </condition>
-        <condition type="one_of" localName="oneof" specified="false" value="inc"/>
+        <condition type="suffix" localName="suffix" specified="false" value="val"/>
       </condition>
-      <condition type="begin_hypen" localName="hypen" specified="false" value="dash"/>
+      <condition type="substr" localName="substr" specified="false" value="val"/>
     </condition>
   </selector>
   <selector type="conditional">
@@ -44,12 +53,21 @@
     <condition type="and">
       <condition type="and">
         <condition type="and">
-          <condition type="attr" namespaceURI="ns" localName="attr" specified="false"/>
-          <condition type="attr" namespaceURI="ns" localName="attr" specified="true" value="str"/>
+          <condition type="and">
+            <condition type="and">
+              <condition type="and">
+                <condition type="attr" namespaceURI="ns" localName="attr" specified="false"/>
+                <condition type="attr" namespaceURI="ns" localName="attr" specified="true" value="str"/>
+              </condition>
+              <condition type="one_of" namespaceURI="ns" localName="oneof" specified="false" value="inc"/>
+            </condition>
+            <condition type="begin_hypen" namespaceURI="ns" localName="hypen" specified="false" value="dash"/>
+          </condition>
+          <condition type="prefix" namespaceURI="ns" localName="prefix" specified="false" value="val"/>
         </condition>
-        <condition type="one_of" namespaceURI="ns" localName="oneof" specified="false" value="inc"/>
+        <condition type="suffix" namespaceURI="ns" localName="suffix" specified="false" value="val"/>
       </condition>
-      <condition type="begin_hypen" namespaceURI="ns" localName="hypen" specified="false" value="dash"/>
+      <condition type="substr" namespaceURI="ns" localName="substr" specified="false" value="val"/>
     </condition>
   </selector>
   <selector type="conditional">
@@ -57,12 +75,21 @@
     <condition type="and">
       <condition type="and">
         <condition type="and">
-          <condition type="attr" localName="attr" specified="false"/>
-          <condition type="attr" localName="attr" specified="true" value="str"/>
+          <condition type="and">
+            <condition type="and">
+              <condition type="and">
+                <condition type="attr" localName="attr" specified="false"/>
+                <condition type="attr" localName="attr" specified="true" value="str"/>
+              </condition>
+              <condition type="one_of" localName="oneof" specified="false" value="inc"/>
+            </condition>
+            <condition type="begin_hypen" localName="hypen" specified="false" value="dash"/>
+          </condition>
+          <condition type="prefix" localName="prefix" specified="false" value="val"/>
         </condition>
-        <condition type="one_of" localName="oneof" specified="false" value="inc"/>
+        <condition type="suffix" localName="suffix" specified="false" value="val"/>
       </condition>
-      <condition type="begin_hypen" localName="hypen" specified="false" value="dash"/>
+      <condition type="substr" localName="substr" specified="false" value="val"/>
     </condition>
   </selector>
   <selector type="conditional">

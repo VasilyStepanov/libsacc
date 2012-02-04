@@ -2,9 +2,9 @@
 , div.some-class
 , .some-class
 , .class1#some-id.class2
-, [attr][iattr=ident][sattr="str"][oneof~="inc"][hypen|="dash"]
-, [ns|attr][ns|attr="str"][ns|oneof~="inc"][ns|hypen|="dash"]
-, [*|attr][*|attr="str"][*|oneof~="inc"][*|hypen|="dash"]
+, [attr][iattr=ident][sattr="str"][oneof~="inc"][hypen|="dash"][prefix^="val"][suffix$="val"][substr*="val"]
+, [ns|attr][ns|attr="str"][ns|oneof~="inc"][ns|hypen|="dash"][ns|prefix^="val"][ns|suffix$="val"][ns|substr*="val"]
+, [*|attr][*|attr="str"][*|oneof~="inc"][*|hypen|="dash"][*|prefix^="val"][*|suffix$="val"][*|substr*="val"]
 , :pseudo-class
 , *.foo:bar
 , a b c

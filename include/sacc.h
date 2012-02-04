@@ -673,6 +673,31 @@ typedef enum {
   SAC_POSITIONAL_CONDITION,
 
   /**
+   * This condition checks if the specified attribure contains at least one
+   * instance of the value.
+   *
+   * Example:
+   *   [att*=val]
+   */
+  SAC_PREFIX_ATTRIBUTE_CONDITION,
+
+  /**
+   * This condition checks if the specified attribure ends with the value.
+   *
+   * Example:
+   *   [att$=val]
+   */
+  SAC_SUFFIX_ATTRIBUTE_CONDITION,
+
+  /**
+   * This condition checks if the specified attribure begins with the value.
+   *
+   * Example:
+   *   [att^=val]
+   */
+  SAC_SUBSTRING_ATTRIBUTE_CONDITION,
+
+  /**
    * This condition checks an attribute.
    *
    * Example:
@@ -956,6 +981,9 @@ struct _SAC_Condition {
 
 
     /**
+     * SAC_PREFIX_ATTRIBUTE_CONDITION
+     * SAC_SUFFIX_ATTRIBUTE_CONDITION
+     * SAC_SUBSTRING_ATTRIBUTE_CONDITION
      * SAC_ATTRIBUTE_CONDITION
      * SAC_ONE_OF_ATTRIBUTE_CONDITION
      * SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION

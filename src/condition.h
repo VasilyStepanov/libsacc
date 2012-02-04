@@ -9,6 +9,12 @@
 
 SAC_Condition* SAC_condition_class(SAC_MPool mpool, SAC_STRING value);
 SAC_Condition* SAC_condition_id(SAC_MPool mpool, SAC_STRING value);
+SAC_Condition* SAC_condition_prefix_attribute(SAC_MPool mpool,
+  SAC_STRING namespaceURI, SAC_STRING localName, SAC_STRING value);
+SAC_Condition* SAC_condition_suffix_attribute(SAC_MPool mpool,
+  SAC_STRING namespaceURI, SAC_STRING localName, SAC_STRING value);
+SAC_Condition* SAC_condition_substring_attribute(SAC_MPool mpool,
+  SAC_STRING namespaceURI, SAC_STRING localName, SAC_STRING value);
 SAC_Condition* SAC_condition_attribute(SAC_MPool mpool,
   SAC_STRING namespaceURI, SAC_STRING localName, SAC_STRING value);
 SAC_Condition* SAC_condition_one_of_attribute(SAC_MPool mpool,

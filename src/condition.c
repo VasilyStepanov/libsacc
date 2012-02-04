@@ -48,6 +48,60 @@ SAC_Condition* SAC_condition_id(SAC_MPool mpool, SAC_STRING value) {
 
 
 
+SAC_Condition* SAC_condition_prefix_attribute(SAC_MPool mpool,
+  SAC_STRING namespaceURI, SAC_STRING localName, SAC_STRING value)
+{
+  SAC_Condition *condition;
+
+  condition = SAC_condition_alloc(mpool, SAC_PREFIX_ATTRIBUTE_CONDITION);
+  if (condition == NULL) return condition;
+
+  condition->desc.attribute.namespaceURI = namespaceURI;
+  condition->desc.attribute.localName = localName;
+  condition->desc.attribute.specified = SAC_FALSE;
+  condition->desc.attribute.value = value;
+
+  return condition;
+}
+
+
+
+SAC_Condition* SAC_condition_suffix_attribute(SAC_MPool mpool,
+  SAC_STRING namespaceURI, SAC_STRING localName, SAC_STRING value)
+{
+  SAC_Condition *condition;
+
+  condition = SAC_condition_alloc(mpool, SAC_SUFFIX_ATTRIBUTE_CONDITION);
+  if (condition == NULL) return condition;
+
+  condition->desc.attribute.namespaceURI = namespaceURI;
+  condition->desc.attribute.localName = localName;
+  condition->desc.attribute.specified = SAC_FALSE;
+  condition->desc.attribute.value = value;
+
+  return condition;
+}
+
+
+
+SAC_Condition* SAC_condition_substring_attribute(SAC_MPool mpool,
+  SAC_STRING namespaceURI, SAC_STRING localName, SAC_STRING value)
+{
+  SAC_Condition *condition;
+
+  condition = SAC_condition_alloc(mpool, SAC_SUBSTRING_ATTRIBUTE_CONDITION);
+  if (condition == NULL) return condition;
+
+  condition->desc.attribute.namespaceURI = namespaceURI;
+  condition->desc.attribute.localName = localName;
+  condition->desc.attribute.specified = SAC_FALSE;
+  condition->desc.attribute.value = value;
+
+  return condition;
+}
+
+
+
 SAC_Condition* SAC_condition_attribute(SAC_MPool mpool,
   SAC_STRING namespaceURI, SAC_STRING localName, SAC_STRING value)
 {
