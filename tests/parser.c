@@ -347,7 +347,6 @@ static void dump_condition(FILE *out, const SAC_Condition *condition) {
     case SAC_SUBSTRING_ATTRIBUTE_CONDITION:
     case SAC_ATTRIBUTE_CONDITION:
     case SAC_CLASS_CONDITION:
-    case SAC_PSEUDO_CLASS_CONDITION:
     case SAC_ID_CONDITION:
       fprintf(out, "<condition type=");
       switch (condition->conditionType) {
@@ -375,9 +374,6 @@ static void dump_condition(FILE *out, const SAC_Condition *condition) {
         case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
           fprintf(out, "\"begin_hypen\"");
           break;
-        case SAC_PSEUDO_CLASS_CONDITION:
-          fprintf(out, "\"pseudo_class\"");
-          break;
         default:
           fprintf(out, "\"unknown_%d\"", condition->conditionType);
           break;
@@ -399,6 +395,34 @@ static void dump_condition(FILE *out, const SAC_Condition *condition) {
           " value=\"%s\"", condition->desc.attribute.value);
 
       fprintf(out, "/>");
+      break;
+    case SAC_PSEUDO_CLASS_CONDITION:
+    case SAC_PSEUDO_ELEMENT_CONDITION:
+      {
+        SAC_LexicalUnit **arg;
+
+        fprintf(out, "<condition type=");
+        switch (condition->conditionType) {
+          case SAC_PSEUDO_CLASS_CONDITION:
+            fprintf(out, "\"pseudo_class\"");
+            break;
+          case SAC_PSEUDO_ELEMENT_CONDITION:
+            fprintf(out, "\"pseudo_element\"");
+            break;
+          default:
+            fprintf(out, "\"unknown_%d\"", condition->conditionType);
+            break;
+        }
+        fprintf(out, " name=\"%s\">", condition->desc.pseudo.name);
+        if (condition->desc.pseudo.parameters != NULL) {
+          for (arg = condition->desc.pseudo.parameters; *arg != NULL; ++arg) {
+            fprintf(out, "<arg>");
+            dump_lexical_unit(out, *arg);
+            fprintf(out, "</arg>");
+          }
+        }
+        fprintf(out, "</condition>");
+      }
       break;
     case SAC_AND_CONDITION:
       fprintf(out, "<condition type=\"and\">");
@@ -480,7 +504,6 @@ static void dump_selector(FILE *out, const SAC_Selector *selector) {
       dump_selector(out, selector->desc.sibling.secondSelector);
       fprintf(out, "</selector>");
       break;
-    case SAC_PSEUDO_ELEMENT_SELECTOR:
     case SAC_ROOT_NODE_SELECTOR:
     case SAC_TEXT_NODE_SELECTOR:
     case SAC_CDATA_SECTION_NODE_SELECTOR:

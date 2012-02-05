@@ -587,14 +587,6 @@ typedef enum {
    */
   SAC_COMMENT_NODE_SELECTOR,
 
-  /**
-   * This selector matches the 'first line' pseudo element.
-   *
-   * Examples:
-   *   :first-line
-   */
-  SAC_PSEUDO_ELEMENT_SELECTOR,
-
 
 
   /**
@@ -759,6 +751,14 @@ typedef enum {
   SAC_PSEUDO_CLASS_CONDITION,
 
   /**
+   * This selector matches the 'first line' pseudo element.
+   *
+   * Examples:
+   *   :first-line
+   */
+  SAC_PSEUDO_ELEMENT_CONDITION,
+
+  /**
    * This condition checks if a node is the only one in the node list.
    */
   SAC_ONLY_CHILD_CONDITION,
@@ -852,7 +852,6 @@ struct _SAC_Selector {
 
     /**
      * SAC_ELEMENT_NODE_SELECTOR
-     * SAC_PSEUDO_ELEMENT_SELECTOR
      */
 
     struct _SAC_Element {
@@ -989,7 +988,6 @@ struct _SAC_Condition {
      * SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION
      * SAC_ID_CONDITION
      * SAC_CLASS_CONDITION
-     * SAC_PSEUDO_CLASS_CONDITION
      */
 
     struct _SAC_Attribute {
@@ -1035,6 +1033,33 @@ struct _SAC_Condition {
       SAC_STRING  value;
     } attribute;
 
+
+
+    /**
+     * SAC_PSEUDO_CLASS_CONDITION
+     * SAC_PSEUDO_ELEMENT_CONDITION
+     */
+
+    struct _SAC_Pseudo {
+      /**
+       * Pseudo name.
+       *
+       * Examples:
+       *  first-line
+       *  checked
+       *  nth-child
+       */
+      SAC_STRING name;
+
+      /**
+       * Parameters for the functional pseudo selector.
+       * Terminated by NULL.
+       *
+       * NULL if this pseudo selector is not functional, i.e. pseudo class and
+       * pseudo element.
+       */
+      SAC_LexicalUnit **parameters;
+    } pseudo;
 
 
     /**

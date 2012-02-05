@@ -94,13 +94,13 @@
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
-    <condition type="pseudo_class" specified="true" value="pseudo-class"/>
+    <condition type="pseudo_class" name="pseudo-class"/>
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
     <condition type="and">
       <condition type="class" specified="true" value="foo"/>
-      <condition type="pseudo_class" specified="true" value="bar"/>
+      <condition type="pseudo_class" name="bar"/>
     </condition>
   </selector>
   <selector type="descendant">
@@ -169,7 +169,7 @@
       <condition type="negative">
         <selector type="conditional">
           <selector type="any_node"/>
-          <condition type="pseudo_class" specified="true" value="pseudo-class"/>
+          <condition type="pseudo_class" name="pseudo-class"/>
         </selector>
       </condition>
     </condition>

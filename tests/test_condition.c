@@ -85,10 +85,8 @@ static void test_condition_factory() {
 
   condition = SAC_condition_pseudo_class(mpool, "foo");
   assert(condition->conditionType == SAC_PSEUDO_CLASS_CONDITION);
-  assert(condition->desc.attribute.namespaceURI == NULL);
-  assert(condition->desc.attribute.localName == NULL);
-  assert(condition->desc.attribute.specified == SAC_TRUE);
-  ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.value);
+  ASSERT_EQUAL_STRINGS("foo", condition->desc.pseudo.name);
+  assert(condition->desc.pseudo.parameters == NULL);
 
   firstCondition = SAC_condition_class(mpool, "foo");
   secondCondition = SAC_condition_class(mpool, "bar");
