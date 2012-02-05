@@ -98,6 +98,10 @@
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
+    <condition type="pseudo_element" name="pseudo-element"/>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
     <condition type="and">
       <condition type="class" specified="true" value="foo"/>
       <condition type="pseudo_class" name="bar"/>
@@ -204,5 +208,33 @@
         <selector type="element_node" localName="a"/>
       </condition>
     </condition>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_element" name="first-line"/>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_element" name="first-letter"/>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_element" name="before"/>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_element" name="after"/>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_class" name="first-child"/>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_class" name="last-child"/>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_class" name="root"/>
   </selector>
 </selectors>

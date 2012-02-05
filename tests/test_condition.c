@@ -88,6 +88,11 @@ static void test_condition_factory() {
   ASSERT_EQUAL_STRINGS("foo", condition->desc.pseudo.name);
   assert(condition->desc.pseudo.parameters == NULL);
 
+  condition = SAC_condition_pseudo_element(mpool, "foo");
+  assert(condition->conditionType == SAC_PSEUDO_ELEMENT_CONDITION);
+  ASSERT_EQUAL_STRINGS("foo", condition->desc.pseudo.name);
+  assert(condition->desc.pseudo.parameters == NULL);
+
   firstCondition = SAC_condition_class(mpool, "foo");
   secondCondition = SAC_condition_class(mpool, "bar");
   condition = SAC_condition_and(mpool, firstCondition, secondCondition);

@@ -1,5 +1,7 @@
 #include "condition.h"
 
+#include "checks.h"
+
 
 
 static SAC_Condition* SAC_condition_alloc(SAC_MPool mpool,
@@ -159,7 +161,26 @@ SAC_Condition* SAC_condition_begin_hypen_attribute(SAC_MPool mpool,
 SAC_Condition* SAC_condition_pseudo_class(SAC_MPool mpool, SAC_STRING name) {
   SAC_Condition *condition;
 
+  SAC_CHECK_STRING_NOT_EQUALS(name, "first-line");
+  SAC_CHECK_STRING_NOT_EQUALS(name, "first-letter");
+  SAC_CHECK_STRING_NOT_EQUALS(name, "before");
+  SAC_CHECK_STRING_NOT_EQUALS(name, "after");
+
   condition = SAC_condition_alloc(mpool, SAC_PSEUDO_CLASS_CONDITION);
+  if (condition == NULL) return condition;
+
+  condition->desc.pseudo.name = name;
+  condition->desc.pseudo.parameters = NULL;
+
+  return condition;
+}
+
+
+
+SAC_Condition* SAC_condition_pseudo_element(SAC_MPool mpool, SAC_STRING name) {
+  SAC_Condition *condition;
+
+  condition = SAC_condition_alloc(mpool, SAC_PSEUDO_ELEMENT_CONDITION);
   if (condition == NULL) return condition;
 
   condition->desc.pseudo.name = name;

@@ -1084,7 +1084,20 @@ attrib_value
   ;
 pseudo
   : ':' IDENT {
-      $$ = SAC_condition_pseudo_class(YY_SCANNER_MPOOL(scanner), $2);
+      if (
+        strcasecmp($2, "first-line") == 0 ||
+        strcasecmp($2, "first-letter") == 0 ||
+        strcasecmp($2, "before") == 0 ||
+        strcasecmp($2, "after") == 0)
+      {
+        $$ = SAC_condition_pseudo_element(YY_SCANNER_MPOOL(scanner), $2);
+      } else {
+        $$ = SAC_condition_pseudo_class(YY_SCANNER_MPOOL(scanner), $2);
+      }
+      TEST_OBJ($$, @$);
+    }
+  | ':' ':' IDENT {
+      $$ = SAC_condition_pseudo_element(YY_SCANNER_MPOOL(scanner), $3);
       TEST_OBJ($$, @$);
     }
 /*
