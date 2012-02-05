@@ -554,11 +554,6 @@ typedef enum {
   SAC_ANY_NODE_SELECTOR,
 
   /**
-   * This selector matches the root node.
-   */
-  SAC_ROOT_NODE_SELECTOR,
-
-  /**
    * This selector matches only element node.
    *
    * Examples:
@@ -804,7 +799,6 @@ struct _SAC_Selector {
 
     /**
      * SAC_ANY_NODE_SELECTOR
-     * SAC_ROOT_NODE_SELECTOR
      */
 
     /* empty */

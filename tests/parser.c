@@ -504,7 +504,6 @@ static void dump_selector(FILE *out, const SAC_Selector *selector) {
       dump_selector(out, selector->desc.sibling.secondSelector);
       fprintf(out, "</selector>");
       break;
-    case SAC_ROOT_NODE_SELECTOR:
     case SAC_TEXT_NODE_SELECTOR:
     case SAC_CDATA_SECTION_NODE_SELECTOR:
     case SAC_PROCESSING_INSTRUCTION_NODE_SELECTOR:
