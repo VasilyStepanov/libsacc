@@ -1,6 +1,9 @@
 #include "lexical_unit.h"
 
 #include "vector_extra.h"
+#include "list.h"
+#include "vector.h"
+#include "vector_extra.h"
 
 #include "checks.h"
 
@@ -581,4 +584,40 @@ SAC_LexicalUnit* SAC_lexical_unit_counters(SAC_MPool mpool,
   value->desc.function.parameters = parameters;
 
   return value;
+}
+
+
+
+SAC_LexicalUnit** SAC_lexical_unit_nth_expr(SAC_MPool mpool,
+  SAC_STRING unit, int size, int offset)
+{
+  SAC_List list;
+  SAC_LexicalUnit *value;
+
+  list = SAC_list_open(mpool);
+
+  value = SAC_lexical_unit_dimension(mpool, unit, size);
+  if (value == NULL) return NULL;
+  SAC_list_push_back(list, mpool, value);
+
+  value = SAC_lexical_unit_int(mpool, offset);
+  if (value == NULL) return NULL;
+  SAC_list_push_back(list, mpool, value);
+
+  return SAC_vector_from_list(list, mpool);
+}
+
+
+
+SAC_LexicalUnit** SAC_lexical_unit_nth_ident_expr(SAC_MPool mpool,
+  SAC_STRING ident)
+{
+  SAC_LexicalUnit **vector;
+
+  vector = SAC_vector_open(mpool, 1);
+
+  vector[0] = SAC_lexical_unit_ident(mpool, ident);
+  if (vector[0] == NULL) return NULL;
+
+  return vector;
 }

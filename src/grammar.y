@@ -7,6 +7,7 @@
  */
 %code requires {
 #include <strings.h>
+#include <string.h>
 
 #include "list.h"
 #include "vector.h"
@@ -200,13 +201,13 @@ SAC_Pair pair;
 %type <boolean> maybe_prio;
 
 %type <ch> unary_operator;
+%type <ch> maybe_unary_operator;
 %type <value> maybe_operator;
 
 %type <list> expr;
 %type <value> term;
 %type <value> function;
-%type <list> functional_pseudo_expr;
-%type <value> functional_pseudo_term;
+%type <vector> functional_pseudo_expr;
 %type <value> functional_pseudo;
 
 %type <sel> type_selector;
@@ -802,8 +803,13 @@ unary_operator
   | PLUS {
       $$ = '+';
     }
-  | /* empty */ {
-      $$ = '+';
+  ;
+maybe_unary_operator
+  : /* empty */ {
+      $$ = '\0';
+    }
+  | unary_operator {
+      $$ = $1;
     }
   ;
 property
@@ -1120,52 +1126,93 @@ pseudo
   ;
 functional_pseudo
   : FUNCTION maybe_spaces functional_pseudo_expr ')' {
-      SAC_LexicalUnit **parameters;
-
-      parameters = SAC_vector_from_list($3, YY_SCANNER_MPOOL(scanner));
-      TEST_OBJ(parameters, @3);
-
-      $$ = SAC_lexical_unit_function(YY_SCANNER_MPOOL(scanner),
-        $1, parameters);
+      $$ = SAC_lexical_unit_function(YY_SCANNER_MPOOL(scanner), $1, $3);
+      TEST_OBJ($$, @$);
     }
   ;
 functional_pseudo_expr
-  : functional_pseudo_term {
-      $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
+  : maybe_unary_operator INT maybe_spaces {
+      if ($1 == '-') $2 = -$2;
+
+      $$ = SAC_lexical_unit_nth_expr(YY_SCANNER_MPOOL(scanner), "n", 0, $2);
       TEST_OBJ($$, @$);
-      TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1), @1);
     }
-  | functional_pseudo_expr functional_pseudo_term {
-      $$ = $1;
-      TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $2), @2);
-    }
-  ;
-functional_pseudo_term
-  : DIMEN maybe_spaces {
-      double value;
+  | maybe_unary_operator DIMEN maybe_spaces {
       char *unit;
+      int size;
+      char *tail;
+      int offset = 0;
 
-      value = strtod($1, &unit);
+      size = (int)strtol($2, &unit, 10);
+      if ($1 == '-') size = -size;
 
-      $$ = SAC_lexical_unit_dimension(YY_SCANNER_MPOOL(scanner), unit, value);
-    }
-  | INT maybe_spaces {
-      $$ = SAC_lexical_unit_int(YY_SCANNER_MPOOL(scanner), $1);
+      tail = strrchr($2, '-');
+
+      if (tail != NULL) {
+        offset = (int)strtol(tail, NULL, 10);
+        *tail = '\0';
+      }
+
+      $$ = SAC_lexical_unit_nth_expr(YY_SCANNER_MPOOL(scanner),
+        unit, size, offset);
       TEST_OBJ($$, @$);
     }
-  | STRING maybe_spaces {
-      $$ = SAC_lexical_unit_string(YY_SCANNER_MPOOL(scanner), $1);
+  | maybe_unary_operator DIMEN maybe_spaces unary_operator maybe_spaces INT
+    maybe_spaces
+    {
+      char *unit;
+      int size;
+
+      size = (int)strtol($2, &unit, 10);
+      if ($1 == '-') size = -size;
+      if ($4 == '-') $6 = -$6;
+
+      $$ = SAC_lexical_unit_nth_expr(YY_SCANNER_MPOOL(scanner),
+        unit, size, $6);
       TEST_OBJ($$, @$);
     }
-  | IDENT maybe_spaces {
-      $$ = SAC_lexical_unit_ident(YY_SCANNER_MPOOL(scanner), $1);
+  | maybe_unary_operator IDENT maybe_spaces {
+      int size = 1;
+      char *tail;
+
+      if ($1 == '\0' && $2[0] == '-') {
+        ++$2;
+        $1 = '-';
+      }
+
+      if ($1 == '-') size = -size;
+
+      tail = strrchr($2, '-');
+
+      if ($1 == '\0' && tail == NULL) {
+        $$ = SAC_lexical_unit_nth_ident_expr(YY_SCANNER_MPOOL(scanner), $2);
+      } else {
+        int offset = 0;
+        if (tail != NULL) {
+          offset = (int)strtol(tail, NULL, 10);
+          *tail = '\0';
+        }
+
+        $$ = SAC_lexical_unit_nth_expr(YY_SCANNER_MPOOL(scanner),
+          $2, size, offset);
+      }
       TEST_OBJ($$, @$);
     }
-  | PLUS maybe_spaces {
-      $$ = SAC_lexical_unit_operator_plus(YY_SCANNER_MPOOL(scanner));
-    }
-  | '-' maybe_spaces {
-      $$ = SAC_lexical_unit_operator_minus(YY_SCANNER_MPOOL(scanner));
+  | maybe_unary_operator IDENT maybe_spaces unary_operator maybe_spaces INT
+    maybe_spaces
+    {
+      int size = 1;
+
+      if ($1 == '\0' && $2[0] == '-') {
+        ++$2;
+        $1 = '-';
+      }
+
+      if ($1 == '-') size = -size;
+
+      $$ = SAC_lexical_unit_nth_expr(YY_SCANNER_MPOOL(scanner),
+        $2, size, $6);
+      TEST_OBJ($$, @$);
     }
   ;
 negation
@@ -1363,77 +1410,77 @@ expr_errors
   ;
 
 term
-  : unary_operator INT maybe_spaces {
+  : maybe_unary_operator INT maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_int(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator REAL maybe_spaces {
+  | maybe_unary_operator REAL maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_real(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator PERCENTAGE maybe_spaces {
+  | maybe_unary_operator PERCENTAGE maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_percentage(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator LENGTH_PIXEL maybe_spaces {
+  | maybe_unary_operator LENGTH_PIXEL maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_pixel(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator LENGTH_INCH maybe_spaces {
+  | maybe_unary_operator LENGTH_INCH maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_inch(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator LENGTH_CENTIMETER maybe_spaces {
+  | maybe_unary_operator LENGTH_CENTIMETER maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_centimeter(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator LENGTH_MILLIMETER maybe_spaces {
+  | maybe_unary_operator LENGTH_MILLIMETER maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_millimeter(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator LENGTH_POINT maybe_spaces {
+  | maybe_unary_operator LENGTH_POINT maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_point(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator LENGTH_PICA maybe_spaces {
+  | maybe_unary_operator LENGTH_PICA maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_pica(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator LENGTH_EM maybe_spaces {
+  | maybe_unary_operator LENGTH_EM maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_em(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator LENGTH_EX maybe_spaces {
+  | maybe_unary_operator LENGTH_EX maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_ex(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator ANGLE_DEG maybe_spaces {
+  | maybe_unary_operator ANGLE_DEG maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_degree(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator ANGLE_RAD maybe_spaces {
+  | maybe_unary_operator ANGLE_RAD maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_radian(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator ANGLE_GRAD maybe_spaces {
+  | maybe_unary_operator ANGLE_GRAD maybe_spaces {
       if ($1 == '-') $2 = -$2;
       $$ = SAC_lexical_unit_gradian(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator DIMEN maybe_spaces {
+  | maybe_unary_operator DIMEN maybe_spaces {
       double value;
       char *unit;
 
@@ -1442,42 +1489,42 @@ term
 
       $$ = SAC_lexical_unit_dimension(YY_SCANNER_MPOOL(scanner), unit, value);
     }
-  | unary_operator TIME_MS maybe_spaces {
+  | maybe_unary_operator TIME_MS maybe_spaces {
       if ($1 == '-') SAC_SYNTAX_ERROR(@1,
         "negative time not allowed");
 
       $$ = SAC_lexical_unit_millisecond(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator TIME_S maybe_spaces {
+  | maybe_unary_operator TIME_S maybe_spaces {
       if ($1 == '-') SAC_SYNTAX_ERROR(@1,
         "negative time not allowed");
 
       $$ = SAC_lexical_unit_second(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator FREQ_HZ maybe_spaces {
+  | maybe_unary_operator FREQ_HZ maybe_spaces {
       if ($1 == '-') SAC_SYNTAX_ERROR(@1,
         "negative frequency not allowed");
 
       $$ = SAC_lexical_unit_hertz(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator FREQ_KHZ maybe_spaces {
+  | maybe_unary_operator FREQ_KHZ maybe_spaces {
       if ($1 == '-') SAC_SYNTAX_ERROR(@1,
         "negative frequency not allowed");
 
       $$ = SAC_lexical_unit_kilohertz(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator RESOLUTION_DPI maybe_spaces {
+  | maybe_unary_operator RESOLUTION_DPI maybe_spaces {
       if ($1 == '-') SAC_SYNTAX_ERROR(@1,
         "negative resolution not allowed");
 
       $$ = SAC_lexical_unit_dots_per_inch(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ($$, @$);
     }
-  | unary_operator RESOLUTION_DPCM maybe_spaces {
+  | maybe_unary_operator RESOLUTION_DPCM maybe_spaces {
       if ($1 == '-') SAC_SYNTAX_ERROR(@1,
         "negative resolution not allowed");
 
