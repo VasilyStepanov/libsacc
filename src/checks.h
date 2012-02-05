@@ -17,10 +17,14 @@
 
 
 #ifdef SAC_CHECKS
-#  define SAC_CHECK_UNSIGNED(ureal) assert(ureal >= 0)
+#  define SAC_CHECK_ASSERT(expr) assert(expr)
 #else
-#  define SAC_CHECK_UNSIGNED(ureal) SAC_NOP
+#  define SAC_CHECK_ASSERT(expr) SAC_NOP
 #endif
+
+
+
+#define SAC_CHECK_UNSIGNED(ureal) SAC_CHECK_ASSERT(ureal >= 0)
 
 
 

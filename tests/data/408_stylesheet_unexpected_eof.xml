@@ -8,7 +8,9 @@
       <start_selectors>
         <selector type="conditional">
           <selector type="element_node" localName="p"/>
-          <condition type="pseudo_element" name="before"/>
+          <condition type="pseudo_element">
+            <ident>before</ident>
+          </condition>
         </selector>
       </start_selectors>
       <error type="SYNTAX" line="2" column="23">closing quote not found</error>
@@ -19,7 +21,9 @@
       <end_selectors>
         <selector type="conditional">
           <selector type="element_node" localName="p"/>
-          <condition type="pseudo_element" name="before"/>
+          <condition type="pseudo_element">
+            <ident>before</ident>
+          </condition>
         </selector>
       </end_selectors>
     </style>

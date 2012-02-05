@@ -439,6 +439,28 @@ SAC_LexicalUnit* SAC_lexical_unit_unicode_range(SAC_MPool mpool,
 
 
 
+SAC_LexicalUnit* SAC_lexical_unit_operator_plus(SAC_MPool mpool) {
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_OPERATOR_PLUS);
+  if (value == NULL) return value;
+
+  return value;
+}
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_operator_minus(SAC_MPool mpool) {
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_OPERATOR_MINUS);
+  if (value == NULL) return value;
+
+  return value;
+}
+
+
+
 SAC_LexicalUnit* SAC_lexical_unit_operator_slash(SAC_MPool mpool) {
   SAC_LexicalUnit *value;
 

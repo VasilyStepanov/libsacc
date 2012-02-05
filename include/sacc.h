@@ -1034,26 +1034,12 @@ struct _SAC_Condition {
      * SAC_PSEUDO_ELEMENT_CONDITION
      */
 
-    struct _SAC_Pseudo {
-      /**
-       * Pseudo name.
-       *
-       * Examples:
-       *  first-line
-       *  checked
-       *  nth-child
-       */
-      SAC_STRING name;
-
-      /**
-       * Parameters for the functional pseudo selector.
-       * Terminated by NULL.
-       *
-       * NULL if this pseudo selector is not functional, i.e. pseudo class and
-       * pseudo element.
-       */
-      SAC_LexicalUnit **parameters;
-    } pseudo;
+    /**
+     * Ident lexical unit for the pseudo class and pseudo element condition.
+     * Function lexical unit for the functional pseudo condition.
+     *
+     */
+    SAC_LexicalUnit *pseudo;
 
 
     /**

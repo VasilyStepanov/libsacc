@@ -94,17 +94,23 @@
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
-    <condition type="pseudo_class" name="pseudo-class"/>
+    <condition type="pseudo_class">
+      <ident>pseudo-class</ident>
+    </condition>
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
-    <condition type="pseudo_element" name="pseudo-element"/>
+    <condition type="pseudo_element">
+      <ident>pseudo-element</ident>
+    </condition>
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
     <condition type="and">
       <condition type="class" specified="true" value="foo"/>
-      <condition type="pseudo_class" name="bar"/>
+      <condition type="pseudo_class">
+        <ident>bar</ident>
+      </condition>
     </condition>
   </selector>
   <selector type="descendant">
@@ -173,7 +179,9 @@
       <condition type="negative">
         <selector type="conditional">
           <selector type="any_node"/>
-          <condition type="pseudo_class" name="pseudo-class"/>
+          <condition type="pseudo_class">
+            <ident>pseudo-class</ident>
+          </condition>
         </selector>
       </condition>
     </condition>
@@ -211,30 +219,154 @@
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
-    <condition type="pseudo_element" name="first-line"/>
+    <condition type="pseudo_element">
+      <ident>first-line</ident>
+    </condition>
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
-    <condition type="pseudo_element" name="first-letter"/>
+    <condition type="pseudo_element">
+      <ident>first-letter</ident>
+    </condition>
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
-    <condition type="pseudo_element" name="before"/>
+    <condition type="pseudo_element">
+      <ident>before</ident>
+    </condition>
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
-    <condition type="pseudo_element" name="after"/>
+    <condition type="pseudo_element">
+      <ident>after</ident>
+    </condition>
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
-    <condition type="pseudo_class" name="first-child"/>
+    <condition type="pseudo_class">
+      <ident>first-child</ident>
+    </condition>
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
-    <condition type="pseudo_class" name="last-child"/>
+    <condition type="pseudo_class">
+      <ident>last-child</ident>
+    </condition>
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
-    <condition type="pseudo_class" name="root"/>
+    <condition type="pseudo_class">
+      <ident>root</ident>
+    </condition>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_element">
+      <func type="generic" name="nth-child">
+        <arg>
+          <dimen type="n">2</dimen>
+        </arg>
+        <arg>
+          <plus/>
+        </arg>
+        <arg>
+          <int>1</int>
+        </arg>
+      </func>
+    </condition>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_element">
+      <func type="generic" name="nth-child">
+        <arg>
+          <ident>odd</ident>
+        </arg>
+      </func>
+    </condition>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_element">
+      <func type="generic" name="nth-child">
+        <arg>
+          <ident>even</ident>
+        </arg>
+      </func>
+    </condition>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_element">
+      <func type="generic" name="nth-child">
+        <arg>
+          <dimen type="n-1">10</dimen>
+        </arg>
+      </func>
+    </condition>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_element">
+      <func type="generic" name="nth-child">
+        <arg>
+          <dimen type="n">3</dimen>
+        </arg>
+        <arg>
+          <plus/>
+        </arg>
+        <arg>
+          <int>1</int>
+        </arg>
+      </func>
+    </condition>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_element">
+      <func type="generic" name="nth-child">
+        <arg>
+          <plus/>
+        </arg>
+        <arg>
+          <dimen type="n">3</dimen>
+        </arg>
+        <arg>
+          <minus/>
+        </arg>
+        <arg>
+          <int>2</int>
+        </arg>
+      </func>
+    </condition>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_element">
+      <func type="generic" name="nth-child">
+        <arg>
+          <ident>-n</ident>
+        </arg>
+        <arg>
+          <plus/>
+        </arg>
+        <arg>
+          <int>6</int>
+        </arg>
+      </func>
+    </condition>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_element">
+      <func type="generic" name="nth-child">
+        <arg>
+          <plus/>
+        </arg>
+        <arg>
+          <int>6</int>
+        </arg>
+      </func>
+    </condition>
   </selector>
 </selectors>

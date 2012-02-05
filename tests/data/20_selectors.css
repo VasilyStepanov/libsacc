@@ -22,3 +22,11 @@
 , :first-child
 , :last-child
 , :root
+, :nth-child(2n+1)
+, :nth-child(odd)
+, :nth-child(even)
+, :nth-child(10n-1)
+, :nth-child( 3n +1 )
+, :nth-child( +3n - 2 )
+, :nth-child( -n+ 6)
+, :nth-child( +6 )

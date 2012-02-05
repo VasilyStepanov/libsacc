@@ -74,6 +74,12 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
     fprintf(out, "<no_lexical_units />");
   } else {
     switch (value->lexicalUnitType) {
+      case SAC_OPERATOR_PLUS:
+        fprintf(out, "<plus/>");
+        break;
+      case SAC_OPERATOR_MINUS:
+        fprintf(out, "<minus/>");
+        break;
       case SAC_OPERATOR_COMMA:
         fprintf(out, "<comma/>");
         break;
@@ -232,8 +238,6 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
         fprintf(out, "<dimen type=\"%s\">%g</dimen>",
           value->desc.dimension.unit, value->desc.dimension.value.sreal);
         break;
-      case SAC_OPERATOR_PLUS:
-      case SAC_OPERATOR_MINUS:
       case SAC_OPERATOR_MULTIPLY:
       case SAC_OPERATOR_MOD:
       case SAC_OPERATOR_EXP:
@@ -399,8 +403,6 @@ static void dump_condition(FILE *out, const SAC_Condition *condition) {
     case SAC_PSEUDO_CLASS_CONDITION:
     case SAC_PSEUDO_ELEMENT_CONDITION:
       {
-        SAC_LexicalUnit **arg;
-
         fprintf(out, "<condition type=");
         switch (condition->conditionType) {
           case SAC_PSEUDO_CLASS_CONDITION:
@@ -413,14 +415,8 @@ static void dump_condition(FILE *out, const SAC_Condition *condition) {
             fprintf(out, "\"unknown_%d\"", condition->conditionType);
             break;
         }
-        fprintf(out, " name=\"%s\">", condition->desc.pseudo.name);
-        if (condition->desc.pseudo.parameters != NULL) {
-          for (arg = condition->desc.pseudo.parameters; *arg != NULL; ++arg) {
-            fprintf(out, "<arg>");
-            dump_lexical_unit(out, *arg);
-            fprintf(out, "</arg>");
-          }
-        }
+        fprintf(out, ">");
+        dump_lexical_unit(out, condition->desc.pseudo);
         fprintf(out, "</condition>");
       }
       break;

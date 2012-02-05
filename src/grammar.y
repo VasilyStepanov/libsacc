@@ -205,6 +205,9 @@ SAC_Pair pair;
 %type <list> expr;
 %type <value> term;
 %type <value> function;
+%type <list> functional_pseudo_expr;
+%type <value> functional_pseudo_term;
+%type <value> functional_pseudo;
 
 %type <sel> type_selector;
 %type <sel> universal;
@@ -1084,25 +1087,86 @@ attrib_value
   ;
 pseudo
   : ':' IDENT {
+      SAC_LexicalUnit *pseudo;
+
+      pseudo = SAC_lexical_unit_ident(YY_SCANNER_MPOOL(scanner), $2);
+      TEST_OBJ(pseudo, @2);
+
       if (
         strcasecmp($2, "first-line") == 0 ||
         strcasecmp($2, "first-letter") == 0 ||
         strcasecmp($2, "before") == 0 ||
         strcasecmp($2, "after") == 0)
       {
-        $$ = SAC_condition_pseudo_element(YY_SCANNER_MPOOL(scanner), $2);
+        $$ = SAC_condition_pseudo_element(YY_SCANNER_MPOOL(scanner), pseudo);
       } else {
-        $$ = SAC_condition_pseudo_class(YY_SCANNER_MPOOL(scanner), $2);
+        $$ = SAC_condition_pseudo_class(YY_SCANNER_MPOOL(scanner), pseudo);
       }
       TEST_OBJ($$, @$);
     }
   | ':' ':' IDENT {
-      $$ = SAC_condition_pseudo_element(YY_SCANNER_MPOOL(scanner), $3);
+      SAC_LexicalUnit *pseudo;
+
+      pseudo = SAC_lexical_unit_ident(YY_SCANNER_MPOOL(scanner), $3);
+      TEST_OBJ(pseudo, @3);
+
+      $$ = SAC_condition_pseudo_element(YY_SCANNER_MPOOL(scanner), pseudo);
       TEST_OBJ($$, @$);
     }
-/*
-  | ':' FUNCTION maybe_spaces maybe_ident ')'
-*/
+  | ':' functional_pseudo {
+      $$ = SAC_condition_pseudo_element(YY_SCANNER_MPOOL(scanner), $2);
+      TEST_OBJ($$, @$);
+    }
+  ;
+functional_pseudo
+  : FUNCTION maybe_spaces functional_pseudo_expr ')' {
+      SAC_LexicalUnit **parameters;
+
+      parameters = SAC_vector_from_list($3, YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(parameters, @3);
+
+      $$ = SAC_lexical_unit_function(YY_SCANNER_MPOOL(scanner),
+        $1, parameters);
+    }
+  ;
+functional_pseudo_expr
+  : functional_pseudo_term {
+      $$ = SAC_list_open(YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ($$, @$);
+      TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $1), @1);
+    }
+  | functional_pseudo_expr functional_pseudo_term {
+      $$ = $1;
+      TEST_OBJ(SAC_list_push_back($$, YY_SCANNER_MPOOL(scanner), $2), @2);
+    }
+  ;
+functional_pseudo_term
+  : DIMEN maybe_spaces {
+      double value;
+      char *unit;
+
+      value = strtod($1, &unit);
+
+      $$ = SAC_lexical_unit_dimension(YY_SCANNER_MPOOL(scanner), unit, value);
+    }
+  | INT maybe_spaces {
+      $$ = SAC_lexical_unit_int(YY_SCANNER_MPOOL(scanner), $1);
+      TEST_OBJ($$, @$);
+    }
+  | STRING maybe_spaces {
+      $$ = SAC_lexical_unit_string(YY_SCANNER_MPOOL(scanner), $1);
+      TEST_OBJ($$, @$);
+    }
+  | IDENT maybe_spaces {
+      $$ = SAC_lexical_unit_ident(YY_SCANNER_MPOOL(scanner), $1);
+      TEST_OBJ($$, @$);
+    }
+  | PLUS maybe_spaces {
+      $$ = SAC_lexical_unit_operator_plus(YY_SCANNER_MPOOL(scanner));
+    }
+  | '-' maybe_spaces {
+      $$ = SAC_lexical_unit_operator_minus(YY_SCANNER_MPOOL(scanner));
+    }
   ;
 negation
   : NOT maybe_spaces type_selector maybe_spaces ')' {

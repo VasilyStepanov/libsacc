@@ -3,6 +3,7 @@
 #include "condition.h"
 #include "mpool.h"
 #include "selector.h"
+#include "lexical_unit.h"
 #include "test_utils.h"
 
 #include <sacc.h>
@@ -17,6 +18,7 @@ static void test_condition_factory() {
   SAC_Condition *firstCondition;
   SAC_Condition *secondCondition;
   SAC_Selector *selector;
+  SAC_LexicalUnit *ident;
 
   mpool = SAC_mpool_open(256);
 
@@ -83,15 +85,15 @@ static void test_condition_factory() {
   assert(condition->desc.attribute.specified == SAC_FALSE);
   ASSERT_EQUAL_STRINGS("bar", condition->desc.attribute.value);
 
-  condition = SAC_condition_pseudo_class(mpool, "foo");
+  ident = SAC_lexical_unit_ident(mpool, "foo");
+  condition = SAC_condition_pseudo_class(mpool, ident);
   assert(condition->conditionType == SAC_PSEUDO_CLASS_CONDITION);
-  ASSERT_EQUAL_STRINGS("foo", condition->desc.pseudo.name);
-  assert(condition->desc.pseudo.parameters == NULL);
+  assert(condition->desc.pseudo == ident);
 
-  condition = SAC_condition_pseudo_element(mpool, "foo");
+  ident = SAC_lexical_unit_ident(mpool, "foo");
+  condition = SAC_condition_pseudo_element(mpool, ident);
   assert(condition->conditionType == SAC_PSEUDO_ELEMENT_CONDITION);
-  ASSERT_EQUAL_STRINGS("foo", condition->desc.pseudo.name);
-  assert(condition->desc.pseudo.parameters == NULL);
+  assert(condition->desc.pseudo == ident);
 
   firstCondition = SAC_condition_class(mpool, "foo");
   secondCondition = SAC_condition_class(mpool, "bar");
