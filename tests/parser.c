@@ -74,12 +74,6 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
     fprintf(out, "<no_lexical_units />");
   } else {
     switch (value->lexicalUnitType) {
-      case SAC_OPERATOR_PLUS:
-        fprintf(out, "<plus/>");
-        break;
-      case SAC_OPERATOR_MINUS:
-        fprintf(out, "<minus/>");
-        break;
       case SAC_OPERATOR_COMMA:
         fprintf(out, "<comma/>");
         break;
@@ -238,6 +232,8 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
         fprintf(out, "<dimen type=\"%s\">%g</dimen>",
           value->desc.dimension.unit, value->desc.dimension.value.sreal);
         break;
+      case SAC_OPERATOR_PLUS:
+      case SAC_OPERATOR_MINUS:
       case SAC_OPERATOR_MULTIPLY:
       case SAC_OPERATOR_MOD:
       case SAC_OPERATOR_EXP:

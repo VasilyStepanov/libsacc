@@ -39,8 +39,6 @@ SAC_LexicalUnit* SAC_lexical_unit_inherit(SAC_MPool mpool);
 SAC_LexicalUnit* SAC_lexical_unit_uri(SAC_MPool mpool, SAC_STRING uri);
 SAC_LexicalUnit* SAC_lexical_unit_unicode_range(SAC_MPool mpool,
   SAC_STRING unicode_range);
-SAC_LexicalUnit* SAC_lexical_unit_operator_plus(SAC_MPool mpool);
-SAC_LexicalUnit* SAC_lexical_unit_operator_minus(SAC_MPool mpool);
 SAC_LexicalUnit* SAC_lexical_unit_operator_slash(SAC_MPool mpool);
 SAC_LexicalUnit* SAC_lexical_unit_operator_comma(SAC_MPool mpool);
 SAC_LexicalUnit* SAC_lexical_unit_function(SAC_MPool mpool,
