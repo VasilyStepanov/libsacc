@@ -506,6 +506,19 @@ struct _SAC_LexicalUnit {
        * The function parameters including operators (like the comma).
        * #000 is converted to rgb(0, 0, 0)
        * Can return null if SAC_FUNCTION.
+       *
+       * nth- function expressions parsing rules.
+       * For knwon expressions there will be three lexical units always:
+       * SAC_DIMENSION, SAC_OPERATOR_ AND SAC_INTEGER.
+       *
+       * Examples:
+       *   -2n-1: SAC_DIMENSION (-2n) SAC_OPERATOR_MINUS SAC_INTEGER (1)
+       *   2n   : SAC_DIMENSION (2n) SAC_OPERATOR_PLUS SAC_INTEGER (0)
+       *   1    : SAC_DIMENSION (0n) SAC_OPERATOR_PLUS SAC_INTEGER (0)
+       *   odd  : treated ass 2n+1
+       *   even : treated ass 2n
+       * but
+       *   foo  : SAC_IDENT
        */
       SAC_LexicalUnit **parameters;
     } function;
