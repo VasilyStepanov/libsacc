@@ -111,6 +111,7 @@ SAC_Pair pair;
 
 %token <str> STRING
 %right <str> IDENT
+%token <str> NTH
 
 %nonassoc <str> HASH
 %nonassoc error
@@ -1151,81 +1152,18 @@ functional_pseudo_expr
       $$ = SAC_lexical_unit_nth_expr(YY_SCANNER_MPOOL(scanner), "n", 0, $2);
       TEST_OBJ($$, @$);
     }
-  | maybe_unary_operator DIMEN maybe_spaces {
-      char *unit;
-      int size;
-      char *tail;
-      int offset = 0;
-
-      size = (int)strtol($2, &unit, 10);
-      if ($1 == '-') size = -size;
-
-      tail = strrchr($2, '-');
-
-      if (tail != NULL) {
-        offset = (int)strtol(tail, NULL, 10);
-        *tail = '\0';
-      }
-
-      $$ = SAC_lexical_unit_nth_expr(YY_SCANNER_MPOOL(scanner),
-        unit, size, offset);
+  | NTH maybe_spaces {
+      $$ = SAC_lexical_unit_parse_nth_expr(YY_SCANNER_MPOOL(scanner), $1);
       TEST_OBJ($$, @$);
     }
-  | maybe_unary_operator DIMEN maybe_spaces unary_operator maybe_spaces INT
-    maybe_spaces
-    {
-      char *unit;
-      int size;
-
-      size = (int)strtol($2, &unit, 10);
-      if ($1 == '-') size = -size;
-      if ($4 == '-') $6 = -$6;
-
-      $$ = SAC_lexical_unit_nth_expr(YY_SCANNER_MPOOL(scanner),
-        unit, size, $6);
-      TEST_OBJ($$, @$);
-    }
-  | maybe_unary_operator IDENT maybe_spaces {
-      int size = 1;
-      char *tail;
-
-      if ($1 == '\0' && $2[0] == '-') {
-        ++$2;
-        $1 = '-';
-      }
-
-      if ($1 == '-') size = -size;
-
-      tail = strrchr($2, '-');
-
-      if ($1 == '\0' && tail == NULL) {
-        $$ = SAC_lexical_unit_nth_ident_expr(YY_SCANNER_MPOOL(scanner), $2);
+  | IDENT maybe_spaces {
+      if (strcasecmp($1, "odd") == 0) {
+        $$ = SAC_lexical_unit_nth_expr(YY_SCANNER_MPOOL(scanner), "n", 2, 1);
+      } else if (strcasecmp($1, "even") == 0) {
+        $$ = SAC_lexical_unit_nth_expr(YY_SCANNER_MPOOL(scanner), "n", 2, 0);
       } else {
-        int offset = 0;
-        if (tail != NULL) {
-          offset = (int)strtol(tail, NULL, 10);
-          *tail = '\0';
-        }
-
-        $$ = SAC_lexical_unit_nth_expr(YY_SCANNER_MPOOL(scanner),
-          $2, size, offset);
+        $$ = SAC_lexical_unit_nth_ident_expr(YY_SCANNER_MPOOL(scanner), $1);
       }
-      TEST_OBJ($$, @$);
-    }
-  | maybe_unary_operator IDENT maybe_spaces unary_operator maybe_spaces INT
-    maybe_spaces
-    {
-      int size = 1;
-
-      if ($1 == '\0' && $2[0] == '-') {
-        ++$2;
-        $1 = '-';
-      }
-
-      if ($1 == '-') size = -size;
-
-      $$ = SAC_lexical_unit_nth_expr(YY_SCANNER_MPOOL(scanner),
-        $2, size, $6);
       TEST_OBJ($$, @$);
     }
   ;

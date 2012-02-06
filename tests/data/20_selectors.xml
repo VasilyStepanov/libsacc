@@ -280,7 +280,13 @@
     <condition type="pseudo_element">
       <func type="nth-child" name="nth-child">
         <arg>
-          <ident>odd</ident>
+          <dimen type="n">2</dimen>
+        </arg>
+        <arg>
+          <plus/>
+        </arg>
+        <arg>
+          <int>1</int>
         </arg>
       </func>
     </condition>
@@ -290,7 +296,23 @@
     <condition type="pseudo_element">
       <func type="nth-child" name="nth-child">
         <arg>
-          <ident>even</ident>
+          <dimen type="n">2</dimen>
+        </arg>
+        <arg>
+          <plus/>
+        </arg>
+        <arg>
+          <int>0</int>
+        </arg>
+      </func>
+    </condition>
+  </selector>
+  <selector type="conditional">
+    <selector type="any_node"/>
+    <condition type="pseudo_element">
+      <func type="nth-child" name="nth-child">
+        <arg>
+          <ident>foobar</ident>
         </arg>
       </func>
     </condition>
@@ -316,7 +338,13 @@
     <condition type="pseudo_element">
       <func type="nth-child" name="nth-child">
         <arg>
-          <ident>n</ident>
+          <dimen type="n">1</dimen>
+        </arg>
+        <arg>
+          <plus/>
+        </arg>
+        <arg>
+          <int>0</int>
         </arg>
       </func>
     </condition>

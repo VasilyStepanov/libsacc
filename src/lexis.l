@@ -95,6 +95,7 @@ Y            y|\\0{0,4}(59|79)(\r\n|[ \t\r\n\f])?|\\y
 Z            z|\\0{0,4}(5a|7a)(\r\n|[ \t\r\n\f])?|\\z
 
 range        \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h})))))
+nth          [\+-]?{int}?{N}({w}[\+-]{w}{int})?
 
 %%
 
@@ -123,6 +124,15 @@ range        \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h}
 {O}{N}{L}{Y}            {return MEDIA_ONLY;}
 {N}{O}{T}               {return MEDIA_NOT;}
 {A}{N}{D}               {return MEDIA_AND;}
+
+{nth}                   {
+                          yylval->str = SAC_mpool_strndup(
+                            YY_SCANNER_MPOOL(yyscanner),
+                            yytext, yyleng);
+                          if (yylval->str == NULL)
+                            YY_FATAL_ERROR("out of dynamic memory");
+                          return NTH;
+                        }
 
 {string}                {
                           yylval->str = SAC_mpool_strndup(
@@ -165,7 +175,7 @@ range        \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h}
                           return HASH;
                         }
 
-{w}"+"                  {return PLUS;}
+"+"                     {return PLUS;}
 {w}">"                  {return GREATER;}
 {w}","                  {return COMMA;}
 {w}"~"                  {return TILDE;}
@@ -188,7 +198,6 @@ range        \?{1,6}|{h}(\?{0,5}|{h}(\?{0,4}|{h}(\?{0,3}|{h}(\?{0,2}|{h}(\??|{h}
                         }
 
 "!"({w}|{comment})*{I}{M}{P}{O}{R}{T}{A}{N}{T}  {return IMPORTANT_SYM;}
-
 
 {num}{E}{M}             {
                           yylval->real = strtod(yytext, NULL);

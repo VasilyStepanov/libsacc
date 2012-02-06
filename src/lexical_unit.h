@@ -63,6 +63,8 @@ SAC_LexicalUnit* SAC_lexical_unit_counter(SAC_MPool mpool,
   SAC_LexicalUnit **parameters);
 SAC_LexicalUnit* SAC_lexical_unit_counters(SAC_MPool mpool,
   SAC_LexicalUnit **parameters);
+SAC_LexicalUnit** SAC_lexical_unit_parse_nth_expr(SAC_MPool mpool,
+  SAC_STRING nth);
 SAC_LexicalUnit** SAC_lexical_unit_nth_expr(SAC_MPool mpool,
   SAC_STRING unit, int size, int offset);
 SAC_LexicalUnit** SAC_lexical_unit_nth_ident_expr(SAC_MPool mpool,

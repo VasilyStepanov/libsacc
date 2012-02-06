@@ -7,6 +7,8 @@
 
 #include "checks.h"
 
+#include <stdio.h>
+
 
 
 static SAC_LexicalUnit* SAC_lexical_unit_alloc(SAC_MPool mpool,
@@ -656,6 +658,37 @@ SAC_LexicalUnit* SAC_lexical_unit_nth_last_of_type_function(SAC_MPool mpool,
 
 
 
+SAC_LexicalUnit** SAC_lexical_unit_parse_nth_expr(SAC_MPool mpool,
+  SAC_STRING nth)
+{
+  int size = 1;
+  int offset = 1;
+  char *tail;
+
+  size = strtol(nth, &tail, 10);
+  if (size == 0) {
+    if (nth[0] != '-') {
+      size = 1;
+    } else {
+      size = -1;
+      ++tail;
+    }
+  }
+
+  while (1) {
+    if (*tail == '\0') break;
+    if (*tail >= '0' && *tail <= '9') break;
+    if (*tail == '-') offset = -1;
+    ++tail;
+  }
+
+  offset *= strtol(tail, NULL, 10);
+
+  return SAC_lexical_unit_nth_expr(mpool, "n", size, offset);
+}
+
+
+
 SAC_LexicalUnit** SAC_lexical_unit_nth_expr(SAC_MPool mpool,
   SAC_STRING unit, int size, int offset)
 {
@@ -692,6 +725,9 @@ SAC_LexicalUnit** SAC_lexical_unit_nth_ident_expr(SAC_MPool mpool,
   SAC_STRING ident)
 {
   SAC_LexicalUnit **vector;
+
+  SAC_CHECK_STRING_NOT_EQUALS(ident, "odd");
+  SAC_CHECK_STRING_NOT_EQUALS(ident, "even");
 
   vector = SAC_vector_open(mpool, 1);
 
