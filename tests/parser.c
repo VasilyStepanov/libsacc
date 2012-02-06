@@ -74,6 +74,12 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
     fprintf(out, "<no_lexical_units />");
   } else {
     switch (value->lexicalUnitType) {
+      case SAC_OPERATOR_PLUS:
+        fprintf(out, "<plus/>");
+        break;
+      case SAC_OPERATOR_MINUS:
+        fprintf(out, "<minus/>");
+        break;
       case SAC_OPERATOR_COMMA:
         fprintf(out, "<comma/>");
         break;
@@ -169,6 +175,10 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
       case SAC_RECT_FUNCTION:
       case SAC_COUNTER_FUNCTION:
       case SAC_COUNTERS_FUNCTION:
+      case SAC_NTH_CHILD_FUNCTION:
+      case SAC_NTH_LAST_CHILD_FUNCTION:
+      case SAC_NTH_OF_TYPE_FUNCTION:
+      case SAC_NTH_LAST_OF_TYPE_FUNCTION:
       case SAC_FUNCTION:
         {
           SAC_LexicalUnit **arg;
@@ -189,6 +199,18 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
               break;
             case SAC_COUNTERS_FUNCTION:
               fprintf(out, "\"counters\"");
+              break;
+            case SAC_NTH_CHILD_FUNCTION:
+              fprintf(out, "\"nth-child\"");
+              break;
+            case SAC_NTH_LAST_CHILD_FUNCTION:
+              fprintf(out, "\"nth-last-child\"");
+              break;
+            case SAC_NTH_OF_TYPE_FUNCTION:
+              fprintf(out, "\"nth-of-type\"");
+              break;
+            case SAC_NTH_LAST_OF_TYPE_FUNCTION:
+              fprintf(out, "\"nth-last-of-type\"");
               break;
             case SAC_FUNCTION:
               fprintf(out, "\"generic\"");
@@ -232,8 +254,6 @@ static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
         fprintf(out, "<dimen type=\"%s\">%g</dimen>",
           value->desc.dimension.unit, value->desc.dimension.value.sreal);
         break;
-      case SAC_OPERATOR_PLUS:
-      case SAC_OPERATOR_MINUS:
       case SAC_OPERATOR_MULTIPLY:
       case SAC_OPERATOR_MOD:
       case SAC_OPERATOR_EXP:

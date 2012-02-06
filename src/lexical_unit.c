@@ -442,6 +442,28 @@ SAC_LexicalUnit* SAC_lexical_unit_unicode_range(SAC_MPool mpool,
 
 
 
+SAC_LexicalUnit* SAC_lexical_unit_operator_plus(SAC_MPool mpool) {
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_OPERATOR_PLUS);
+  if (value == NULL) return value;
+
+  return value;
+}
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_operator_minus(SAC_MPool mpool) {
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_OPERATOR_MINUS);
+  if (value == NULL) return value;
+
+  return value;
+}
+
+
+
 SAC_LexicalUnit* SAC_lexical_unit_operator_slash(SAC_MPool mpool) {
   SAC_LexicalUnit *value;
 
@@ -474,6 +496,10 @@ SAC_LexicalUnit* SAC_lexical_unit_function(SAC_MPool mpool,
   SAC_CHECK_STRING_NOT_EQUALS(name, "rect");
   SAC_CHECK_STRING_NOT_EQUALS(name, "counter");
   SAC_CHECK_STRING_NOT_EQUALS(name, "counters");
+  SAC_CHECK_STRING_NOT_EQUALS(name, "nth-child");
+  SAC_CHECK_STRING_NOT_EQUALS(name, "nth-last-child");
+  SAC_CHECK_STRING_NOT_EQUALS(name, "nth-of-type");
+  SAC_CHECK_STRING_NOT_EQUALS(name, "nth-last-of-type");
 
   value = SAC_lexical_unit_alloc(mpool, SAC_FUNCTION);
   if (value == NULL) return value;
@@ -566,6 +592,70 @@ SAC_LexicalUnit* SAC_lexical_unit_counters(SAC_MPool mpool,
 
 
 
+SAC_LexicalUnit* SAC_lexical_unit_nth_child_function(SAC_MPool mpool,
+  SAC_LexicalUnit **parameters)
+{
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_NTH_CHILD_FUNCTION);
+  if (value == NULL) return value;
+
+  value->desc.function.name = "nth-child";
+  value->desc.function.parameters = parameters;
+
+  return value;
+}
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_nth_last_child_function(SAC_MPool mpool,
+  SAC_LexicalUnit **parameters)
+{
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_NTH_LAST_CHILD_FUNCTION);
+  if (value == NULL) return value;
+
+  value->desc.function.name = "nth-last-child";
+  value->desc.function.parameters = parameters;
+
+  return value;
+}
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_nth_of_type_function(SAC_MPool mpool,
+  SAC_LexicalUnit **parameters)
+{
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_NTH_OF_TYPE_FUNCTION);
+  if (value == NULL) return value;
+
+  value->desc.function.name = "nth-of-type";
+  value->desc.function.parameters = parameters;
+
+  return value;
+}
+
+
+
+SAC_LexicalUnit* SAC_lexical_unit_nth_last_of_type_function(SAC_MPool mpool,
+  SAC_LexicalUnit **parameters)
+{
+  SAC_LexicalUnit *value;
+
+  value = SAC_lexical_unit_alloc(mpool, SAC_NTH_LAST_OF_TYPE_FUNCTION);
+  if (value == NULL) return value;
+
+  value->desc.function.name = "nth-last-of-type";
+  value->desc.function.parameters = parameters;
+
+  return value;
+}
+
+
+
 SAC_LexicalUnit** SAC_lexical_unit_nth_expr(SAC_MPool mpool,
   SAC_STRING unit, int size, int offset)
 {
@@ -576,11 +666,22 @@ SAC_LexicalUnit** SAC_lexical_unit_nth_expr(SAC_MPool mpool,
 
   value = SAC_lexical_unit_dimension(mpool, unit, size);
   if (value == NULL) return NULL;
-  SAC_list_push_back(list, mpool, value);
+  if (SAC_list_push_back(list, mpool, value) == NULL) return NULL;
+
+  if (offset >= 0) {
+    value = SAC_lexical_unit_operator_plus(mpool);
+    if (value == NULL) return NULL;
+    if (SAC_list_push_back(list, mpool, value) == NULL) return NULL;
+  } else {
+    offset = -offset;
+    value = SAC_lexical_unit_operator_minus(mpool);
+    if (value == NULL) return NULL;
+    if (SAC_list_push_back(list, mpool, value) == NULL) return NULL;
+  }
 
   value = SAC_lexical_unit_int(mpool, offset);
   if (value == NULL) return NULL;
-  SAC_list_push_back(list, mpool, value);
+  if (SAC_list_push_back(list, mpool, value) == NULL) return NULL;
 
   return SAC_vector_from_list(list, mpool);
 }

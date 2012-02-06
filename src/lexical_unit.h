@@ -39,10 +39,20 @@ SAC_LexicalUnit* SAC_lexical_unit_inherit(SAC_MPool mpool);
 SAC_LexicalUnit* SAC_lexical_unit_uri(SAC_MPool mpool, SAC_STRING uri);
 SAC_LexicalUnit* SAC_lexical_unit_unicode_range(SAC_MPool mpool,
   SAC_STRING unicode_range);
+SAC_LexicalUnit* SAC_lexical_unit_operator_plus(SAC_MPool mpool);
+SAC_LexicalUnit* SAC_lexical_unit_operator_minus(SAC_MPool mpool);
 SAC_LexicalUnit* SAC_lexical_unit_operator_slash(SAC_MPool mpool);
 SAC_LexicalUnit* SAC_lexical_unit_operator_comma(SAC_MPool mpool);
 SAC_LexicalUnit* SAC_lexical_unit_function(SAC_MPool mpool,
   SAC_STRING name, SAC_LexicalUnit **parameters);
+SAC_LexicalUnit* SAC_lexical_unit_nth_child_function(SAC_MPool mpool,
+  SAC_LexicalUnit **parameters);
+SAC_LexicalUnit* SAC_lexical_unit_nth_last_child_function(SAC_MPool mpool,
+  SAC_LexicalUnit **parameters);
+SAC_LexicalUnit* SAC_lexical_unit_nth_of_type_function(SAC_MPool mpool,
+  SAC_LexicalUnit **parameters);
+SAC_LexicalUnit* SAC_lexical_unit_nth_last_of_type_function(SAC_MPool mpool,
+  SAC_LexicalUnit **parameters);
 SAC_LexicalUnit* SAC_lexical_unit_attr(SAC_MPool mpool,
   SAC_LexicalUnit **parameters);
 SAC_LexicalUnit* SAC_lexical_unit_rect(SAC_MPool mpool,

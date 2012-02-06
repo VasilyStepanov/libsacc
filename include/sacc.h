@@ -202,6 +202,32 @@ typedef enum _SAC_LexicalUnitCode {
 
 
   /**
+   * Nths.
+   */
+
+  /**
+   * ntn-child function.
+   */
+  SAC_NTH_CHILD_FUNCTION,
+
+  /**
+   * nth-last-child function.
+   */
+  SAC_NTH_LAST_CHILD_FUNCTION,
+
+  /**
+   * nth-of-type function.
+   */
+  SAC_NTH_OF_TYPE_FUNCTION,
+
+  /**
+   * nth-last-of-type function.
+   */
+  SAC_NTH_LAST_OF_TYPE_FUNCTION,
+
+
+
+  /**
    * RGB Colors.
    *
    * Examples:
@@ -464,6 +490,10 @@ struct _SAC_LexicalUnit {
      * SAC_FUNCTION
      * SAC_RECT_FUNCTION
      * SAC_ATTR_FUNCTION
+     * SAC_NTH_CHILD_FUNCTION
+     * SAC_NTH_LAST_CHILD_FUNCTION
+     * SAC_NTH_OF_TYPE_FUNCTION
+     * SAC_NTH_LAST_OF_TYPE_FUNCTION
      */
 
     struct _SAC_Function {
@@ -1036,8 +1066,8 @@ struct _SAC_Condition {
 
     /**
      * Ident lexical unit for the pseudo class and pseudo element condition.
-     * Function lexical unit for the functional pseudo condition.
-     *
+     * Nth lexical unit for the nth functional pseudo condition.
+     * Function lexical unit for the unknown functional pseudo condition.
      */
     SAC_LexicalUnit *pseudo;
 

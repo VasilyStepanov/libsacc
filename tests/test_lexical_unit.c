@@ -178,6 +178,12 @@ static void test_lexical_unit_factory() {
   assert(value->lexicalUnitType == SAC_UNICODERANGE);
   ASSERT_EQUAL_STRINGS("U+4E00-9FFF", value->desc.unicodeRange);
 
+  value = SAC_lexical_unit_operator_plus(mpool);
+  assert(value->lexicalUnitType == SAC_OPERATOR_PLUS);
+
+  value = SAC_lexical_unit_operator_minus(mpool);
+  assert(value->lexicalUnitType == SAC_OPERATOR_MINUS);
+
   value = SAC_lexical_unit_operator_slash(mpool);
   assert(value->lexicalUnitType == SAC_OPERATOR_SLASH);
 
@@ -220,6 +226,42 @@ static void test_lexical_unit_factory() {
   value = SAC_lexical_unit_rect(mpool, params);
   assert(value->lexicalUnitType == SAC_RECT_FUNCTION);
   ASSERT_EQUAL_STRINGS("rect", value->desc.function.name);
+  assert(value->desc.function.parameters == params);
+
+  params = SAC_vector_open(mpool, 3);
+  params[0] = SAC_lexical_unit_dimension(mpool, "n", 1);
+  params[1] = SAC_lexical_unit_operator_plus(mpool);
+  params[2] = SAC_lexical_unit_int(mpool, 1);
+  value = SAC_lexical_unit_nth_child_function(mpool, params);
+  assert(value->lexicalUnitType == SAC_NTH_CHILD_FUNCTION);
+  ASSERT_EQUAL_STRINGS("nth-child", value->desc.function.name);
+  assert(value->desc.function.parameters == params);
+
+  params = SAC_vector_open(mpool, 3);
+  params[0] = SAC_lexical_unit_dimension(mpool, "n", 1);
+  params[1] = SAC_lexical_unit_operator_plus(mpool);
+  params[2] = SAC_lexical_unit_int(mpool, 1);
+  value = SAC_lexical_unit_nth_last_child_function(mpool, params);
+  assert(value->lexicalUnitType == SAC_NTH_LAST_CHILD_FUNCTION);
+  ASSERT_EQUAL_STRINGS("nth-last-child", value->desc.function.name);
+  assert(value->desc.function.parameters == params);
+
+  params = SAC_vector_open(mpool, 3);
+  params[0] = SAC_lexical_unit_dimension(mpool, "n", 1);
+  params[1] = SAC_lexical_unit_operator_plus(mpool);
+  params[2] = SAC_lexical_unit_int(mpool, 1);
+  value = SAC_lexical_unit_nth_of_type_function(mpool, params);
+  assert(value->lexicalUnitType == SAC_NTH_OF_TYPE_FUNCTION);
+  ASSERT_EQUAL_STRINGS("nth-of-type", value->desc.function.name);
+  assert(value->desc.function.parameters == params);
+
+  params = SAC_vector_open(mpool, 3);
+  params[0] = SAC_lexical_unit_dimension(mpool, "n", 1);
+  params[1] = SAC_lexical_unit_operator_plus(mpool);
+  params[2] = SAC_lexical_unit_int(mpool, 1);
+  value = SAC_lexical_unit_nth_last_of_type_function(mpool, params);
+  assert(value->lexicalUnitType == SAC_NTH_LAST_OF_TYPE_FUNCTION);
+  ASSERT_EQUAL_STRINGS("nth-last-of-type", value->desc.function.name);
   assert(value->desc.function.parameters == params);
 
   params = SAC_vector_open(mpool, 1);

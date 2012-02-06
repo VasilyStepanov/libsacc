@@ -185,6 +185,10 @@ SAC_Condition* SAC_condition_pseudo_element(SAC_MPool mpool,
   SAC_Condition *condition;
 
   SAC_CHECK_ASSERT(pseudo->lexicalUnitType == SAC_IDENT ||
+    pseudo->lexicalUnitType == SAC_NTH_CHILD_FUNCTION ||
+    pseudo->lexicalUnitType == SAC_NTH_LAST_CHILD_FUNCTION ||
+    pseudo->lexicalUnitType == SAC_NTH_OF_TYPE_FUNCTION ||
+    pseudo->lexicalUnitType == SAC_NTH_LAST_OF_TYPE_FUNCTION ||
     pseudo->lexicalUnitType == SAC_FUNCTION);
 
   condition = SAC_condition_alloc(mpool, SAC_PSEUDO_ELEMENT_CONDITION);

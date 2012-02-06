@@ -1126,7 +1126,21 @@ pseudo
   ;
 functional_pseudo
   : FUNCTION maybe_spaces functional_pseudo_expr ')' {
-      $$ = SAC_lexical_unit_function(YY_SCANNER_MPOOL(scanner), $1, $3);
+      if (strcasecmp($1, "nth-child") == 0) {
+        $$ = SAC_lexical_unit_nth_child_function(
+          YY_SCANNER_MPOOL(scanner), $3);
+      } else if (strcasecmp($1, "nth-last-child") == 0) {
+        $$ = SAC_lexical_unit_nth_last_child_function(
+          YY_SCANNER_MPOOL(scanner), $3);
+      } else if (strcasecmp($1, "nth-of-type") == 0) {
+        $$ = SAC_lexical_unit_nth_of_type_function(
+          YY_SCANNER_MPOOL(scanner), $3);
+      } else if (strcasecmp($1, "nth-last-of-type") == 0) {
+        $$ = SAC_lexical_unit_nth_last_of_type_function(
+          YY_SCANNER_MPOOL(scanner), $3);
+      } else {
+        $$ = SAC_lexical_unit_function(YY_SCANNER_MPOOL(scanner), $1, $3);
+      }
       TEST_OBJ($$, @$);
     }
   ;
