@@ -1454,7 +1454,7 @@ SAC_Boolean SAC_ParsePriority(SAC_Parser parser, const char *buffer, int len);
 /**
  * Create the parser.
  * 
- * The caller is responsible of disposing the parser by calling
+ * The caller is responsible for disposing the parser by calling
  * SAC_DisposeParser.
  *
  * Returns NULL if out of memory.
