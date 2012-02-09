@@ -2,8 +2,8 @@
 
 #include "test_utils.h"
 
-#include "mpool.h"
-#include "mpool_extra.h"
+#include "src/mpool.h"
+#include "src/mpool_extra.h"
 
 #include <assert.h>
 

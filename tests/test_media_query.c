@@ -1,6 +1,6 @@
 #include "test_media_query.h"
 
-#include "media_query.h"
+#include "src/media_query.h"
 #include "test_utils.h"
 
 #include <assert.h>

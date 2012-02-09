@@ -2,7 +2,7 @@ noinst_PROGRAMS = test_suite \
                   sacc
 
 AM_CFLAGS = -Wall -Wextra -Werror -ansi -pedantic -D_XOPEN_SOURCE=700 \
-            -I$(top_srcdir)/include -I$(top_srcdir)/src
+            -I$(top_srcdir)/include
 
 XML_FORMAT = xmllint --format
 

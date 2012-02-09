@@ -1,8 +1,8 @@
 #include "test_vector.h"
 
-#include "vector.h"
-#include "vector_extra.h"
-#include "mpool.h"
+#include "src/vector.h"
+#include "src/vector_extra.h"
+#include "src/mpool.h"
 
 #include <sacc.h>
 

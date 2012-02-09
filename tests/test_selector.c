@@ -1,8 +1,8 @@
 #include "test_selector.h"
 
-#include "selector.h"
-#include "condition.h"
-#include "mpool.h"
+#include "src/selector.h"
+#include "src/condition.h"
+#include "src/mpool.h"
 #include "test_utils.h"
 
 #include <sacc.h>

@@ -1,7 +1,7 @@
 #include "test_list.h"
 
-#include "list.h"
-#include "mpool.h"
+#include "src/list.h"
+#include "src/mpool.h"
 
 #include <sacc.h>
 

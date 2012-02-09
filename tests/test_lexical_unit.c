@@ -1,8 +1,8 @@
 #include "test_lexical_unit.h"
 
-#include "lexical_unit.h"
-#include "mpool.h"
-#include "vector.h"
+#include "src/lexical_unit.h"
+#include "src/mpool.h"
+#include "src/vector.h"
 #include "test_utils.h"
 
 #include <sacc.h>

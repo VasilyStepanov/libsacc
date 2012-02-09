@@ -1,9 +1,9 @@
 #include "test_condition.h"
 
-#include "condition.h"
-#include "mpool.h"
-#include "selector.h"
-#include "lexical_unit.h"
+#include "src/condition.h"
+#include "src/mpool.h"
+#include "src/selector.h"
+#include "src/lexical_unit.h"
 #include "test_utils.h"
 
 #include <sacc.h>
