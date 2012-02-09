@@ -2,10 +2,10 @@ lib_LTLIBRARIES = libsacc.la
 
 noinst_LTLIBRARIES = libgrammar.la
 
-GENERIC_CFLAGS = -Wall -Wextra -ansi -pedantic -D_XOPEN_SOURCE=700 \
+GENERIC_CFLAGS = -Wall -Wextra -ansi -pedantic -D_XOPEN_SOURCE=700 -Werror \
                  -I$(top_srcdir)/include
 
-AM_CFLAGS = $(GENERIC_CFLAGS) -Werror
+AM_CFLAGS = $(GENERIC_CFLAGS)
 
 BUILT_SOURCES = grammar.h
 AM_YFLAGS = -d --warnings=error
@@ -37,7 +37,7 @@ libsacc_la_LIBADD = libgrammar.la
 libgrammar_la_SOURCES = lexis.l \
                         grammar.y
 
-libgrammar_la_CFLAGS = $(GENERIC_CFLAGS) -Wno-unused-parameter -Werror
+libgrammar_la_CFLAGS = $(GENERIC_CFLAGS) -Wno-unused-parameter
 
 
 
