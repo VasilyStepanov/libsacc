@@ -15,7 +15,7 @@ AM_LFLAGS = -o$(LEX_OUTPUT_ROOT).c
 
 libsacc_ladir = $(includedir)
 
-libsacc_la_HEADERS = ../include/sacc.h
+libsacc_la_HEADERS = $(top_srcdir)/include/sacc.h
 
 libsacc_la_SOURCES = parser.c \
                      mlex.c \
