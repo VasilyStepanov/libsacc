@@ -35,14 +35,20 @@
 int yyerror(const char *data) { return 0; }
 extern int yylex();
 
-#define TEST_OBJ(obj, loc) \
+#define PARSER_ASSERT(expr, loc) \
   do { \
-    if ((obj) == NULL) { \
+    if (!(expr)) { \
       SAC_parser_fatal_error_handler(YY_SCANNER_PARSER(scanner), \
         (loc).first_line, (loc).first_column, SAC_FATAL_ERROR_NO_MEMORY); \
       YYABORT; \
     } \
   } while (0)
+
+#define TEST_OBJ(obj, loc) \
+  PARSER_ASSERT((obj) != NULL, loc)
+
+#define TEST_RVAL(rval, loc) \
+  PARSER_ASSERT(rval == 0, loc)
 
 #define SAC_ERROR(loc, type, data) \
   SAC_parser_error_handler(YY_SCANNER_PARSER(scanner), \
@@ -219,91 +225,91 @@ SAC_Pair pair;
 
 start
   : priority_start maybe_prio {
-      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
 
       YY_SCANNER_OUTPUT(scanner) = (void*)$2;
     }
   | priority_start prio error {
       SAC_SYNTAX_ERROR(@3,
         "unexpected token while parsing priority");
-      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
 
       YY_SCANNER_OUTPUT(scanner) = (void*)SAC_FALSE;
     }
   | priority_start error {
       SAC_SYNTAX_ERROR(@2,
         "unexpected token while parsing priority");
-      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
 
       YY_SCANNER_OUTPUT(scanner) = (void*)SAC_FALSE;
     }
   | property_value_start expr {
-      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
 
       YY_SCANNER_OUTPUT(scanner) = SAC_lexical_unit_from_list(
         $2, YY_SCANNER_MPOOL(scanner));
       TEST_OBJ(YY_SCANNER_OUTPUT(scanner), @2);
     }
   | property_value_start bad_expr {
-      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
 
       YY_SCANNER_OUTPUT(scanner) = NULL;
     }
   | style_declarations_start maybe_declarations {
-      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
     }
   | selectors_start selectors_group {
-      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
 
       YY_SCANNER_OUTPUT(scanner) = SAC_vector_from_list(
         $2, YY_SCANNER_MPOOL(scanner));
       TEST_OBJ(YY_SCANNER_OUTPUT(scanner), @2);
     }
   | selectors_start bad_selectors_group {
-      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
 
       YY_SCANNER_OUTPUT(scanner) = NULL;
     }
   | rule_start ruleset maybe_spaces {
-      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
     }
   | rule_start ruleset maybe_spaces error {
       SAC_SYNTAX_ERROR(@4,
         "unexpected token while parsing ruleset");
-      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
     }
   | stylesheet_start stylesheet {
-      SAC_parser_end_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
     }
   ;
 
 priority_start
   : START_AS_PRIORITY maybe_spaces {
-      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_start_document(YY_SCANNER_PARSER(scanner)), @$);
     }
   ;
 property_value_start
   : START_AS_PROPERTY_VALUE maybe_spaces {
-      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_start_document(YY_SCANNER_PARSER(scanner)), @$);
     }
   ;
 style_declarations_start
   : START_AS_STYLE_DECLARATIONS maybe_spaces {
-      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_start_document(YY_SCANNER_PARSER(scanner)), @$);
     }
   ;
 selectors_start
   : START_AS_SELECTORS maybe_spaces {
-      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_start_document(YY_SCANNER_PARSER(scanner)), @$);
     }
 rule_start
   : START_AS_RULE maybe_spaces {
-      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_start_document(YY_SCANNER_PARSER(scanner)), @$);
     }
   ;
 stylesheet_start
   : START_AS_STYLESHEET maybe_spaces {
-      SAC_parser_start_document(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_start_document(YY_SCANNER_PARSER(scanner)), @$);
     }
   ;
 
@@ -396,7 +402,8 @@ import
 
       mediums = SAC_vector_from_list($4, YY_SCANNER_MPOOL(scanner));
       TEST_OBJ(mediums, @4);
-      SAC_parser_import_handler(YY_SCANNER_PARSER(scanner), $3, mediums, NULL);
+      TEST_RVAL(SAC_parser_import_handler(YY_SCANNER_PARSER(scanner),
+        $3, mediums, NULL), @$);
     }
   | bad_import
   ;
@@ -448,8 +455,8 @@ namespace
   : NAMESPACE_SYM maybe_spaces maybe_namespace_prefix string_or_uri
     ';' maybe_comments
     {
-      SAC_parser_namespace_declaration_handler(YY_SCANNER_PARSER(scanner),
-        $3, $4);
+      TEST_RVAL(SAC_parser_namespace_declaration_handler(
+        YY_SCANNER_PARSER(scanner), $3, $4), @$);
     }
   | bad_namespace
   ;
@@ -542,7 +549,8 @@ namespace_prefix
   ;
 media
   : media_start maybe_rulesets closing_brace {
-      SAC_parser_end_media_handler(YY_SCANNER_PARSER(scanner), $1);
+      TEST_RVAL(SAC_parser_end_media_handler(YY_SCANNER_PARSER(scanner),
+        $1), @$);
     }
   | MEDIA_SYM maybe_spaces media_query media_query_errors invalid_block {
       SAC_SYNTAX_ERROR(@4,
@@ -567,7 +575,8 @@ media_start
 
       mediums = SAC_vector_from_list($3, YY_SCANNER_MPOOL(scanner));
       TEST_OBJ(mediums, @3);
-      SAC_parser_start_media_handler(YY_SCANNER_PARSER(scanner), mediums);
+      TEST_RVAL(SAC_parser_start_media_handler(YY_SCANNER_PARSER(scanner),
+        mediums), @$);
       $$ = mediums;
     }
   ;
@@ -690,8 +699,8 @@ media_feature
   ;
 page
   : page_start maybe_declarations closing_brace {
-      SAC_parser_end_page_handler(YY_SCANNER_PARSER(scanner),
-        $1.first, $1.second);
+      TEST_RVAL(SAC_parser_end_page_handler(YY_SCANNER_PARSER(scanner),
+        $1.first, $1.second), @$);
     }
   | PAGE_SYM maybe_spaces maybe_ident pseudo_page page_errors invalid_block {
       SAC_SYNTAX_ERROR(@5,
@@ -724,7 +733,8 @@ page_errors
   ;
 page_start
   : PAGE_SYM maybe_spaces maybe_ident maybe_pseudo_page '{' maybe_spaces {
-      SAC_parser_start_page_handler(YY_SCANNER_PARSER(scanner), $3, $4);
+      TEST_RVAL(SAC_parser_start_page_handler(YY_SCANNER_PARSER(scanner),
+        $3, $4), @$);
       $$.first = $3;
       $$.second = $4;
     }
@@ -757,7 +767,8 @@ pseudo_page
   ;
 font_face
   : font_face_start maybe_declarations closing_brace {
-      SAC_parser_end_font_face_handler(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_end_font_face_handler(YY_SCANNER_PARSER(scanner)),
+        @$);
     }
   | FONT_FACE_SYM maybe_spaces font_face_errors invalid_block {
       SAC_SYNTAX_ERROR(@3,
@@ -774,15 +785,18 @@ font_face_errors
   ;
 font_face_start
   : FONT_FACE_SYM maybe_spaces '{' maybe_spaces {
-      SAC_parser_start_font_face_handler(YY_SCANNER_PARSER(scanner));
+      TEST_RVAL(SAC_parser_start_font_face_handler(YY_SCANNER_PARSER(scanner)),
+        @$);
     }
   ;
 ignorable_at_rule
   : ATKEYWORD_SYM maybe_spaces error invalid_block {
-      SAC_parser_ignorable_at_rule_handler(YY_SCANNER_PARSER(scanner), $1);
+      TEST_RVAL(SAC_parser_ignorable_at_rule_handler(YY_SCANNER_PARSER(scanner),
+        $1), @$);
     }
   | ATKEYWORD_SYM maybe_spaces error ';' {
-      SAC_parser_ignorable_at_rule_handler(YY_SCANNER_PARSER(scanner), $1);
+      TEST_RVAL(SAC_parser_ignorable_at_rule_handler(YY_SCANNER_PARSER(scanner),
+        $1), @$);
     }
 maybe_operator
   : '/' maybe_spaces {
@@ -820,7 +834,8 @@ property
   ;
 ruleset
   : style_start maybe_declarations closing_brace {
-      SAC_parser_end_style_handler(YY_SCANNER_PARSER(scanner), $1);
+      TEST_RVAL(SAC_parser_end_style_handler(YY_SCANNER_PARSER(scanner),
+        $1), @$);
     }
   | bad_selectors_group invalid_block
   ;
@@ -830,7 +845,8 @@ style_start
       
       vector = SAC_vector_from_list($1, YY_SCANNER_MPOOL(scanner));
       TEST_OBJ(vector, @1);
-      SAC_parser_start_style_handler(YY_SCANNER_PARSER(scanner), vector);
+      TEST_RVAL(SAC_parser_start_style_handler(YY_SCANNER_PARSER(scanner),
+        vector), @$);
       $$ = vector;
     }
   ;
@@ -1254,8 +1270,8 @@ declaration
       expr = SAC_lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner));
       TEST_OBJ(expr, @4);
 
-      SAC_parser_property_handler(YY_SCANNER_PARSER(scanner),
-        $1, expr, $5);
+      TEST_RVAL(SAC_parser_property_handler(YY_SCANNER_PARSER(scanner),
+        $1, expr, $5), @$);
     }
   | property ':' maybe_spaces expr prio declaration_errors {
       /* p {color: red !important fail;} */
@@ -1265,8 +1281,8 @@ declaration
       expr = SAC_lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner));
       TEST_OBJ(expr, @4);
 
-      SAC_parser_property_handler(YY_SCANNER_PARSER(scanner),
-        $1, expr, $5);
+      TEST_RVAL(SAC_parser_property_handler(YY_SCANNER_PARSER(scanner),
+        $1, expr, $5), @$);
 
       SAC_SYNTAX_ERROR(@6,
         "unexpected token after property expression");
@@ -1279,8 +1295,8 @@ declaration
       expr = SAC_lexical_unit_from_list($4, YY_SCANNER_MPOOL(scanner));
       TEST_OBJ(expr, @4);
 
-      SAC_parser_property_handler(YY_SCANNER_PARSER(scanner),
-        $1, expr, SAC_FALSE);
+      TEST_RVAL(SAC_parser_property_handler(YY_SCANNER_PARSER(scanner),
+        $1, expr, SAC_FALSE), @$);
 
       SAC_SYNTAX_ERROR(@5,
         "unexpected token after property expression");

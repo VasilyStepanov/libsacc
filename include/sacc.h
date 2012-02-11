@@ -1214,8 +1214,9 @@ typedef void* SAC_Parser;
  * Receive notification of the beginning of a document.
  * The SAC parser will invoke this method only once, before any other methods in
  * this interface.
+ * Nonzero return from callback aborts the parser.
  */
-typedef void (*SAC_StartDocumentHandler)(void *userData);
+typedef int (*SAC_StartDocumentHandler)(void *userData);
 
 /**
  * Receive notification of the end of a document.
@@ -1223,24 +1224,28 @@ typedef void (*SAC_StartDocumentHandler)(void *userData);
  * method invoked during the parse. The parser shall not invoke this method
  * until it has either abandoned parsing (because of an unrecoverable error) or
  * reached the end of input.
+ * Nonzero return from callback aborts the parser.
  */
-typedef void (*SAC_EndDocumentHandler)(void *userData);
+typedef int (*SAC_EndDocumentHandler)(void *userData);
 
 /**
  * Receive notification of an unknown rule at-rule not supported by this parser.
+ * Nonzero return from callback aborts the parser.
  */
-typedef void (*SAC_IgnorableAtRuleHandler)(void *userData,
+typedef int (*SAC_IgnorableAtRuleHandler)(void *userData,
   const SAC_STRING atRule);
 
 /**
  * Receive notification of a namespace declaration and the default namespace
  * if any (prefix will be NULL in that case). uri can never be NULL.
+ * Nonzero return from callback aborts the parser.
  */
-typedef void (*SAC_NamespaceDeclarationHandler)(void *userData,
+typedef int (*SAC_NamespaceDeclarationHandler)(void *userData,
   const SAC_STRING prefix, const SAC_STRING uri);
 
 /**
  * Receive notification of an import statement.
+ * Nonzero return from callback aborts the parser.
  * base  - The base argument is whatever was set by SAC_SetBase.
  * uri   - The unresolved URI of the imported style sheet.
  *         It can never be NULL.
@@ -1248,7 +1253,7 @@ typedef void (*SAC_NamespaceDeclarationHandler)(void *userData,
  *         It terminated by NULL.
  * defaultNamepaceURI - The default namespace URI for the imported style sheet.
  */
-typedef void (*SAC_ImportHandler)(void *userData,
+typedef int (*SAC_ImportHandler)(void *userData,
   const SAC_STRING base,
   const SAC_STRING uri,
   const SAC_MediaQuery *media[],
@@ -1261,11 +1266,12 @@ typedef void (*SAC_ImportHandler)(void *userData,
  * in the CSS document. There will be a corresponding SAC_EndMediaHandler event
  * for every SAC_StartMediaHandler event. All rules inside the rule will be
  * reported, in order, before the corresponding SAC_EndMediaHandler event.
+ * Nonzero return from callback aborts the parser.
  *
  * media - It is an array of all media for the media rule.
  *         It terminated by NULL.
  */
-typedef void (*SAC_StartMediaHandler)(void *userData,
+typedef int (*SAC_StartMediaHandler)(void *userData,
   const SAC_MediaQuery *media[]);
 
 /**
@@ -1274,11 +1280,12 @@ typedef void (*SAC_StartMediaHandler)(void *userData,
  * The SAC Parser will invoke this method at the end of every media rule in the
  * CSS document. There will be a corresponding SAC_StartMediaHandler event for
  * every SAC_EndMediaHandler event.
+ * Nonzero return from callback aborts the parser.
  *
  * media - It is an array of all media for the media rule.
  *         It terminated by NULL.
  */
-typedef void (*SAC_EndMediaHandler)(void *userData,
+typedef int (*SAC_EndMediaHandler)(void *userData,
   const SAC_MediaQuery *media[]);
 
 /**
@@ -1288,11 +1295,12 @@ typedef void (*SAC_EndMediaHandler)(void *userData,
  * the CSS document. There will be a corresponding SAC_EndPageHandler event for
  * every SAC_StartPageHandler event. All properties inside the rule will be
  * reported, in order, before the corresponding SAC_EndPageHandler event.
+ * Nonzero return from callback aborts the parser.
  *
  * name         - The name of the page if any.
  * pseudoPseudo - The pseudo page associated to the page.
  */
-typedef void (*SAC_StartPageHandler)(void *userData,
+typedef int (*SAC_StartPageHandler)(void *userData,
   const SAC_STRING name, const SAC_STRING pseudoPage);
 
 /**
@@ -1301,11 +1309,12 @@ typedef void (*SAC_StartPageHandler)(void *userData,
  * The SAC Parser will invoke this method at the end of every page rule in the
  * CSS document. There will be a corresponding SAC_StartPageHandler event for
  * every SAC_EndPageHandler event.
+ * Nonzero return from callback aborts the parser.
  *
  * name       - The name of the page if any.
  * pseudoPage - The pseudo page associated to the page.
  */
-typedef void (*SAC_EndPageHandler)(void *userData,
+typedef int (*SAC_EndPageHandler)(void *userData,
   const SAC_STRING name, const SAC_STRING pseudoPage);
 
 /**
@@ -1316,8 +1325,9 @@ typedef void (*SAC_EndPageHandler)(void *userData,
  * SAC_EndFontFaceHandler event for every SAC_StartFontFaceHandler event. All
  * properties inside the rule will be reported, in order, before the
  * corresponding SAC_EndFontFaceHandler event.
+ * Nonzero return from callback aborts the parser.
  */
-typedef void (*SAC_StartFontFaceHandler)(void *userData);
+typedef int (*SAC_StartFontFaceHandler)(void *userData);
 
 /**
  * Receive notification of the end of a font-face rule.
@@ -1325,8 +1335,9 @@ typedef void (*SAC_StartFontFaceHandler)(void *userData);
  * The SAC Parser will invoke this method at the end of every font-face rule in
  * the CSS document. There will be a corresponding SAC_StartFontFaceHandler
  * event for every SAC_EndFontFaceHandler event.
+ * Nonzero return from callback aborts the parser.
  */
-typedef void (*SAC_EndFontFaceHandler)(void *userData);
+typedef int (*SAC_EndFontFaceHandler)(void *userData);
 
 /**
  * Receive notification of the beginning of a style rule.
@@ -1335,10 +1346,11 @@ typedef void (*SAC_EndFontFaceHandler)(void *userData);
  * in the CSS document. There will be a corresponding SAC_EndStyleHandler event
  * for every SAC_StartStyleHandler event. All properties inside the rule will be
  * reported, in order, before the corresponding SAC_EndStyleHandler event.
+ * Nonzero return from callback aborts the parser.
  *
  * selectors - It is an array of all selectors for the style rule.
  */
-typedef void (*SAC_StartStyleHandler)(void *userData,
+typedef int (*SAC_StartStyleHandler)(void *userData,
   const SAC_Selector *selectors[]);
 
 /**
@@ -1347,10 +1359,11 @@ typedef void (*SAC_StartStyleHandler)(void *userData,
  * The SAC Parser will invoke this method at the end of every style rule in the
  * CSS document. There will be a corresponding SAC_StartStyleHandler event for
  * every SAC_EndStyleHandler event.
+ * Nonzero return from callback aborts the parser.
  *
  * selectors - It is an array of all selectors for the style rule.
  */
-typedef void (*SAC_EndStyleHandler)(void *userData,
+typedef int (*SAC_EndStyleHandler)(void *userData,
   const SAC_Selector *selectors[]);
 
 /**
@@ -1358,13 +1371,14 @@ typedef void (*SAC_EndStyleHandler)(void *userData,
  *
  * The SAC Parser will call this method to report each property inside a rule.
  * Note that shorthand properties will be reported as-is.
+ * Nonzero return from callback aborts the parser.
  *
  * propertyName - The name of the property.
  * value - The value of the property.
  * important - SAC_TRUE if this property is important (i.e. "!important"),
  *             SAC_FALSE otherwise.
  */
-typedef void (*SAC_PropertyHandler)(void *userData,
+typedef int (*SAC_PropertyHandler)(void *userData,
   const SAC_STRING propertyName,
   const SAC_LexicalUnit *value,
   SAC_Boolean important);

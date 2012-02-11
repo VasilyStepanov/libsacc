@@ -99,63 +99,48 @@ static void SAC_default_error_handler(void *userData SAC_UNUSED,
 
 
 
-void SAC_parser_start_document(SAC_Parser parser) {
-  if (PARSER(parser)->start_document_handler != NULL)
-    PARSER(parser)->start_document_handler(PARSER(parser)->user_data);
+int SAC_parser_start_document(SAC_Parser parser) {
+  if (PARSER(parser)->start_document_handler == NULL) return 0;
+  return PARSER(parser)->start_document_handler(PARSER(parser)->user_data);
 }
 
 
 
-void SAC_parser_end_document(SAC_Parser parser) {
-  if (PARSER(parser)->end_document_handler != NULL)
-    PARSER(parser)->end_document_handler(PARSER(parser)->user_data);
+int SAC_parser_end_document(SAC_Parser parser) {
+  if (PARSER(parser)->end_document_handler == NULL) return 0;
+  return PARSER(parser)->end_document_handler(PARSER(parser)->user_data);
 }
 
 
 
-void SAC_parser_start_font_face_handler(SAC_Parser parser) {
-  if (PARSER(parser)->start_font_face_handler != NULL)
-    PARSER(parser)->start_font_face_handler(PARSER(parser)->user_data);
-}
-
-
-
-void SAC_parser_end_font_face_handler(SAC_Parser parser) {
-  if (PARSER(parser)->end_font_face_handler != NULL)
-    PARSER(parser)->end_font_face_handler(PARSER(parser)->user_data);
-}
-
-
-
-void SAC_parser_start_style_handler(
-  SAC_Parser parser,
+int SAC_parser_start_style_handler(SAC_Parser parser,
   const SAC_Selector *selectors[])
 {
-  if (PARSER(parser)->start_style_handler != NULL)
-    PARSER(parser)->start_style_handler(PARSER(parser)->user_data, selectors);
+  if (PARSER(parser)->start_style_handler == NULL) return 0;
+  return PARSER(parser)->start_style_handler(PARSER(parser)->user_data,
+    selectors);
 }
 
 
 
-void SAC_parser_end_style_handler(
-  SAC_Parser parser,
+int SAC_parser_end_style_handler(SAC_Parser parser,
   const SAC_Selector *selectors[])
 {
-  if (PARSER(parser)->end_style_handler != NULL)
-    PARSER(parser)->end_style_handler(PARSER(parser)->user_data, selectors);
+  if (PARSER(parser)->end_style_handler == NULL) return 0;
+  return PARSER(parser)->end_style_handler(PARSER(parser)->user_data,
+    selectors);
 }
 
 
 
-void SAC_parser_property_handler(
-  SAC_Parser parser,
+int SAC_parser_property_handler(SAC_Parser parser,
   const SAC_STRING propertyName,
   const SAC_LexicalUnit *value,
   SAC_Boolean important)
 {
-  if (PARSER(parser)->property_handler != NULL)
-    PARSER(parser)->property_handler(PARSER(parser)->user_data,
-      propertyName, value, important);
+  if (PARSER(parser)->property_handler == NULL) return 0;
+  return PARSER(parser)->property_handler(PARSER(parser)->user_data,
+    propertyName, value, important);
 }
 
 
@@ -202,73 +187,87 @@ static SAC_Boolean SAC_parser_clear(SAC_Parser parser) {
 
 
 
-void SAC_parser_start_page_handler(SAC_Parser parser,
-  const SAC_STRING name, const SAC_STRING pseudoPage)
-{
-  if (PARSER(parser)->start_page_handler != NULL)
-    PARSER(parser)->start_page_handler(PARSER(parser)->user_data,
-      name, pseudoPage);
-}
-
-
-
-void SAC_parser_end_page_handler(SAC_Parser parser,
-  const SAC_STRING name, const SAC_STRING pseudoPage)
-{
-  if (PARSER(parser)->end_page_handler != NULL)
-    PARSER(parser)->end_page_handler(PARSER(parser)->user_data,
-      name, pseudoPage);
-}
-
-
-
-void SAC_parser_ignorable_at_rule_handler(SAC_Parser parser,
+int SAC_parser_ignorable_at_rule_handler(SAC_Parser parser,
   const SAC_STRING atRule)
 {
-  if (PARSER(parser)->ignorable_at_rule_handler != NULL)
-    PARSER(parser)->ignorable_at_rule_handler(PARSER(parser)->user_data,
-      atRule);
+  if (PARSER(parser)->ignorable_at_rule_handler == NULL) return 0;
+  return PARSER(parser)->ignorable_at_rule_handler(PARSER(parser)->user_data,
+    atRule);
 }
 
 
 
 
-void SAC_parser_namespace_declaration_handler(SAC_Parser parser,
+int SAC_parser_namespace_declaration_handler(SAC_Parser parser,
   const SAC_STRING prefix, const SAC_STRING uri)
 {
-  if (PARSER(parser)->namespace_declaration_handler != NULL)
-    PARSER(parser)->namespace_declaration_handler(PARSER(parser)->user_data,
-      prefix, uri);
+  if (PARSER(parser)->namespace_declaration_handler == NULL) return 0;
+  return PARSER(parser)->namespace_declaration_handler(
+    PARSER(parser)->user_data, prefix, uri);
 }
 
 
 
-void SAC_parser_import_handler(SAC_Parser parser,
+int SAC_parser_import_handler(SAC_Parser parser,
   const SAC_STRING uri,
   const SAC_MediaQuery *media[],
   const SAC_STRING defaultNamepaceURI)
 {
-  if (PARSER(parser)->import_handler != NULL)
-    PARSER(parser)->import_handler(PARSER(parser)->user_data,
+  if (PARSER(parser)->import_handler == NULL) return 0;
+  return PARSER(parser)->import_handler(PARSER(parser)->user_data,
       PARSER(parser)->base, uri, media, defaultNamepaceURI);
 }
 
 
 
-void SAC_parser_start_media_handler(SAC_Parser parser,
+int SAC_parser_start_media_handler(SAC_Parser parser,
   const SAC_MediaQuery *media[])
 {
-  if (PARSER(parser)->start_media_handler != NULL)
-    PARSER(parser)->start_media_handler(PARSER(parser)->user_data, media);
+  if (PARSER(parser)->start_media_handler == NULL) return 0;
+  return PARSER(parser)->start_media_handler(PARSER(parser)->user_data, media);
 }
 
 
 
-void SAC_parser_end_media_handler(SAC_Parser parser,
+int SAC_parser_end_media_handler(SAC_Parser parser,
   const SAC_MediaQuery *media[])
 {
-  if (PARSER(parser)->end_media_handler != NULL)
-    PARSER(parser)->end_media_handler(PARSER(parser)->user_data, media);
+  if (PARSER(parser)->end_media_handler == NULL) return 0;
+  return PARSER(parser)->end_media_handler(PARSER(parser)->user_data, media);
+}
+
+
+
+int SAC_parser_start_page_handler(SAC_Parser parser,
+  const SAC_STRING name, const SAC_STRING pseudoPage)
+{
+  if (PARSER(parser)->start_page_handler == NULL) return 0;
+  return PARSER(parser)->start_page_handler(PARSER(parser)->user_data,
+      name, pseudoPage);
+}
+
+
+
+int SAC_parser_end_page_handler(SAC_Parser parser,
+  const SAC_STRING name, const SAC_STRING pseudoPage)
+{
+  if (PARSER(parser)->end_page_handler == NULL) return 0;
+  return PARSER(parser)->end_page_handler(PARSER(parser)->user_data,
+      name, pseudoPage);
+}
+
+
+
+int SAC_parser_start_font_face_handler(SAC_Parser parser) {
+  if (PARSER(parser)->start_font_face_handler == NULL) return 0;
+  return PARSER(parser)->start_font_face_handler(PARSER(parser)->user_data);
+}
+
+
+
+int SAC_parser_end_font_face_handler(SAC_Parser parser) {
+  if (PARSER(parser)->end_font_face_handler == NULL) return 0;
+  return PARSER(parser)->end_font_face_handler(PARSER(parser)->user_data);
 }
 
 

@@ -6,29 +6,32 @@
 
 
 
-static void start_document(void *userData) {
+static int start_document(void *userData) {
   fprintf(USERDATA_FILE(userData), "<document>");
+  return 0;
 }
 
 
 
-static void end_document(void *userData) {
+static int end_document(void *userData) {
   fprintf(USERDATA_FILE(userData), "</document>");
+  return 0;
 }
 
 
 
-static void ignorable_at_rule(void *userData,
+static int ignorable_at_rule(void *userData,
   const SAC_STRING atRule)
 {
   fprintf(USERDATA_FILE(userData), "<ignorable_at_rule");
   fprintf(USERDATA_FILE(userData), " name=\"%s\"", atRule);
   fprintf(USERDATA_FILE(userData), "/>");
+  return 0;
 }
 
 
 
-static void namespace_declaration(void *userData,
+static int namespace_declaration(void *userData,
   const SAC_STRING prefix, const SAC_STRING uri)
 {
   fprintf(USERDATA_FILE(userData), "<namespace");
@@ -37,11 +40,12 @@ static void namespace_declaration(void *userData,
   if (uri != NULL)
     fprintf(USERDATA_FILE(userData), " uri=\"%s\"", uri);
   fprintf(USERDATA_FILE(userData), "/>");
+  return 0;
 }
 
 
 
-static void start_page(void *userData,
+static int start_page(void *userData,
   const SAC_STRING name, const SAC_STRING pseudoPage)
 {
   fprintf(USERDATA_FILE(userData), "<page>");
@@ -51,11 +55,12 @@ static void start_page(void *userData,
   if (pseudoPage != NULL)
     fprintf(USERDATA_FILE(userData), " pseudoPage=\"%s\"", pseudoPage);
   fprintf(USERDATA_FILE(userData), " />");
+  return 0;
 }
 
 
 
-static void end_page(void *userData,
+static int end_page(void *userData,
   const SAC_STRING name, const SAC_STRING pseudoPage)
 {
   fprintf(USERDATA_FILE(userData), "<end_page");
@@ -65,6 +70,7 @@ static void end_page(void *userData,
     fprintf(USERDATA_FILE(userData), " pseudoPage=\"%s\"", pseudoPage);
   fprintf(USERDATA_FILE(userData), " />");
   fprintf(USERDATA_FILE(userData), "</page>");
+  return 0;
 }
 
 
@@ -313,7 +319,7 @@ static void dump_media_queries(FILE *out, const SAC_MediaQuery *media[]) {
 
 
 
-static void import(void *userData,
+static int import(void *userData,
   const SAC_STRING base,
   const SAC_STRING uri,
   const SAC_MediaQuery *media[],
@@ -332,24 +338,27 @@ static void import(void *userData,
   dump_media_queries(USERDATA_FILE(userData), media);
 
   fprintf(USERDATA_FILE(userData), "</import>");
+  return 0;
 }
 
 
 
-static void start_media(void *userData, const SAC_MediaQuery *media[]) {
+static int start_media(void *userData, const SAC_MediaQuery *media[]) {
   fprintf(USERDATA_FILE(userData), "<media>");
   fprintf(USERDATA_FILE(userData), "<start_media_queries>");
   dump_media_queries(USERDATA_FILE(userData), media);
   fprintf(USERDATA_FILE(userData), "</start_media_queries>");
+  return 0;
 }
 
 
 
-static void end_media(void *userData, const SAC_MediaQuery *media[]) {
+static int end_media(void *userData, const SAC_MediaQuery *media[]) {
   fprintf(USERDATA_FILE(userData), "<end_media_queries>");
   dump_media_queries(USERDATA_FILE(userData), media);
   fprintf(USERDATA_FILE(userData), "</end_media_queries>");
   fprintf(USERDATA_FILE(userData), "</media>");
+  return 0;
 }
 
 
@@ -542,41 +551,41 @@ static void dump_selectors(FILE *out, const SAC_Selector **value) {
 
 
 
-static void start_font_face(void *userData) {
+static int start_font_face(void *userData) {
   fprintf(USERDATA_FILE(userData), "<font_face>");
+  return 0;
 }
 
 
 
-static void end_font_face(void *userData) {
+static int end_font_face(void *userData) {
   fprintf(USERDATA_FILE(userData), "</font_face>");
+  return 0;
 }
 
 
 
-static void start_style(void *userData, const SAC_Selector *selectors[]) {
+static int start_style(void *userData, const SAC_Selector *selectors[]) {
   fprintf(USERDATA_FILE(userData), "<style>");
   fprintf(USERDATA_FILE(userData), "<start_selectors>");
   dump_selectors(USERDATA_FILE(userData), selectors);
   fprintf(USERDATA_FILE(userData), "</start_selectors>");
+  return 0;
 }
 
 
 
-static void end_style(
-  void *userData,
-  const SAC_Selector *selectors[])
-{
+static int end_style(void *userData, const SAC_Selector *selectors[]) {
   fprintf(USERDATA_FILE(userData), "<end_selectors>");
   dump_selectors(USERDATA_FILE(userData), selectors);
   fprintf(USERDATA_FILE(userData), "</end_selectors>");
   fprintf(USERDATA_FILE(userData), "</style>");
+  return 0;
 }
 
 
 
-static void property(
-  void *userData,
+static int property(void *userData,
   const SAC_STRING propertyName,
   const SAC_LexicalUnit *value,
   SAC_Boolean important)
@@ -587,6 +596,7 @@ static void property(
   fprintf(USERDATA_FILE(userData), ">");
   dump_lexical_unit(USERDATA_FILE(userData), value);
   fprintf(USERDATA_FILE(userData), "</property>");
+  return 0;
 }
 
 
