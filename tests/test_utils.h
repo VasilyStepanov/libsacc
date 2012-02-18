@@ -10,14 +10,16 @@
 #define ASSERT_EQUAL_STRINGS(lhs, rhs) \
   do { \
     int eq; \
-    assert(lhs != NULL); \
-    assert(rhs != NULL); \
-    eq = strcmp(lhs, rhs); \
+    const char *lhsval = (lhs); \
+    const char *rhsval = (rhs); \
+    assert(lhsval != NULL); \
+    assert(rhsval != NULL); \
+    eq = strcmp(lhsval, rhsval); \
     if (eq != 0) { \
       printf( \
 "Expected: %s\n" \
 "Received: %s\n", \
-      lhs, rhs); \
+      lhsval, rhsval); \
     } \
     assert(eq == 0); \
   } while (0)
