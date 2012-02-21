@@ -1487,7 +1487,7 @@ void SAC_DisposeParser(SAC_Parser parser);
  */
 
 typedef enum _SAC_FatalErrorCode {
-  SAC_FATAL_ERROR_NO_MEMORY
+  SAC_FATAL_ERROR_NO_MEMORY = -100
   /* @@CONTINUEME */
 } SAC_FatalErrorCode;
 
@@ -1505,8 +1505,8 @@ void SAC_SetFatalErrorHandler(SAC_Parser parser,
 
 
 typedef enum _SAC_ErrorCode {
-  SAC_ERROR_NOT_SUPPORTED,
-  SAC_ERROR_SYNTAX
+  SAC_ERROR_NOT_SUPPORTED = -1,
+  SAC_ERROR_SYNTAX = -2
 } SAC_ErrorCode;
 
 typedef struct _SAC_Error {

@@ -35,20 +35,20 @@
 int yyerror(const char *data) { return 0; }
 extern int yylex();
 
-#define PARSER_ASSERT(expr, loc) \
+#define PARSER_ASSERT(expr, loc, errno) \
   do { \
     if (!(expr)) { \
       SAC_parser_fatal_error_handler(YY_SCANNER_PARSER(scanner), \
-        (loc).first_line, (loc).first_column, SAC_FATAL_ERROR_NO_MEMORY); \
+        (loc).first_line, (loc).first_column, (errno)); \
       YYABORT; \
     } \
   } while (0)
 
 #define TEST_OBJ(obj, loc) \
-  PARSER_ASSERT((obj) != NULL, loc)
+  PARSER_ASSERT((obj) != NULL, loc, SAC_FATAL_ERROR_NO_MEMORY)
 
 #define TEST_RVAL(rval, loc) \
-  PARSER_ASSERT(rval == 0, loc)
+  PARSER_ASSERT(rval == 0, loc, rval)
 
 #define SAC_ERROR(loc, type, data) \
   SAC_parser_error_handler(YY_SCANNER_PARSER(scanner), \
