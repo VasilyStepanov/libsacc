@@ -5,7 +5,7 @@
 
 
 
-typedef void* SAC_MPool;
+typedef struct _SAC_MPool* SAC_MPool;
 
 
 

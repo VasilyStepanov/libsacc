@@ -5,7 +5,7 @@
 
 
 
-typedef void* SAC_List;
+typedef struct _SAC_List* SAC_List;
 
 typedef void** SAC_ListIter;
 
@@ -13,7 +13,7 @@ typedef void** SAC_ListIter;
 
 SAC_List SAC_list_open(SAC_MPool mpool);
 
-void SAC_list_close(SAC_MPool mpool, SAC_List list);
+void SAC_list_close(SAC_List list, SAC_MPool mpool);
 
 SAC_ListIter SAC_list_head(SAC_List list);
 
