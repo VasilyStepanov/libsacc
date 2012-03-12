@@ -368,7 +368,7 @@ typedef struct _SAC_LexicalUnit SAC_LexicalUnit;
 
 struct _SAC_LexicalUnit {
   SAC_LexicalUnitCode lexicalUnitType;
-  union _SAC_unit {
+  union {
     /**
      * SAC_OPERATOR_COMMA
      * SAC_OPERATOR_PLUS
@@ -422,13 +422,13 @@ struct _SAC_LexicalUnit {
      * SAC_DIMENSION, etc.
      */
 
-    struct _SAC_Dimension {
+    struct {
       /**
        * The string representation of the unit.
        */
       SAC_STRING unit;
 
-      union _SAC_DimensionValue {
+      union {
         /**
          * SAC_DIMENSION
          * SAC_LENGTH_EM
@@ -496,7 +496,7 @@ struct _SAC_LexicalUnit {
      * SAC_NTH_LAST_OF_TYPE_FUNCTION
      */
 
-    struct _SAC_Function {
+    struct {
       /**
        * The name of the function.
        */
@@ -819,12 +819,12 @@ struct _SAC_Selector {
   /* the type of the selector */
   SAC_SelectorType selectorType;
 
-  union _SAC_Sdesc {
+  union {
     /**
      * SAC_CONDITIONAL_SELECTOR
      */
 
-    struct _SAC_Conditional {
+    struct {
       /**
        * The simple selector.
        *
@@ -852,7 +852,7 @@ struct _SAC_Selector {
      * SAC_CHILD_SELECTOR
      */
 
-    struct _SAC_Sdescendant {
+    struct {
       /**
        * The parent selector.
        *
@@ -873,7 +873,7 @@ struct _SAC_Selector {
      * SAC_GENERAL_ADJACENT_SELECTOR
      */
 
-    struct _SAC_Ssibling {
+    struct {
       /**
        * The first selector.
        */
@@ -891,7 +891,7 @@ struct _SAC_Selector {
      * SAC_ELEMENT_NODE_SELECTOR
      */
 
-    struct _SAC_Element {
+    struct {
       /**
        * The namespace URI of this element selector.
        *
@@ -933,7 +933,7 @@ struct _SAC_Selector {
      * SAC_PROCESSING_INSTRUCTION_NODE_SELECTOR
      */
 
-    struct _SAC_Pi {
+    struct {
       /**
        * The target of the processing instruction.
        *
@@ -957,13 +957,13 @@ struct _SAC_Condition {
   /* the type of the condition */
   SAC_ConditionType conditionType;
 
-  union _SAC_Cdesc {
+  union {
     /**
      * SAC_AND_CONDITION
      * SAC_OR_CONDITION
      */
 
-    struct _SAC_Ccombinator {
+    struct {
       /**
        * The first condition.
        */
@@ -992,7 +992,7 @@ struct _SAC_Condition {
      * SAC_POSITIONAL_CONDITION
      */
 
-    struct _SAC_CPositional {
+    struct {
       /**
        * The position in the tree.
        *
@@ -1027,7 +1027,7 @@ struct _SAC_Condition {
      * SAC_CLASS_CONDITION
      */
 
-    struct _SAC_Attribute {
+    struct {
       /**
        * The namespace URI of this attribute condition.
        *
@@ -1167,18 +1167,18 @@ struct _SAC_MediaQuery {
   /* the type of the media query */
   SAC_MediaQueryType mediaQueryType;
 
-  union _SAC_MQdesc {
+  union {
     /* SAC_TYPE_MEDIA_QUERY */
     SAC_STRING type;
 
     /* SAC_FEATURE_MEDIA_QUERY */
-    struct _SAC_MQfeature {
+    struct {
       SAC_STRING name;
       SAC_LexicalUnit *value;
     } feature;
 
     /* SAC_AND_MEDIA_QUERY */
-    struct _SAC_MQcombinator {
+    struct {
       /**
        * Can't be an 'only' media query or a 'not' media query.
        */
