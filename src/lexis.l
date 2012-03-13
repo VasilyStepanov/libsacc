@@ -184,6 +184,22 @@ nth          [\+-]?{int}?{N}({w}[\+-]{w}{int})?
 
 @{I}{M}{P}{O}{R}{T}     {return IMPORT_SYM;}
 @{P}{A}{G}{E}           {return PAGE_SYM;}
+"@top-left-corner"      {return TOP_LEFT_CORNER_SYM;}
+"@top-left"             {return TOP_LEFT_SYM;}
+"@top-center"           {return TOP_CENTER_SYM;}
+"@top-right"            {return TOP_RIGHT_SYM;}
+"@top-right-corner"     {return TOP_RIGHT_CORNER_SYM;}
+"@bottom-left-corner"   {return BOTTOM_LEFT_CORNER_SYM;}
+"@bottom-left"          {return BOTTOM_LEFT_SYM;}
+"@bottom-center"        {return BOTTOM_CENTER_SYM;}
+"@bottom-right"         {return BOTTOM_RIGHT_SYM;}
+"@bottom-right-corner"  {return BOTTOM_RIGHT_CORNER_SYM;}
+"@left-top"             {return LEFT_TOP_SYM;}
+"@left-middle"          {return LEFT_MIDDLE_SYM;}
+"@left-bottom"          {return LEFT_BOTTOM_SYM;}
+"@right-top"            {return RIGHT_TOP_SYM;}
+"@right-middle"         {return RIGHT_MIDDLE_SYM;}
+"@right-bottom"         {return RIGHT_BOTTOM_SYM;}
 @{M}{E}{D}{I}{A}        {return MEDIA_SYM;}
 "@font-face"            {return FONT_FACE_SYM;}
 "@charset "             {return CHARSET_SYM;}

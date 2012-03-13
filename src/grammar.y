@@ -126,6 +126,22 @@ SAC_Pair pair;
 
 %token IMPORT_SYM
 %token PAGE_SYM
+%token TOP_LEFT_CORNER_SYM
+%token TOP_LEFT_SYM
+%token TOP_CENTER_SYM
+%token TOP_RIGHT_SYM
+%token TOP_RIGHT_CORNER_SYM
+%token BOTTOM_LEFT_CORNER_SYM
+%token BOTTOM_LEFT_SYM
+%token BOTTOM_CENTER_SYM
+%token BOTTOM_RIGHT_SYM
+%token BOTTOM_RIGHT_CORNER_SYM
+%token LEFT_TOP_SYM
+%token LEFT_MIDDLE_SYM
+%token LEFT_BOTTOM_SYM
+%token RIGHT_TOP_SYM
+%token RIGHT_MIDDLE_SYM
+%token RIGHT_BOTTOM_SYM
 %token MEDIA_SYM
 %token FONT_FACE_SYM
 %token CHARSET_SYM
@@ -698,7 +714,7 @@ media_feature
     }
   ;
 page
-  : page_start maybe_declarations closing_brace {
+  : page_start maybe_declarations_and_margins closing_brace {
       TEST_RVAL(SAC_parser_end_page_handler(YY_SCANNER_PARSER(scanner),
         $1.first, $1.second), @$);
     }
@@ -726,6 +742,32 @@ page
       SAC_SYNTAX_ERROR(@4,
         "unexpected 'semicolon' while parsing 'page' rule");
     }
+  ;
+maybe_declarations_and_margins
+  : maybe_declarations
+  | maybe_declarations_and_margins margin maybe_declarations
+  ;
+margin
+  : margin_sym maybe_spaces '{' maybe_spaces maybe_declarations closing_brace
+    maybe_spaces
+  ;
+margin_sym
+  : TOP_LEFT_CORNER_SYM
+  | TOP_LEFT_SYM
+  | TOP_CENTER_SYM
+  | TOP_RIGHT_SYM
+  | TOP_RIGHT_CORNER_SYM
+  | BOTTOM_LEFT_CORNER_SYM
+  | BOTTOM_LEFT_SYM
+  | BOTTOM_CENTER_SYM
+  | BOTTOM_RIGHT_SYM
+  | BOTTOM_RIGHT_CORNER_SYM
+  | LEFT_TOP_SYM
+  | LEFT_MIDDLE_SYM
+  | LEFT_BOTTOM_SYM
+  | RIGHT_TOP_SYM
+  | RIGHT_MIDDLE_SYM
+  | RIGHT_BOTTOM_SYM
   ;
 page_errors
   : error

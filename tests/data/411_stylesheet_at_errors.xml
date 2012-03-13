@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<document>
+  <page>
+    <start_page/>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_page/>
+  </page>
+  <page>
+    <start_page pseudoPage="left"/>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_page pseudoPage="left"/>
+  </page>
+  <page>
+    <start_page pseudoPage="right"/>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_page pseudoPage="right"/>
+  </page>
+  <page>
+    <start_page name="LandscapeTable"/>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_page name="LandscapeTable"/>
+  </page>
+  <page>
+    <start_page name="CompanyLetterHead" pseudoPage="first"/>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_page name="CompanyLetterHead" pseudoPage="first"/>
+  </page>
+  <page>
+    <start_page pseudoPage="first"/>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_page pseudoPage="first"/>
+  </page>
+  <page>
+    <start_page/>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_page/>
+  </page>
+  <page>
+    <start_page pseudoPage="left"/>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_page pseudoPage="left"/>
+  </page>
+  <page>
+    <start_page pseudoPage="right"/>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_page pseudoPage="right"/>
+  </page>
+  <page>
+    <start_page pseudoPage="left"/>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_page pseudoPage="left"/>
+  </page>
+  <page>
+    <start_page pseudoPage="right"/>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_page pseudoPage="right"/>
+  </page>
+  <page>
+    <start_page pseudoPage="first"/>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_page pseudoPage="first"/>
+  </page>
+</document>

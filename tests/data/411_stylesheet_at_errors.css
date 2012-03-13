@@ -1,0 +1,18 @@
+@page { color : green }
+@page :left { color : green }
+@page :right { color : green  }
+@page LandscapeTable { color : green }
+@page CompanyLetterHead:first { color : green } /*  identifier and pseudo page. */
+@page:first { color : green }
+
+@page {
+   @top-left { color : green /* document name */ }
+   @bottom-center { color : green /* page number */}
+}
+@page :left { @left-middle { color : green /* page number in left margin */ }}
+@page :right{ @right-middle { color : green /* page number in right margins of right pages */}}
+
+@page :left { @bottom-left-corner { color : green /* left page numbers */ }}
+@page :right { @bottom-right-corner { color : green /* right page numbers */ }}
+@page :first { @bottom-left-corner { color : green /* empty footer on 1st page */ }
+               @bottom-right-corner { color : green /* empty footer */ } }
