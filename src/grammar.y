@@ -16,6 +16,7 @@
 #include "condition.h"
 #include "selector.h"
 #include "media_query.h"
+#include "page_margin.h"
 #include "mpool.h"
 #include "pair.h"
 }
@@ -77,8 +78,9 @@ SAC_List list;
 SAC_Vector vector;
 SAC_Selector *sel;
 SAC_Condition *cond;
-SAC_ConditionType cond_type;
 SAC_MediaQuery *media;
+SAC_PageMargin *margin;
+SAC_PageMarginType margin_type;
 SAC_Boolean boolean;
 SAC_Pair pair;
 }
@@ -183,6 +185,9 @@ SAC_Pair pair;
 %type <pair> page_start;
 %type <vector> style_start;
 %type <vector> media_start;
+
+%type <margin> margin_start;
+%type <margin_type> margin_sym;
 
 %type <str> namespace_prefix;
 %type <str> maybe_namespace_prefix;
@@ -748,26 +753,71 @@ maybe_declarations_and_margins
   | maybe_declarations_and_margins margin maybe_declarations
   ;
 margin
-  : margin_sym maybe_spaces '{' maybe_spaces maybe_declarations closing_brace
+  : margin_start maybe_spaces '{' maybe_spaces maybe_declarations closing_brace
     maybe_spaces
+    {
+      TEST_RVAL(SAC_parser_end_page_margin_handler(
+        YY_SCANNER_PARSER(scanner), $1), @$);
+    }
+  ;
+margin_start
+  : margin_sym {
+      $$ = SAC_page_margin(YY_SCANNER_MPOOL(scanner), $1);
+      TEST_OBJ($$, @$);
+
+      TEST_RVAL(SAC_parser_start_page_margin_handler(
+        YY_SCANNER_PARSER(scanner), $$), @$);
+    }
   ;
 margin_sym
-  : TOP_LEFT_CORNER_SYM
-  | TOP_LEFT_SYM
-  | TOP_CENTER_SYM
-  | TOP_RIGHT_SYM
-  | TOP_RIGHT_CORNER_SYM
-  | BOTTOM_LEFT_CORNER_SYM
-  | BOTTOM_LEFT_SYM
-  | BOTTOM_CENTER_SYM
-  | BOTTOM_RIGHT_SYM
-  | BOTTOM_RIGHT_CORNER_SYM
-  | LEFT_TOP_SYM
-  | LEFT_MIDDLE_SYM
-  | LEFT_BOTTOM_SYM
-  | RIGHT_TOP_SYM
-  | RIGHT_MIDDLE_SYM
-  | RIGHT_BOTTOM_SYM
+  : TOP_LEFT_CORNER_SYM {
+      $$ = SAC_TOP_LEFT_CORNER_PAGE_MARGIN;
+    }
+  | TOP_LEFT_SYM {
+      $$ = SAC_TOP_LEFT_PAGE_MARGIN;
+    }
+  | TOP_CENTER_SYM {
+      $$ = SAC_TOP_CENTER_PAGE_MARGIN;
+    }
+  | TOP_RIGHT_SYM {
+      $$ = SAC_TOP_RIGHT_PAGE_MARGIN;
+    }
+  | TOP_RIGHT_CORNER_SYM {
+      $$ = SAC_TOP_RIGHT_CORNER_PAGE_MARGIN;
+    }
+  | BOTTOM_LEFT_CORNER_SYM {
+      $$ = SAC_BOTTOM_LEFT_CORNER_PAGE_MARGIN;
+    }
+  | BOTTOM_LEFT_SYM {
+      $$ = SAC_BOTTOM_LEFT_PAGE_MARGIN;
+    }
+  | BOTTOM_CENTER_SYM {
+      $$ = SAC_BOTTOM_CENTER_PAGE_MARGIN;
+    }
+  | BOTTOM_RIGHT_SYM {
+      $$ = SAC_BOTTOM_RIGHT_PAGE_MARGIN;
+    }
+  | BOTTOM_RIGHT_CORNER_SYM {
+      $$ = SAC_BOTTOM_RIGHT_CORNER_PAGE_MARGIN;
+    }
+  | LEFT_TOP_SYM {
+      $$ = SAC_LEFT_TOP_PAGE_MARGIN;
+    }
+  | LEFT_MIDDLE_SYM {
+      $$ = SAC_LEFT_MIDDLE_PAGE_MARGIN;
+    }
+  | LEFT_BOTTOM_SYM {
+      $$ = SAC_LEFT_BOTTOM_PAGE_MARGIN;
+    }
+  | RIGHT_TOP_SYM {
+      $$ = SAC_RIGHT_TOP_PAGE_MARGIN;
+    }
+  | RIGHT_MIDDLE_SYM {
+      $$ = SAC_RIGHT_MIDDLE_PAGE_MARGIN;
+    }
+  | RIGHT_BOTTOM_SYM {
+      $$ = SAC_RIGHT_BOTTOM_PAGE_MARGIN;
+    }
   ;
 page_errors
   : error

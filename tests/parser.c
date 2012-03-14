@@ -76,7 +76,7 @@ static int end_page(void *userData,
 
 
 static void dump_page_margin(FILE *out, const SAC_PageMargin *margin) {
-  fprintf(out, "<margin type=\"");
+  fprintf(out, "<page_margin type=\"");
   switch (margin->pageMarginType) {
     case SAC_TOP_LEFT_CORNER_PAGE_MARGIN:
       fprintf(out, "top-left-corner");
@@ -134,15 +134,19 @@ static void dump_page_margin(FILE *out, const SAC_PageMargin *margin) {
 
 static int start_page_margin(void *userData, const SAC_PageMargin *margin) {
   fprintf(USERDATA_FILE(userData), "<page_margin>");
+  fprintf(USERDATA_FILE(userData), "<start_page_margin>");
   dump_page_margin(USERDATA_FILE(userData), margin);
+  fprintf(USERDATA_FILE(userData), "</start_page_margin>");
   return 0;
 }
 
 
 
 static int end_page_margin(void *userData, const SAC_PageMargin *margin) {
-  fprintf(USERDATA_FILE(userData), "</page_margin>");
+  fprintf(USERDATA_FILE(userData), "<end_page_margin>");
   dump_page_margin(USERDATA_FILE(userData), margin);
+  fprintf(USERDATA_FILE(userData), "</end_page_margin>");
+  fprintf(USERDATA_FILE(userData), "</page_margin>");
   return 0;
 }
 

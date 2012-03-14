@@ -5,6 +5,7 @@
 #include "test_condition.h"
 #include "test_selector.h"
 #include "test_media_query.h"
+#include "test_page_margin.h"
 #include "test_parser.h"
 
 #include <stdlib.h>
@@ -19,6 +20,7 @@ int main() {
   test_condition();
   test_selector();
   test_media_query();
+  test_page_margin();
   test_parser();
   return EXIT_SUCCESS;
 }

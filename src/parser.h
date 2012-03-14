@@ -54,6 +54,12 @@ int SAC_parser_start_page_handler(SAC_Parser parser,
 int SAC_parser_end_page_handler(SAC_Parser parser,
   const SAC_STRING name, const SAC_STRING pseudoPage);
 
+int SAC_parser_start_page_margin_handler(SAC_Parser parser,
+  const SAC_PageMargin *margin);
+
+int SAC_parser_end_page_margin_handler(SAC_Parser parser,
+  const SAC_PageMargin *margin);
+
 int SAC_parser_start_font_face_handler(SAC_Parser parser);
 
 int SAC_parser_end_font_face_handler(SAC_Parser parser);

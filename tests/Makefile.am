@@ -14,6 +14,7 @@ test_suite_SOURCES = test_mpool.c \
                      test_condition.c \
                      test_selector.c \
                      test_media_query.c \
+                     test_page_margin.c \
                      test_parser.c \
                      test_suite.c
 

@@ -260,6 +260,26 @@ int SAC_parser_end_page_handler(SAC_Parser parser,
 
 
 
+int SAC_parser_start_page_margin_handler(SAC_Parser parser,
+  const SAC_PageMargin *margin)
+{
+  if (PARSER(parser)->start_page_margin_handler == NULL) return 0;
+  return PARSER(parser)->start_page_margin_handler(PARSER(parser)->user_data,
+    margin);
+}
+
+
+
+int SAC_parser_end_page_margin_handler(SAC_Parser parser,
+  const SAC_PageMargin *margin)
+{
+  if (PARSER(parser)->end_page_margin_handler == NULL) return 0;
+  return PARSER(parser)->end_page_margin_handler(PARSER(parser)->user_data,
+    margin);
+}
+
+
+
 int SAC_parser_start_font_face_handler(SAC_Parser parser) {
   if (PARSER(parser)->start_font_face_handler == NULL) return 0;
   return PARSER(parser)->start_font_face_handler(PARSER(parser)->user_data);

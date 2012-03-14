@@ -44,50 +44,114 @@
   </page>
   <page>
     <start_page/>
-    <property name="color">
-      <ident>green</ident>
-    </property>
-    <property name="color">
-      <ident>green</ident>
-    </property>
+    <page_margin>
+      <start_page_margin>
+        <page_margin type="top-left"/>
+      </start_page_margin>
+      <property name="color">
+        <ident>green</ident>
+      </property>
+      <end_page_margin>
+        <page_margin type="top-left"/>
+      </end_page_margin>
+    </page_margin>
+    <page_margin>
+      <start_page_margin>
+        <page_margin type="bottom-center"/>
+      </start_page_margin>
+      <property name="color">
+        <ident>green</ident>
+      </property>
+      <end_page_margin>
+        <page_margin type="bottom-center"/>
+      </end_page_margin>
+    </page_margin>
     <end_page/>
   </page>
   <page>
     <start_page pseudoPage="left"/>
-    <property name="color">
-      <ident>green</ident>
-    </property>
+    <page_margin>
+      <start_page_margin>
+        <page_margin type="left-middle"/>
+      </start_page_margin>
+      <property name="color">
+        <ident>green</ident>
+      </property>
+      <end_page_margin>
+        <page_margin type="left-middle"/>
+      </end_page_margin>
+    </page_margin>
     <end_page pseudoPage="left"/>
   </page>
   <page>
     <start_page pseudoPage="right"/>
-    <property name="color">
-      <ident>green</ident>
-    </property>
+    <page_margin>
+      <start_page_margin>
+        <page_margin type="right-middle"/>
+      </start_page_margin>
+      <property name="color">
+        <ident>green</ident>
+      </property>
+      <end_page_margin>
+        <page_margin type="right-middle"/>
+      </end_page_margin>
+    </page_margin>
     <end_page pseudoPage="right"/>
   </page>
   <page>
     <start_page pseudoPage="left"/>
-    <property name="color">
-      <ident>green</ident>
-    </property>
+    <page_margin>
+      <start_page_margin>
+        <page_margin type="bottom-left-corner"/>
+      </start_page_margin>
+      <property name="color">
+        <ident>green</ident>
+      </property>
+      <end_page_margin>
+        <page_margin type="bottom-left-corner"/>
+      </end_page_margin>
+    </page_margin>
     <end_page pseudoPage="left"/>
   </page>
   <page>
     <start_page pseudoPage="right"/>
-    <property name="color">
-      <ident>green</ident>
-    </property>
+    <page_margin>
+      <start_page_margin>
+        <page_margin type="bottom-corner"/>
+      </start_page_margin>
+      <property name="color">
+        <ident>green</ident>
+      </property>
+      <end_page_margin>
+        <page_margin type="bottom-corner"/>
+      </end_page_margin>
+    </page_margin>
     <end_page pseudoPage="right"/>
   </page>
   <page>
     <start_page pseudoPage="first"/>
-    <property name="color">
-      <ident>green</ident>
-    </property>
-    <property name="color">
-      <ident>green</ident>
-    </property>
+    <page_margin>
+      <start_page_margin>
+        <page_margin type="bottom-left-corner"/>
+      </start_page_margin>
+      <property name="color">
+        <ident>green</ident>
+      </property>
+      <end_page_margin>
+        <page_margin type="bottom-left-corner"/>
+      </end_page_margin>
+    </page_margin>
+    <page_margin>
+      <start_page_margin>
+        <page_margin type="bottom-corner"/>
+      </start_page_margin>
+      <property name="color">
+        <ident>green</ident>
+      </property>
+      <end_page_margin>
+        <page_margin type="bottom-corner"/>
+      </end_page_margin>
+    </page_margin>
     <end_page pseudoPage="first"/>
   </page>
 </document>
