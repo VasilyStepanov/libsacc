@@ -753,15 +753,22 @@ maybe_declarations_and_margins
   | maybe_declarations_and_margins margin maybe_declarations
   ;
 margin
-  : margin_start maybe_spaces '{' maybe_spaces maybe_declarations closing_brace
-    maybe_spaces
+  : margin_start maybe_declarations closing_brace maybe_spaces
     {
       TEST_RVAL(SAC_parser_end_page_margin_handler(
         YY_SCANNER_PARSER(scanner), $1), @$);
     }
+  | margin_sym maybe_spaces margin_errors invalid_block maybe_spaces {
+      SAC_SYNTAX_ERROR(@3,
+        "unexpected token while parsing 'page margin' rule");
+    }
+  ;
+margin_errors
+  : error
+  | margin_errors error
   ;
 margin_start
-  : margin_sym {
+  : margin_sym maybe_spaces '{' maybe_spaces {
       $$ = SAC_page_margin(YY_SCANNER_MPOOL(scanner), $1);
       TEST_OBJ($$, @$);
 

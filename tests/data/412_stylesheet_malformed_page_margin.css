@@ -1,0 +1,4 @@
+@page {
+  @top-left err { color : red; } /* malformed margin */
+  @top-left { color : green; } /* recovery */
+}
