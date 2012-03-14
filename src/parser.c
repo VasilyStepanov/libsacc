@@ -25,6 +25,8 @@ struct _SAC_Parser {
   SAC_EndDocumentHandler end_document_handler;
   SAC_StartPageHandler start_page_handler;
   SAC_EndPageHandler end_page_handler;
+  SAC_StartPageMarginHandler start_page_margin_handler;
+  SAC_EndPageMarginHandler end_page_margin_handler;
   SAC_IgnorableAtRuleHandler ignorable_at_rule_handler;
   SAC_NamespaceDeclarationHandler namespace_declaration_handler;
   SAC_ImportHandler import_handler;
@@ -303,6 +305,15 @@ void SAC_SetPageHandler(SAC_Parser parser,
 {
   PARSER(parser)->start_page_handler = start;
   PARSER(parser)->end_page_handler = end;
+}
+
+
+
+void SAC_SetPageMarginHandler(SAC_Parser parser,
+  SAC_StartPageMarginHandler start, SAC_EndPageMarginHandler end)
+{
+  PARSER(parser)->start_page_margin_handler = start;
+  PARSER(parser)->end_page_margin_handler = end;
 }
 
 

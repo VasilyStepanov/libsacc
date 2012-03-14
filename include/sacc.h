@@ -1352,6 +1352,30 @@ typedef int (*SAC_EndPageHandler)(void *userData,
   const SAC_STRING name, const SAC_STRING pseudoPage);
 
 /**
+ * Receive notification of the beginning of a page margin rule.
+ *
+ * The SAC Parser will invoke this method at the beginning of every page margin
+ * rule in the CSS document. There will be a corresponding
+ * SAC_EndPageMarginHandler event for every SAC_StartPageMarginHandler event.
+ * All properties inside the rule will be reported, in order, before the
+ * corresponding SAC_EndPageMarginHandler event.
+ * Nonzero return from callback aborts the parser.
+ */
+typedef int (*SAC_StartPageMarginHandler)(void *userData,
+  const SAC_PageMargin *margin);
+
+/**
+ * Receive notification of the end of a page margin rule.
+ *
+ * The SAC Parser will invoke this method at the end of every page rule in the
+ * CSS document. There will be a corresponding SAC_StartPageHandler event for
+ * every SAC_EndPageHandler event.
+ * Nonzero return from callback aborts the parser.
+ */
+typedef int (*SAC_EndPageMarginHandler)(void *userData,
+  const SAC_PageMargin *margin);
+
+/**
  * Receive notification of a beginning of font-face rule.
  *
  * The SAC Parser will invoke this method at the beginning of every font-face
@@ -1436,6 +1460,9 @@ void SAC_SetImportHandler(SAC_Parser parser, SAC_ImportHandler handler);
 
 void SAC_SetPageHandler(SAC_Parser parser,
   SAC_StartPageHandler start, SAC_EndPageHandler end);
+
+void SAC_SetPageMarginHandler(SAC_Parser parser,
+  SAC_StartPageMarginHandler start, SAC_EndPageMarginHandler end);
 
 void SAC_SetFontFaceHandler(SAC_Parser parser,
   SAC_StartFontFaceHandler start, SAC_EndFontFaceHandler end);

@@ -75,6 +75,79 @@ static int end_page(void *userData,
 
 
 
+static void dump_page_margin(FILE *out, const SAC_PageMargin *margin) {
+  fprintf(out, "<margin type=\"");
+  switch (margin->pageMarginType) {
+    case SAC_TOP_LEFT_CORNER_PAGE_MARGIN:
+      fprintf(out, "top-left-corner");
+      break;
+    case SAC_TOP_LEFT_PAGE_MARGIN:
+      fprintf(out, "top-left");
+      break;
+    case SAC_TOP_CENTER_PAGE_MARGIN:
+      fprintf(out, "top-center");
+      break;
+    case SAC_TOP_RIGHT_PAGE_MARGIN:
+      fprintf(out, "top-right");
+      break;
+    case SAC_TOP_RIGHT_CORNER_PAGE_MARGIN:
+      fprintf(out, "top-right-corner");
+      break;
+    case SAC_BOTTOM_LEFT_CORNER_PAGE_MARGIN:
+      fprintf(out, "bottom-left-corner");
+      break;
+    case SAC_BOTTOM_LEFT_PAGE_MARGIN:
+      fprintf(out, "bottom-left");
+      break;
+    case SAC_BOTTOM_CENTER_PAGE_MARGIN:
+      fprintf(out, "bottom-center");
+      break;
+    case SAC_BOTTOM_RIGHT_PAGE_MARGIN:
+      fprintf(out, "bottom-right");
+      break;
+    case SAC_BOTTOM_RIGHT_CORNER_PAGE_MARGIN:
+      fprintf(out, "bottom-corner");
+      break;
+    case SAC_LEFT_TOP_PAGE_MARGIN:
+      fprintf(out, "left-top");
+      break;
+    case SAC_LEFT_MIDDLE_PAGE_MARGIN:
+      fprintf(out, "left-middle");
+      break;
+    case SAC_LEFT_BOTTOM_PAGE_MARGIN:
+      fprintf(out, "left-middle");
+      break;
+    case SAC_RIGHT_TOP_PAGE_MARGIN:
+      fprintf(out, "right-top");
+      break;
+    case SAC_RIGHT_MIDDLE_PAGE_MARGIN:
+      fprintf(out, "right-middle");
+      break;
+    case SAC_RIGHT_BOTTOM_PAGE_MARGIN:
+      fprintf(out, "right-bottom");
+      break;
+  }
+  fprintf(out, "\" />");
+}
+
+
+
+static int start_page_margin(void *userData, const SAC_PageMargin *margin) {
+  fprintf(USERDATA_FILE(userData), "<page_margin>");
+  dump_page_margin(USERDATA_FILE(userData), margin);
+  return 0;
+}
+
+
+
+static int end_page_margin(void *userData, const SAC_PageMargin *margin) {
+  fprintf(USERDATA_FILE(userData), "</page_margin>");
+  dump_page_margin(USERDATA_FILE(userData), margin);
+  return 0;
+}
+
+
+
 static void dump_lexical_unit(FILE *out, const SAC_LexicalUnit *value) {
   if (value == NULL) {
     fprintf(out, "<no_lexical_units />");
@@ -635,6 +708,7 @@ static SAC_Parser create_parser(FILE *out) {
   SAC_SetIgnorableAtRuleHandler(parser, ignorable_at_rule);
   SAC_SetNamespaceDeclarationHandler(parser, namespace_declaration);
   SAC_SetPageHandler(parser, start_page, end_page);
+  SAC_SetPageMarginHandler(parser, start_page_margin, end_page_margin);
   SAC_SetImportHandler(parser, import);
   SAC_SetMediaHandler(parser, start_media, end_media);
   SAC_SetFontFaceHandler(parser, start_font_face, end_font_face);
