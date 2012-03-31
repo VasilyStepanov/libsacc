@@ -3,7 +3,7 @@
 
 
 
-void test_selector();
+void test_selector(void);
 
 
 

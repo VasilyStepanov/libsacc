@@ -12,7 +12,7 @@
 
 
 
-static void test_condition_factory() {
+static void test_condition_factory(void) {
   SAC_MPool mpool;
   SAC_Condition *condition;
   SAC_Condition *firstCondition;
@@ -112,6 +112,6 @@ static void test_condition_factory() {
 
 
 
-void test_condition() {
+void test_condition(void) {
   test_condition_factory();
 }

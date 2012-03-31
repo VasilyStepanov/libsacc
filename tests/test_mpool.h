@@ -3,7 +3,7 @@
 
 
 
-void test_mpool();
+void test_mpool(void);
 
 
 

@@ -3,7 +3,7 @@
 
 
 
-void test_vector();
+void test_vector(void);
 
 
 

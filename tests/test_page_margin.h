@@ -3,7 +3,7 @@
 
 
 
-void test_page_margin();
+void test_page_margin(void);
 
 
 

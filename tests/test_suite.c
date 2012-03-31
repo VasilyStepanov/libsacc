@@ -12,7 +12,7 @@
 
 
 
-int main() {
+int main(void) {
   test_mpool();
   test_list();
   test_vector();

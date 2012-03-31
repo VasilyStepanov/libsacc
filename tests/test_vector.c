@@ -10,7 +10,7 @@
 
 
 
-static void test_vector_basics() {
+static void test_vector_basics(void) {
   SAC_MPool mpool;
   SAC_Vector vector;
   SAC_VectorIter it;
@@ -47,7 +47,7 @@ static void test_vector_basics() {
 
 
 
-static void test_vector_cpy() {
+static void test_vector_cpy(void) {
   SAC_MPool mpool;
   SAC_Vector vector1, vector2;
   int a = 1, b = 2, c = 3;
@@ -73,7 +73,7 @@ static void test_vector_cpy() {
 
 
 
-static void test_vector_from_list() {
+static void test_vector_from_list(void) {
   SAC_MPool mpool;
   SAC_List list;
   SAC_Vector vector;
@@ -100,7 +100,7 @@ static void test_vector_from_list() {
 
 
 
-void test_vector() {
+void test_vector(void) {
   test_vector_basics();
   test_vector_cpy();
   test_vector_from_list();

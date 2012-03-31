@@ -11,7 +11,7 @@
 
 
 
-static void test_selector_factory() {
+static void test_selector_factory(void) {
   SAC_MPool mpool;
   SAC_Selector *selector;
   SAC_Selector *simpleSelector;
@@ -72,6 +72,6 @@ static void test_selector_factory() {
 
 
 
-void test_selector() {
+void test_selector(void) {
   test_selector_factory();
 }

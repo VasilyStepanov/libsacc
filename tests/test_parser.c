@@ -19,7 +19,7 @@ static int property(void *userData SAC_UNUSED,
 
 
 
-static void test_parser_errno() {
+static void test_parser_errno(void) {
   const char *css;
   SAC_Parser parser;
   int errno;
@@ -37,6 +37,6 @@ static void test_parser_errno() {
 
 
 
-void test_parser() {
+void test_parser(void) {
   test_parser_errno();
 }

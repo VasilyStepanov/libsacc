@@ -6,7 +6,7 @@
 
 
 
-static void test_page_margin_alloc() {
+static void test_page_margin_alloc(void) {
   SAC_MPool mpool;
   SAC_PageMargin *margin;
 
@@ -20,6 +20,6 @@ static void test_page_margin_alloc() {
 
 
 
-void test_page_margin() {
+void test_page_margin(void) {
   test_page_margin_alloc();
 }

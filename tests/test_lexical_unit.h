@@ -4,7 +4,7 @@
 
 
 
-void test_lexical_unit();
+void test_lexical_unit(void);
 
 
 

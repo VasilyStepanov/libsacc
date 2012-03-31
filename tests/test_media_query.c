@@ -7,7 +7,7 @@
 
 
 
-static void test_media_query_factory() {
+static void test_media_query_factory(void) {
   SAC_MPool mpool;
   SAC_MediaQuery *query;
   SAC_MediaQuery *firstQuery;
@@ -47,6 +47,6 @@ static void test_media_query_factory() {
 
 
 
-void test_media_query() {
+void test_media_query(void) {
   test_media_query_factory();
 }

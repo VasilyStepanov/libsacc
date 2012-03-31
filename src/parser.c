@@ -390,7 +390,7 @@ void* SAC_GetUserData(SAC_Parser parser) {
 
 
 
-SAC_Parser SAC_CreateParser() {
+SAC_Parser SAC_CreateParser(void) {
   struct _SAC_Parser *parser = (struct _SAC_Parser*)malloc(
     sizeof(struct _SAC_Parser));
 

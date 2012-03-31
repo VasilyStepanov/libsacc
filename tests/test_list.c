@@ -9,7 +9,7 @@
 
 
 
-static void test_list_basics() {
+static void test_list_basics(void) {
   SAC_MPool mpool;
   SAC_List list;
   SAC_ListIter it;
@@ -45,7 +45,7 @@ static void test_list_basics() {
 
 
 
-static void test_list_push_front() {
+static void test_list_push_front(void) {
   SAC_MPool mpool;
   SAC_List list;
   SAC_ListIter it;
@@ -83,7 +83,7 @@ static void test_list_push_front() {
 
 
 
-void test_list() {
+void test_list(void) {
   test_list_basics();
   test_list_push_front();
 }

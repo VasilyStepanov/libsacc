@@ -3,7 +3,7 @@
 
 
 
-void test_media_query();
+void test_media_query(void);
 
 
 

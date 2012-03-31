@@ -12,7 +12,7 @@
 
 
 
-static void test_lexical_unit_from_list() {
+static void test_lexical_unit_from_list(void) {
   SAC_MPool mpool;
   SAC_LexicalUnit *a, *b, *c;
   SAC_List list;
@@ -49,7 +49,7 @@ static void test_lexical_unit_from_list() {
 
 
 
-static void test_lexical_unit_factory() {
+static void test_lexical_unit_factory(void) {
   SAC_MPool mpool;
   SAC_LexicalUnit *value;
   SAC_LexicalUnit **params;
@@ -283,7 +283,7 @@ static void test_lexical_unit_factory() {
 
 
 
-void test_lexical_unit() {
+void test_lexical_unit(void) {
   test_lexical_unit_from_list();
   test_lexical_unit_factory();
 }

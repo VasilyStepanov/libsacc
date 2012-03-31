@@ -3,7 +3,7 @@
 
 
 
-void test_condition();
+void test_condition(void);
 
 
 
