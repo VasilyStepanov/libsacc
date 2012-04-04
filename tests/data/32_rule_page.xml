@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<document>
+  <page>
+    <start_page name="LandscapeTable"/>
+    <property name="color">
+      <ident>green</ident>
+    </property>
+    <end_page name="LandscapeTable"/>
+  </page>
+</document>

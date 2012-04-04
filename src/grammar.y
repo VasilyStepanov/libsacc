@@ -291,11 +291,11 @@ start
 
       YY_SCANNER_OUTPUT(scanner) = NULL;
     }
-  | rule_start ruleset maybe_spaces {
+  | rule_start style_unit {
       TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
     }
-  | rule_start ruleset maybe_spaces error {
-      SAC_SYNTAX_ERROR(@4,
+  | rule_start style_unit error {
+      SAC_SYNTAX_ERROR(@3,
         "unexpected token while parsing ruleset");
       TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
     }
