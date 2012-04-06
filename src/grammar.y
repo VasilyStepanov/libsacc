@@ -18,7 +18,6 @@
 #include "media_query.h"
 #include "page_margin.h"
 #include "mpool.h"
-#include "pair.h"
 }
 
 %{
@@ -82,7 +81,6 @@ SAC_MediaQuery *media;
 SAC_PageMargin *margin;
 SAC_PageMarginType margin_type;
 SAC_Boolean boolean;
-SAC_Pair pair;
 }
 
 %locations
