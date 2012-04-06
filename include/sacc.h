@@ -1368,8 +1368,8 @@ typedef int (*SAC_StartPageMarginHandler)(void *userData,
  * Receive notification of the end of a page margin rule.
  *
  * The SAC Parser will invoke this method at the end of every page rule in the
- * CSS document. There will be a corresponding SAC_StartPageHandler event for
- * every SAC_EndPageHandler event.
+ * CSS document. There will be a corresponding SAC_StartPageMarginHandler event
+ * for every SAC_EndPageMarginHandler event.
  * Nonzero return from callback aborts the parser.
  */
 typedef int (*SAC_EndPageMarginHandler)(void *userData,
