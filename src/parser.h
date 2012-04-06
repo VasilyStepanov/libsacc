@@ -49,10 +49,10 @@ int SAC_parser_end_media_handler(SAC_Parser parser,
   const SAC_MediaQuery *media[]);
 
 int SAC_parser_start_page_handler(SAC_Parser parser,
-  const SAC_STRING name, const SAC_STRING pseudoPage);
+  const SAC_Selector *selectors[]);
 
 int SAC_parser_end_page_handler(SAC_Parser parser,
-  const SAC_STRING name, const SAC_STRING pseudoPage);
+  const SAC_Selector *selectors[]);
 
 int SAC_parser_start_page_margin_handler(SAC_Parser parser,
   const SAC_PageMargin *margin);

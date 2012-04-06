@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <document>
   <page>
-    <start_page/>
+    <start_page>
+      <selector type="any_node"/>
+    </start_page>
     <error type="SYNTAX" line="2" column="13">unexpected token while parsing 'page margin' rule</error>
     <page_margin>
       <start_page_margin>
@@ -14,6 +16,8 @@
         <page_margin type="top-left"/>
       </end_page_margin>
     </page_margin>
-    <end_page/>
+    <end_page>
+      <selector type="any_node"/>
+    </end_page>
   </page>
 </document>

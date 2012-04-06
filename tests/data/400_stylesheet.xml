@@ -40,11 +40,25 @@
     </end_media_queries>
   </media>
   <page>
-    <start_page name="page_name" pseudoPage="first"/>
+    <start_page>
+      <selector type="conditional">
+        <selector type="element_node" localName="page_name"/>
+        <condition type="pseudo_class">
+          <ident>first</ident>
+        </condition>
+      </selector>
+    </start_page>
     <property name="prop">
       <ident>ident</ident>
     </property>
-    <end_page name="page_name" pseudoPage="first"/>
+    <end_page>
+      <selector type="conditional">
+        <selector type="element_node" localName="page_name"/>
+        <condition type="pseudo_class">
+          <ident>first</ident>
+        </condition>
+      </selector>
+    </end_page>
   </page>
   <font_face>
     <property name="font-family">

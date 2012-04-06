@@ -1335,7 +1335,7 @@ typedef int (*SAC_EndMediaHandler)(void *userData,
  * pseudoPseudo - The pseudo page associated to the page.
  */
 typedef int (*SAC_StartPageHandler)(void *userData,
-  const SAC_STRING name, const SAC_STRING pseudoPage);
+  const SAC_Selector *selectors[]);
 
 /**
  * Receive notification of the end of a page rule.
@@ -1349,7 +1349,7 @@ typedef int (*SAC_StartPageHandler)(void *userData,
  * pseudoPage - The pseudo page associated to the page.
  */
 typedef int (*SAC_EndPageHandler)(void *userData,
-  const SAC_STRING name, const SAC_STRING pseudoPage);
+  const SAC_Selector *selectors[]);
 
 /**
  * Receive notification of the beginning of a page margin rule.

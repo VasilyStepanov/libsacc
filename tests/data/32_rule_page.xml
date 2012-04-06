@@ -1,10 +1,14 @@
 <?xml version="1.0"?>
 <document>
   <page>
-    <start_page name="LandscapeTable"/>
+    <start_page>
+      <selector type="element_node" localName="LandscapeTable"/>
+    </start_page>
     <property name="color">
       <ident>green</ident>
     </property>
-    <end_page name="LandscapeTable"/>
+    <end_page>
+      <selector type="element_node" localName="LandscapeTable"/>
+    </end_page>
   </page>
 </document>

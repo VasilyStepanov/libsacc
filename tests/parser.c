@@ -6,6 +6,10 @@
 
 
 
+static void dump_selectors(FILE *out, const SAC_Selector **value);
+
+
+
 static int start_document(void *userData) {
   fprintf(USERDATA_FILE(userData), "<document>");
   return 0;
@@ -45,30 +49,20 @@ static int namespace_declaration(void *userData,
 
 
 
-static int start_page(void *userData,
-  const SAC_STRING name, const SAC_STRING pseudoPage)
-{
+static int start_page(void *userData, const SAC_Selector *selectors[]) {
   fprintf(USERDATA_FILE(userData), "<page>");
-  fprintf(USERDATA_FILE(userData), "<start_page");
-  if (name != NULL)
-    fprintf(USERDATA_FILE(userData), " name=\"%s\"", name);
-  if (pseudoPage != NULL)
-    fprintf(USERDATA_FILE(userData), " pseudoPage=\"%s\"", pseudoPage);
-  fprintf(USERDATA_FILE(userData), " />");
+  fprintf(USERDATA_FILE(userData), "<start_page>");
+  dump_selectors(USERDATA_FILE(userData), selectors);
+  fprintf(USERDATA_FILE(userData), "</start_page>");
   return 0;
 }
 
 
 
-static int end_page(void *userData,
-  const SAC_STRING name, const SAC_STRING pseudoPage)
-{
-  fprintf(USERDATA_FILE(userData), "<end_page");
-  if (name != NULL)
-    fprintf(USERDATA_FILE(userData), " name=\"%s\"", name);
-  if (pseudoPage != NULL)
-    fprintf(USERDATA_FILE(userData), " pseudoPage=\"%s\"", pseudoPage);
-  fprintf(USERDATA_FILE(userData), " />");
+static int end_page(void *userData, const SAC_Selector *selectors[]) {
+  fprintf(USERDATA_FILE(userData), "<end_page>");
+  dump_selectors(USERDATA_FILE(userData), selectors);
+  fprintf(USERDATA_FILE(userData), "</end_page>");
   fprintf(USERDATA_FILE(userData), "</page>");
   return 0;
 }

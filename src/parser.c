@@ -241,21 +241,21 @@ int SAC_parser_end_media_handler(SAC_Parser parser,
 
 
 int SAC_parser_start_page_handler(SAC_Parser parser,
-  const SAC_STRING name, const SAC_STRING pseudoPage)
+  const SAC_Selector *selectors[])
 {
   if (PARSER(parser)->start_page_handler == NULL) return 0;
   return PARSER(parser)->start_page_handler(PARSER(parser)->user_data,
-      name, pseudoPage);
+      selectors);
 }
 
 
 
 int SAC_parser_end_page_handler(SAC_Parser parser,
-  const SAC_STRING name, const SAC_STRING pseudoPage)
+  const SAC_Selector *selectors[])
 {
   if (PARSER(parser)->end_page_handler == NULL) return 0;
   return PARSER(parser)->end_page_handler(PARSER(parser)->user_data,
-      name, pseudoPage);
+      selectors);
 }
 
 

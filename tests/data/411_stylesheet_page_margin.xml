@@ -1,49 +1,115 @@
 <?xml version="1.0"?>
 <document>
   <page>
-    <start_page/>
+    <start_page>
+      <selector type="any_node"/>
+    </start_page>
     <property name="color">
       <ident>green</ident>
     </property>
-    <end_page/>
+    <end_page>
+      <selector type="any_node"/>
+    </end_page>
   </page>
   <page>
-    <start_page pseudoPage="left"/>
+    <start_page>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="pseudo_class">
+          <ident>left</ident>
+        </condition>
+      </selector>
+    </start_page>
     <property name="color">
       <ident>green</ident>
     </property>
-    <end_page pseudoPage="left"/>
+    <end_page>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="pseudo_class">
+          <ident>left</ident>
+        </condition>
+      </selector>
+    </end_page>
   </page>
   <page>
-    <start_page pseudoPage="right"/>
+    <start_page>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="pseudo_class">
+          <ident>right</ident>
+        </condition>
+      </selector>
+    </start_page>
     <property name="color">
       <ident>green</ident>
     </property>
-    <end_page pseudoPage="right"/>
+    <end_page>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="pseudo_class">
+          <ident>right</ident>
+        </condition>
+      </selector>
+    </end_page>
   </page>
   <page>
-    <start_page name="LandscapeTable"/>
+    <start_page>
+      <selector type="element_node" localName="LandscapeTable"/>
+    </start_page>
     <property name="color">
       <ident>green</ident>
     </property>
-    <end_page name="LandscapeTable"/>
+    <end_page>
+      <selector type="element_node" localName="LandscapeTable"/>
+    </end_page>
   </page>
   <page>
-    <start_page name="CompanyLetterHead" pseudoPage="first"/>
+    <start_page>
+      <selector type="conditional">
+        <selector type="element_node" localName="CompanyLetterHead"/>
+        <condition type="pseudo_class">
+          <ident>first</ident>
+        </condition>
+      </selector>
+    </start_page>
     <property name="color">
       <ident>green</ident>
     </property>
-    <end_page name="CompanyLetterHead" pseudoPage="first"/>
+    <end_page>
+      <selector type="conditional">
+        <selector type="element_node" localName="CompanyLetterHead"/>
+        <condition type="pseudo_class">
+          <ident>first</ident>
+        </condition>
+      </selector>
+    </end_page>
   </page>
   <page>
-    <start_page pseudoPage="first"/>
+    <start_page>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="pseudo_class">
+          <ident>first</ident>
+        </condition>
+      </selector>
+    </start_page>
     <property name="color">
       <ident>green</ident>
     </property>
-    <end_page pseudoPage="first"/>
+    <end_page>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="pseudo_class">
+          <ident>first</ident>
+        </condition>
+      </selector>
+    </end_page>
   </page>
   <page>
-    <start_page/>
+    <start_page>
+      <selector type="any_node"/>
+    </start_page>
     <page_margin>
       <start_page_margin>
         <page_margin type="top-left"/>
@@ -66,10 +132,19 @@
         <page_margin type="bottom-center"/>
       </end_page_margin>
     </page_margin>
-    <end_page/>
+    <end_page>
+      <selector type="any_node"/>
+    </end_page>
   </page>
   <page>
-    <start_page pseudoPage="left"/>
+    <start_page>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="pseudo_class">
+          <ident>left</ident>
+        </condition>
+      </selector>
+    </start_page>
     <page_margin>
       <start_page_margin>
         <page_margin type="left-middle"/>
@@ -81,10 +156,24 @@
         <page_margin type="left-middle"/>
       </end_page_margin>
     </page_margin>
-    <end_page pseudoPage="left"/>
+    <end_page>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="pseudo_class">
+          <ident>left</ident>
+        </condition>
+      </selector>
+    </end_page>
   </page>
   <page>
-    <start_page pseudoPage="right"/>
+    <start_page>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="pseudo_class">
+          <ident>right</ident>
+        </condition>
+      </selector>
+    </start_page>
     <page_margin>
       <start_page_margin>
         <page_margin type="right-middle"/>
@@ -96,10 +185,24 @@
         <page_margin type="right-middle"/>
       </end_page_margin>
     </page_margin>
-    <end_page pseudoPage="right"/>
+    <end_page>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="pseudo_class">
+          <ident>right</ident>
+        </condition>
+      </selector>
+    </end_page>
   </page>
   <page>
-    <start_page pseudoPage="left"/>
+    <start_page>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="pseudo_class">
+          <ident>left</ident>
+        </condition>
+      </selector>
+    </start_page>
     <page_margin>
       <start_page_margin>
         <page_margin type="bottom-left-corner"/>
@@ -111,10 +214,24 @@
         <page_margin type="bottom-left-corner"/>
       </end_page_margin>
     </page_margin>
-    <end_page pseudoPage="left"/>
+    <end_page>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="pseudo_class">
+          <ident>left</ident>
+        </condition>
+      </selector>
+    </end_page>
   </page>
   <page>
-    <start_page pseudoPage="right"/>
+    <start_page>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="pseudo_class">
+          <ident>right</ident>
+        </condition>
+      </selector>
+    </start_page>
     <page_margin>
       <start_page_margin>
         <page_margin type="bottom-corner"/>
@@ -126,10 +243,24 @@
         <page_margin type="bottom-corner"/>
       </end_page_margin>
     </page_margin>
-    <end_page pseudoPage="right"/>
+    <end_page>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="pseudo_class">
+          <ident>right</ident>
+        </condition>
+      </selector>
+    </end_page>
   </page>
   <page>
-    <start_page pseudoPage="first"/>
+    <start_page>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="pseudo_class">
+          <ident>first</ident>
+        </condition>
+      </selector>
+    </start_page>
     <page_margin>
       <start_page_margin>
         <page_margin type="bottom-left-corner"/>
@@ -152,6 +283,13 @@
         <page_margin type="bottom-corner"/>
       </end_page_margin>
     </page_margin>
-    <end_page pseudoPage="first"/>
+    <end_page>
+      <selector type="conditional">
+        <selector type="any_node"/>
+        <condition type="pseudo_class">
+          <ident>first</ident>
+        </condition>
+      </selector>
+    </end_page>
   </page>
 </document>

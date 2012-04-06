@@ -182,7 +182,7 @@ SAC_Pair pair;
 
 %token <str> UNICODERANGE
 
-%type <pair> page_start;
+%type <vector> page_start;
 %type <vector> style_start;
 %type <vector> media_start;
 
@@ -194,7 +194,7 @@ SAC_Pair pair;
 
 %type <str> string_or_uri;
 %type <str> ident;
-%type <str> maybe_ident;
+%type <sel> maybe_page_ident;
 
 %type <list> media_query_list;
 %type <list> maybe_media_query_list;
@@ -222,8 +222,8 @@ SAC_Pair pair;
 %type <str> attrib_name;
 %type <str> attrib_value;
 %type <cond> pseudo;
-%type <str> pseudo_page;
-%type <str> maybe_pseudo_page;
+%type <cond> pseudo_page;
+%type <cond> maybe_pseudo_page;
 
 %type <boolean> prio;
 %type <boolean> maybe_prio;
@@ -721,9 +721,10 @@ media_feature
 page
   : page_start maybe_declarations_and_margins closing_brace {
       TEST_RVAL(SAC_parser_end_page_handler(YY_SCANNER_PARSER(scanner),
-        $1.first, $1.second), @$);
+        $1), @$);
     }
-  | PAGE_SYM maybe_spaces maybe_ident pseudo_page page_errors invalid_block {
+  | PAGE_SYM maybe_spaces maybe_page_ident pseudo_page page_errors
+    invalid_block {
       SAC_SYNTAX_ERROR(@5,
         "unexpected token while parsing 'page' rule");
     }
@@ -735,7 +736,7 @@ page
       SAC_SYNTAX_ERROR(@3,
         "unexpected token while parsing 'page' rule");
     }
-  | PAGE_SYM maybe_spaces maybe_ident pseudo_page page_errors ';' {
+  | PAGE_SYM maybe_spaces maybe_page_ident pseudo_page page_errors ';' {
       SAC_SYNTAX_ERROR(@6,
         "unexpected 'semicolon' while parsing 'page' rule");
     }
@@ -831,19 +832,35 @@ page_errors
   | page_errors error
   ;
 page_start
-  : PAGE_SYM maybe_spaces maybe_ident maybe_pseudo_page '{' maybe_spaces {
+  : PAGE_SYM maybe_spaces maybe_page_ident maybe_pseudo_page '{' maybe_spaces {
+      SAC_Vector vector;
+      SAC_Selector **selectors;
+
+      vector = SAC_vector_open(YY_SCANNER_MPOOL(scanner), 1);
+      TEST_OBJ(vector, @$);
+      selectors = vector;
+      
+      if ($4 != NULL) {
+        selectors[0] = SAC_selector_conditional(YY_SCANNER_MPOOL(scanner),
+          $3, $4);
+        TEST_OBJ(selectors[0], @3);
+      } else {
+        selectors[0] = $3;
+      }
+
       TEST_RVAL(SAC_parser_start_page_handler(YY_SCANNER_PARSER(scanner),
-        $3, $4), @$);
-      $$.first = $3;
-      $$.second = $4;
+        vector), @$);
+      $$ = selectors;
     }
   ;
-maybe_ident
+maybe_page_ident
   : /* empty */ {
-      $$ = NULL;
+      $$ = SAC_selector_any_node(YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ($$, @$);
     }
   | ident {
-      $$ = $1;
+      $$ = SAC_selector_element_node(YY_SCANNER_MPOOL(scanner), NULL, $1);
+      TEST_OBJ($$, @$);
     }
   ;
 ident
@@ -861,7 +878,13 @@ maybe_pseudo_page
   ;
 pseudo_page
   : ':' IDENT maybe_spaces {
-      $$ = $2;
+      SAC_LexicalUnit *pseudo;
+
+      pseudo = SAC_lexical_unit_ident(YY_SCANNER_MPOOL(scanner), $2);
+      TEST_OBJ(pseudo, @2);
+
+      $$ = SAC_condition_pseudo_class(YY_SCANNER_MPOOL(scanner), pseudo);
+      TEST_OBJ($$, @$);
     }
   ;
 font_face
