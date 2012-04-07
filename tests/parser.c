@@ -682,7 +682,7 @@ static const char* error_code(SAC_ErrorCode code) {
 
 
 
-static void error(void *userData, const SAC_Error *error) {
+static int error(void *userData, const SAC_Error *error) {
   fprintf(USERDATA_FILE(userData),
     "<error type=\"%s\"", error_code(error->code));
   if (error->line != -1)
@@ -693,6 +693,7 @@ static void error(void *userData, const SAC_Error *error) {
   if (error->data != NULL)
     fprintf(USERDATA_FILE(userData), "%s", error->data);
   fprintf(USERDATA_FILE(userData), "</error>");
+  return 0;
 }
 
 

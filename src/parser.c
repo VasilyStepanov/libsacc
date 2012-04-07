@@ -84,19 +84,20 @@ static void SAC_default_fatal_error_handler(void *userData SAC_UNUSED,
 
 
 
-static void SAC_default_error_handler(void *userData SAC_UNUSED,
+static int SAC_default_error_handler(void *userData SAC_UNUSED,
   const SAC_Error *error)
 {
   switch (error->code) {
     case SAC_ERROR_NOT_SUPPORTED:
       SAC_parser_print_error(error->line, error->column,
-        "unspecified error", error->data);
+        "not supported error", error->data);
       break;
     case SAC_ERROR_SYNTAX:
       SAC_parser_print_error(error->line, error->column,
         "syntax error", error->data);
       break;
   }
+  return 0;
 }
 
 
@@ -160,7 +161,7 @@ void SAC_parser_fatal_error_handler(SAC_Parser parser,
 
 
 
-void SAC_parser_error_handler(SAC_Parser parser,
+int SAC_parser_error_handler(SAC_Parser parser,
   signed int line, signed int column,
   SAC_ErrorCode code, const SAC_STRING data)
 {
@@ -171,7 +172,7 @@ void SAC_parser_error_handler(SAC_Parser parser,
   error.code = code;
   error.data = data;
   PARSER(parser)->errno = code;
-  PARSER(parser)->error_handler(PARSER(parser)->user_data, &error);
+  return PARSER(parser)->error_handler(PARSER(parser)->user_data, &error);
 }
 
 

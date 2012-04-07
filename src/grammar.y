@@ -51,8 +51,8 @@ extern int yylex();
   PARSER_ASSERT(rval == 0, loc, rval)
 
 #define SAC_ERROR(loc, type, data) \
-  SAC_parser_error_handler(YY_SCANNER_PARSER(scanner), \
-    loc.first_line, loc.first_column, type, data)
+  TEST_RVAL(SAC_parser_error_handler(YY_SCANNER_PARSER(scanner), \
+      loc.first_line, loc.first_column, type, data), (loc))
 
 #define SAC_SYNTAX_ERROR(loc, data) \
   SAC_ERROR(loc, SAC_ERROR_SYNTAX, data)

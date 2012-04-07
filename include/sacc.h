@@ -1577,7 +1577,7 @@ typedef struct _SAC_Error {
   const SAC_STRING data; /* NULL if it is not relevant */
 } SAC_Error;
 
-typedef void (*SAC_ErrorHandler)(void *userData,
+typedef int (*SAC_ErrorHandler)(void *userData,
   const SAC_Error *error);
 
 void SAC_SetErrorHandler(SAC_Parser parser,

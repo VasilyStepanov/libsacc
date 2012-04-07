@@ -78,7 +78,7 @@ int SAC_parser_property_handler(SAC_Parser parser,
 void SAC_parser_fatal_error_handler(SAC_Parser parser,
   signed int line, signed int column, SAC_FatalErrorCode code);
 
-void SAC_parser_error_handler(SAC_Parser parser,
+int SAC_parser_error_handler(SAC_Parser parser,
   signed int line, signed int column,
   SAC_ErrorCode code, const SAC_STRING data);
 
