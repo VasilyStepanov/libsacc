@@ -35,7 +35,7 @@ static int ignorable_at_rule(void *userData,
 
 
 
-static int namespace_declaration(void *userData,
+static int namespace(void *userData,
   const SAC_STRING prefix, const SAC_STRING uri)
 {
   fprintf(USERDATA_FILE(userData), "<namespace");
@@ -705,7 +705,7 @@ static SAC_Parser create_parser(FILE *out) {
   
   SAC_SetDocumentHandler(parser, start_document, end_document);
   SAC_SetIgnorableAtRuleHandler(parser, ignorable_at_rule);
-  SAC_SetNamespaceDeclarationHandler(parser, namespace_declaration);
+  SAC_SetNamespaceHandler(parser, namespace);
   SAC_SetPageHandler(parser, start_page, end_page);
   SAC_SetPageMarginHandler(parser, start_page_margin, end_page_margin);
   SAC_SetImportHandler(parser, import);

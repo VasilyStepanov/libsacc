@@ -1274,7 +1274,7 @@ typedef int (*SAC_IgnorableAtRuleHandler)(void *userData,
  * if any (prefix will be NULL in that case). uri can never be NULL.
  * Nonzero return from callback aborts the parser.
  */
-typedef int (*SAC_NamespaceDeclarationHandler)(void *userData,
+typedef int (*SAC_NamespaceHandler)(void *userData,
   const SAC_STRING prefix, const SAC_STRING uri);
 
 /**
@@ -1453,8 +1453,8 @@ void SAC_SetDocumentHandler(SAC_Parser parser,
 void SAC_SetIgnorableAtRuleHandler(SAC_Parser parser,
   SAC_IgnorableAtRuleHandler handler);
 
-void SAC_SetNamespaceDeclarationHandler(SAC_Parser parser,
-  SAC_NamespaceDeclarationHandler handler);
+void SAC_SetNamespaceHandler(SAC_Parser parser,
+  SAC_NamespaceHandler handler);
 
 void SAC_SetImportHandler(SAC_Parser parser, SAC_ImportHandler handler);
 

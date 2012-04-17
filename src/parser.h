@@ -34,7 +34,7 @@ int SAC_parser_end_document(SAC_Parser parser);
 int SAC_parser_ignorable_at_rule_handler(SAC_Parser parser,
   const SAC_STRING atRule);
 
-int SAC_parser_namespace_declaration_handler(SAC_Parser parser,
+int SAC_parser_namespace_handler(SAC_Parser parser,
   const SAC_STRING prefix, const SAC_STRING uri);
 
 int SAC_parser_import_handler(SAC_Parser parser,

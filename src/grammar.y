@@ -474,7 +474,7 @@ namespace
   : NAMESPACE_SYM maybe_spaces maybe_namespace_prefix string_or_uri
     ';' maybe_comments
     {
-      TEST_RVAL(SAC_parser_namespace_declaration_handler(
+      TEST_RVAL(SAC_parser_namespace_handler(
         YY_SCANNER_PARSER(scanner), $3, $4), @$);
     }
   | bad_namespace

@@ -28,7 +28,7 @@ struct _SAC_Parser {
   SAC_StartPageMarginHandler start_page_margin_handler;
   SAC_EndPageMarginHandler end_page_margin_handler;
   SAC_IgnorableAtRuleHandler ignorable_at_rule_handler;
-  SAC_NamespaceDeclarationHandler namespace_declaration_handler;
+  SAC_NamespaceHandler namespace_handler;
   SAC_ImportHandler import_handler;
   SAC_StartMediaHandler start_media_handler;
   SAC_EndMediaHandler end_media_handler;
@@ -201,11 +201,11 @@ int SAC_parser_ignorable_at_rule_handler(SAC_Parser parser,
 
 
 
-int SAC_parser_namespace_declaration_handler(SAC_Parser parser,
+int SAC_parser_namespace_handler(SAC_Parser parser,
   const SAC_STRING prefix, const SAC_STRING uri)
 {
-  if (PARSER(parser)->namespace_declaration_handler == NULL) return 0;
-  return PARSER(parser)->namespace_declaration_handler(
+  if (PARSER(parser)->namespace_handler == NULL) return 0;
+  return PARSER(parser)->namespace_handler(
     PARSER(parser)->user_data, prefix, uri);
 }
 
@@ -313,10 +313,10 @@ void SAC_SetIgnorableAtRuleHandler(SAC_Parser parser,
 
 
 
-void SAC_SetNamespaceDeclarationHandler(SAC_Parser parser,
-  SAC_NamespaceDeclarationHandler handler)
+void SAC_SetNamespaceHandler(SAC_Parser parser,
+  SAC_NamespaceHandler handler)
 {
-  PARSER(parser)->namespace_declaration_handler = handler;
+  PARSER(parser)->namespace_handler = handler;
 }
 
 
