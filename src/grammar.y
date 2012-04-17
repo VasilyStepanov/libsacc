@@ -289,10 +289,10 @@ start
 
       YY_SCANNER_OUTPUT(scanner) = NULL;
     }
-  | rule_start style_unit {
+  | rule_start rule_unit {
       TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
     }
-  | rule_start style_unit error {
+  | rule_start rule_unit error {
       SAC_SYNTAX_ERROR(@3,
         "unexpected token while parsing ruleset");
       TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
@@ -532,6 +532,11 @@ style_unit
   | page maybe_comments
   | font_face maybe_comments
   | ignorable_at_rule maybe_comments
+  ;
+rule_unit
+  : style_unit
+  | namespace
+  | import
   ;
 string_or_uri
   : STRING maybe_spaces {
