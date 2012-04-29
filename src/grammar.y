@@ -93,6 +93,7 @@ SAC_Boolean boolean;
 
 %token START_AS_STYLE_DECLARATIONS
 %token START_AS_SELECTORS
+%token START_AS_MEDIAQUERY
 %token START_AS_STYLESHEET
 %token START_AS_RULE
 %token START_AS_PROPERTY_VALUE
@@ -289,6 +290,18 @@ start
 
       YY_SCANNER_OUTPUT(scanner) = NULL;
     }
+  | mediaquery_start maybe_media_query_list {
+      TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
+
+      YY_SCANNER_OUTPUT(scanner) = SAC_vector_from_list(
+        $2, YY_SCANNER_MPOOL(scanner));
+      TEST_OBJ(YY_SCANNER_OUTPUT(scanner), @2);
+    }
+  | mediaquery_start bad_media_query {
+      TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
+
+      YY_SCANNER_OUTPUT(scanner) = NULL;
+    }
   | rule_start rule_unit {
       TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
     }
@@ -319,6 +332,10 @@ style_declarations_start
   ;
 selectors_start
   : START_AS_SELECTORS maybe_spaces {
+      TEST_RVAL(SAC_parser_start_document(YY_SCANNER_PARSER(scanner)), @$);
+    }
+mediaquery_start
+  : START_AS_MEDIAQUERY maybe_spaces {
       TEST_RVAL(SAC_parser_start_document(YY_SCANNER_PARSER(scanner)), @$);
     }
 rule_start

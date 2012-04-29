@@ -464,6 +464,15 @@ const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
 
 
 
+const SAC_MediaQuery** SAC_ParseMediaQuery(SAC_Parser parser,
+  const char *buffer, int len)
+{
+  return (const SAC_MediaQuery**)SAC_parse(parser,
+    START_AS_MEDIAQUERY, buffer, len);
+}
+
+
+
 const SAC_LexicalUnit* SAC_ParsePropertyValue(SAC_Parser parser,
   const char *buffer, int len)
 {

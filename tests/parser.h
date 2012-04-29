@@ -13,7 +13,8 @@ typedef enum {
   PROPERTY,
   PRIORITY,
   RULE,
-  STYLESHEET
+  STYLESHEET,
+  MEDIAQUERY
 } ParserType;
 
 

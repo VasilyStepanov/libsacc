@@ -1514,6 +1514,9 @@ int SAC_ParseRule(SAC_Parser parser, const char *buffer, int len);
 const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
   const char *buffer, int len);
 
+const SAC_MediaQuery** SAC_ParseMediaQuery(SAC_Parser parser,
+  const char *buffer, int len);
+
 /**
  * Parse property value.
  * Returns NULL in case of errors.

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<mediaquery>
+  <document/>
+  <media_query type="and">
+    <media_query type="type">screen</media_query>
+    <media_query type="and">
+      <media_query type="feature" feature="min-width">
+        <pixel dimension="px">400</pixel>
+      </media_query>
+      <media_query type="feature" feature="max-width">
+        <pixel dimension="px">700</pixel>
+      </media_query>
+    </media_query>
+  </media_query>
+  <media_query type="type">projection</media_query>
+</mediaquery>

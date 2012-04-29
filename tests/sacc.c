@@ -11,7 +11,7 @@
 
 static void usage(void) {
   printf("USAGE: sacc "
-    "-t [declarations|selectors|property|priorityrule|stylesheet]\n");
+    "-t [declarations|selectors|property|priorityrule|stylesheet|mediaquery]\n");
 }
 
 
@@ -23,6 +23,7 @@ static ParserType parse_type_arg(const char *arg) {
   if (strcmp(arg, "priority") == 0) return PRIORITY;
   if (strcmp(arg, "rule") == 0) return RULE;
   if (strcmp(arg, "stylesheet") == 0) return STYLESHEET;
+  if (strcmp(arg, "mediaquery") == 0) return MEDIAQUERY;
   usage();
   exit(EXIT_FAILURE);
 }

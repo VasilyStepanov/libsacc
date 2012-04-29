@@ -749,6 +749,17 @@ static void parse_selectors(SAC_Parser parser, const char *buffer) {
 
 
 
+static void parse_mediaquery(SAC_Parser parser, const char *buffer) {
+  FILE *out;
+
+  out = USERDATA_FILE(SAC_GetUserData(parser));
+  fprintf(out, "<mediaquery>\n");
+  dump_media_queries(out, SAC_ParseMediaQuery(parser, buffer, strlen(buffer)));
+  fprintf(out, "</mediaquery>\n");
+}
+
+
+
 static void parse_property_value(SAC_Parser parser, const char *buffer) {
   FILE *out;
 
@@ -802,6 +813,9 @@ void parse(FILE *out, ParserType type, const char *buffer) {
       break;
     case STYLESHEET:
       parse_stylesheet(parser, buffer);
+      break;
+    case MEDIAQUERY:
+      parse_mediaquery(parser, buffer);
       break;
   }
   dispose_parser(parser);
