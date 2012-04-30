@@ -464,6 +464,15 @@ const SAC_Selector** SAC_ParseSelectors(SAC_Parser parser,
 
 
 
+const SAC_Selector** SAC_ParsePageSelectors(SAC_Parser parser,
+  const char *buffer, int len)
+{
+  return (const SAC_Selector**)SAC_parse(parser,
+    START_AS_PAGESELECTORS, buffer, len);
+}
+
+
+
 const SAC_MediaQuery** SAC_ParseMediaQuery(SAC_Parser parser,
   const char *buffer, int len)
 {

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<pageselectors>
+  <document>
+    <error type="SYNTAX" line="1" column="3">unexpected token while parsing page selectors</error>
+  </document>
+  <selectors/>
+</pageselectors>

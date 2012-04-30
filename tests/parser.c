@@ -749,6 +749,17 @@ static void parse_selectors(SAC_Parser parser, const char *buffer) {
 
 
 
+static void parse_pageselectors(SAC_Parser parser, const char *buffer) {
+  FILE *out;
+
+  out = USERDATA_FILE(SAC_GetUserData(parser));
+  fprintf(out, "<pageselectors>\n");
+  dump_selectors(out, SAC_ParsePageSelectors(parser, buffer, strlen(buffer)));
+  fprintf(out, "</pageselectors>\n");
+}
+
+
+
 static void parse_mediaquery(SAC_Parser parser, const char *buffer) {
   FILE *out;
 
@@ -801,6 +812,9 @@ void parse(FILE *out, ParserType type, const char *buffer) {
       break;
     case SELECTORS:
       parse_selectors(parser, buffer);
+      break;
+    case PAGESELECTORS:
+      parse_pageselectors(parser, buffer);
       break;
     case PROPERTY:
       parse_property_value(parser, buffer);

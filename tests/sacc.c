@@ -19,6 +19,7 @@ static void usage(void) {
 static ParserType parse_type_arg(const char *arg) {
   if (strcmp(arg, "declarations") == 0) return DECLARATIONS;
   if (strcmp(arg, "selectors") == 0) return SELECTORS;
+  if (strcmp(arg, "pageselectors") == 0) return PAGESELECTORS;
   if (strcmp(arg, "property") == 0) return PROPERTY;
   if (strcmp(arg, "priority") == 0) return PRIORITY;
   if (strcmp(arg, "rule") == 0) return RULE;

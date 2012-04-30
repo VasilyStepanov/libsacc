@@ -93,6 +93,7 @@ SAC_Boolean boolean;
 
 %token START_AS_STYLE_DECLARATIONS
 %token START_AS_SELECTORS
+%token START_AS_PAGESELECTORS
 %token START_AS_MEDIAQUERY
 %token START_AS_STYLESHEET
 %token START_AS_RULE
@@ -210,6 +211,7 @@ SAC_Boolean boolean;
 %type <sel> simple_selector_sequence;
 %type <sel> selector;
 %type <list> selectors_group;
+%type <vector> page_selectors_group;
 %type <cond> maybe_attribute_conditions;
 %type <cond> attribute_condition;
 %type <cond> attribute_conditions;
@@ -290,6 +292,18 @@ start
 
       YY_SCANNER_OUTPUT(scanner) = NULL;
     }
+  | pageselectors_start page_selectors_group {
+      TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
+
+      YY_SCANNER_OUTPUT(scanner) = $2;
+    }
+  | pageselectors_start page_selectors_group error {
+      SAC_SYNTAX_ERROR(@3,
+        "unexpected token while parsing page selectors");
+      TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
+
+      YY_SCANNER_OUTPUT(scanner) = NULL;
+    }
   | mediaquery_start maybe_media_query_list {
       TEST_RVAL(SAC_parser_end_document(YY_SCANNER_PARSER(scanner)), @$);
 
@@ -332,6 +346,10 @@ style_declarations_start
   ;
 selectors_start
   : START_AS_SELECTORS maybe_spaces {
+      TEST_RVAL(SAC_parser_start_document(YY_SCANNER_PARSER(scanner)), @$);
+    }
+pageselectors_start
+  : START_AS_PAGESELECTORS maybe_spaces {
       TEST_RVAL(SAC_parser_start_document(YY_SCANNER_PARSER(scanner)), @$);
     }
 mediaquery_start
@@ -851,8 +869,8 @@ page_errors
   : error
   | page_errors error
   ;
-page_start
-  : PAGE_SYM maybe_spaces maybe_page_ident maybe_pseudo_page '{' maybe_spaces {
+page_selectors_group
+  : maybe_page_ident maybe_pseudo_page {
       SAC_Vector vector;
       SAC_Selector **selectors;
 
@@ -860,17 +878,22 @@ page_start
       TEST_OBJ(vector, @$);
       selectors = vector;
       
-      if ($4 != NULL) {
+      if ($2 != NULL) {
         selectors[0] = SAC_selector_conditional(YY_SCANNER_MPOOL(scanner),
-          $3, $4);
-        TEST_OBJ(selectors[0], @3);
+          $1, $2);
+        TEST_OBJ(selectors[0], @1);
       } else {
-        selectors[0] = $3;
+        selectors[0] = $1;
       }
 
-      TEST_RVAL(SAC_parser_start_page_handler(YY_SCANNER_PARSER(scanner),
-        vector), @$);
       $$ = selectors;
+    }
+  ;
+page_start
+  : PAGE_SYM maybe_spaces page_selectors_group '{' maybe_spaces {
+      $$ = $3;
+      TEST_RVAL(SAC_parser_start_page_handler(YY_SCANNER_PARSER(scanner),
+        $$), @$);
     }
   ;
 maybe_page_ident

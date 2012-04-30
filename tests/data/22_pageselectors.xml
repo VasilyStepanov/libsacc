@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<pageselectors>
+  <document/>
+  <selector type="conditional">
+    <selector type="element_node" localName="CompanyLetterHead"/>
+    <condition type="pseudo_class">
+      <ident>first</ident>
+    </condition>
+  </selector>
+</pageselectors>
