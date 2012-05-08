@@ -24,63 +24,63 @@ static void test_condition_factory(void) {
 
   condition = SAC_condition_class(mpool, "foo");
   assert(condition->conditionType == SAC_CLASS_CONDITION);
-  assert(condition->desc.attribute.namespaceURI == NULL);
+  assert(condition->desc.attribute.prefix == NULL);
   assert(condition->desc.attribute.localName == NULL);
   assert(condition->desc.attribute.specified == SAC_TRUE);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.value);
 
   condition = SAC_condition_id(mpool, "foo");
   assert(condition->conditionType == SAC_ID_CONDITION);
-  assert(condition->desc.attribute.namespaceURI == NULL);
+  assert(condition->desc.attribute.prefix == NULL);
   assert(condition->desc.attribute.localName == NULL);
   assert(condition->desc.attribute.specified == SAC_TRUE);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.value);
 
   condition = SAC_condition_prefix_attribute(mpool, "ns", "foo", "bar");
   assert(condition->conditionType == SAC_PREFIX_ATTRIBUTE_CONDITION);
-  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.namespaceURI);
+  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.prefix);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.localName);
   assert(condition->desc.attribute.specified == SAC_FALSE);
   ASSERT_EQUAL_STRINGS("bar", condition->desc.attribute.value);
 
   condition = SAC_condition_suffix_attribute(mpool, "ns", "foo", "bar");
   assert(condition->conditionType == SAC_SUFFIX_ATTRIBUTE_CONDITION);
-  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.namespaceURI);
+  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.prefix);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.localName);
   assert(condition->desc.attribute.specified == SAC_FALSE);
   ASSERT_EQUAL_STRINGS("bar", condition->desc.attribute.value);
 
   condition = SAC_condition_substring_attribute(mpool, "ns", "foo", "bar");
   assert(condition->conditionType == SAC_SUBSTRING_ATTRIBUTE_CONDITION);
-  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.namespaceURI);
+  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.prefix);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.localName);
   assert(condition->desc.attribute.specified == SAC_FALSE);
   ASSERT_EQUAL_STRINGS("bar", condition->desc.attribute.value);
 
   condition = SAC_condition_attribute(mpool, "ns", "foo", "bar");
   assert(condition->conditionType == SAC_ATTRIBUTE_CONDITION);
-  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.namespaceURI);
+  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.prefix);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.localName);
   assert(condition->desc.attribute.specified == SAC_TRUE);
   ASSERT_EQUAL_STRINGS("bar", condition->desc.attribute.value);
 
   condition = SAC_condition_attribute(mpool, "ns", "foo", NULL);
   assert(condition->conditionType == SAC_ATTRIBUTE_CONDITION);
-  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.namespaceURI);
+  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.prefix);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.localName);
   assert(condition->desc.attribute.specified == SAC_FALSE);
   assert(condition->desc.attribute.value == NULL);
 
   condition = SAC_condition_one_of_attribute(mpool, "ns", "foo", "bar");
   assert(condition->conditionType == SAC_ONE_OF_ATTRIBUTE_CONDITION);
-  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.namespaceURI);
+  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.prefix);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.localName);
   assert(condition->desc.attribute.specified == SAC_FALSE);
   ASSERT_EQUAL_STRINGS("bar", condition->desc.attribute.value);
 
   condition = SAC_condition_begin_hypen_attribute(mpool, "ns", "foo", "bar");
   assert(condition->conditionType == SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION);
-  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.namespaceURI);
+  ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.prefix);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.localName);
   assert(condition->desc.attribute.specified == SAC_FALSE);
   ASSERT_EQUAL_STRINGS("bar", condition->desc.attribute.value);

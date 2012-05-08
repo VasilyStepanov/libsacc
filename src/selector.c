@@ -30,14 +30,14 @@ SAC_Selector* SAC_selector_any_node(SAC_MPool mpool) {
 
 
 SAC_Selector* SAC_selector_element_node(SAC_MPool mpool,
-  SAC_STRING namespaceURI, SAC_STRING localName)
+  SAC_STRING prefix, SAC_STRING localName)
 {
   SAC_Selector *selector;
 
   selector = SAC_selector_alloc(mpool, SAC_ELEMENT_NODE_SELECTOR);
   if (selector == NULL) return NULL;
 
-  selector->desc.element.namespaceURI = namespaceURI;
+  selector->desc.element.prefix = prefix;
   selector->desc.element.localName = localName;
 
   return selector;

@@ -893,13 +893,11 @@ struct _SAC_Selector {
 
     struct {
       /**
-       * The namespace URI of this element selector.
+       * The namespace prefix of this element selector.
        *
        * NULL if this element selector can match any namespace.
-       *
-       * [namespace URI](http://www.w3.org/TR/REC-xml-names/#dt-NSName)
        */
-      SAC_STRING namespaceURI;
+      SAC_STRING prefix;
 
       /**
        * The local part of the qualified name of this element.
@@ -1009,7 +1007,7 @@ struct _SAC_Condition {
 
       /**
        * SAC_TRUE if the node should have the same node type (for element, same
-       * namespaceURI and same localName).
+       * namespace prefix and same localName).
        */
       SAC_Boolean type;
     } position;
@@ -1029,16 +1027,14 @@ struct _SAC_Condition {
 
     struct {
       /**
-       * The namespace URI of this attribute condition.
+       * The namespace prefix of this attribute condition.
        *
        * NULL if :
        *  - this attribute condition can match any namespace.
        *  - this attribute is an id attribute.
-       * 
-       * [namespace URI](http://www.w3.org/TR/REC-xml-names/#dt-NSName)
        *
        */
-      SAC_STRING namespaceURI;
+      SAC_STRING prefix;
 
       /**
        * The local part of the qualified name of this attribute.

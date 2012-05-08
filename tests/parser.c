@@ -479,9 +479,9 @@ static void dump_condition(FILE *out, const SAC_Condition *condition) {
           break;
       }
 
-      if (condition->desc.attribute.namespaceURI != NULL)
+      if (condition->desc.attribute.prefix != NULL)
         fprintf(out,
-          " namespaceURI=\"%s\"", condition->desc.attribute.namespaceURI);
+          " prefix=\"%s\"", condition->desc.attribute.prefix);
 
       if (condition->desc.attribute.localName != NULL)
         fprintf(out,
@@ -555,9 +555,9 @@ static void dump_selector(FILE *out, const SAC_Selector *selector) {
     case SAC_ELEMENT_NODE_SELECTOR:
       fprintf(out, "<selector type=\"element_node\"");
 
-      if (selector->desc.element.namespaceURI != NULL)
+      if (selector->desc.element.prefix != NULL)
         fprintf(out,
-          " namespaceURI=\"%s\"", selector->desc.element.namespaceURI);
+          " prefix=\"%s\"", selector->desc.element.prefix);
 
       if (selector->desc.element.localName != NULL)
         fprintf(out,
