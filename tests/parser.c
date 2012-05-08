@@ -472,7 +472,7 @@ static void dump_condition(FILE *out, const SAC_Condition *condition) {
           fprintf(out, "\"one_of\"");
           break;
         case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
-          fprintf(out, "\"begin_hypen\"");
+          fprintf(out, "\"begin_hyphen\"");
           break;
         default:
           fprintf(out, "\"unknown_%d\"", condition->conditionType);

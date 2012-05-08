@@ -762,7 +762,7 @@ typedef enum {
   SAC_ONE_OF_ATTRIBUTE_CONDITION,
 
   /**
-   * This condition checks if the value is in a hypen-separated list of values
+   * This condition checks if the value is in a hyphen-separated list of values
    * in a specified attribute.
    *
    * Example:

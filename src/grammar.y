@@ -1242,14 +1242,14 @@ attrib
     }
   | '[' maybe_spaces attrib_name DASHMATCH maybe_spaces attrib_value ']'
     {
-      $$ = SAC_condition_begin_hypen_attribute(YY_SCANNER_MPOOL(scanner),
+      $$ = SAC_condition_begin_hyphen_attribute(YY_SCANNER_MPOOL(scanner),
         NULL, $3, $6);
       TEST_OBJ($$, @$);
     }
   | '[' maybe_spaces selector_namespace_prefix attrib_name DASHMATCH
     maybe_spaces attrib_value ']'
     {
-      $$ = SAC_condition_begin_hypen_attribute(YY_SCANNER_MPOOL(scanner),
+      $$ = SAC_condition_begin_hyphen_attribute(YY_SCANNER_MPOOL(scanner),
         $3, $4, $7);
       TEST_OBJ($$, @$);
     }

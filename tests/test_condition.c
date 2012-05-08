@@ -78,7 +78,7 @@ static void test_condition_factory(void) {
   assert(condition->desc.attribute.specified == SAC_FALSE);
   ASSERT_EQUAL_STRINGS("bar", condition->desc.attribute.value);
 
-  condition = SAC_condition_begin_hypen_attribute(mpool, "ns", "foo", "bar");
+  condition = SAC_condition_begin_hyphen_attribute(mpool, "ns", "foo", "bar");
   assert(condition->conditionType == SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION);
   ASSERT_EQUAL_STRINGS("ns", condition->desc.attribute.prefix);
   ASSERT_EQUAL_STRINGS("foo", condition->desc.attribute.name);

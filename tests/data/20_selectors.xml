@@ -39,7 +39,7 @@
               </condition>
               <condition type="one_of" name="oneof" specified="false" value="inc"/>
             </condition>
-            <condition type="begin_hypen" name="hypen" specified="false" value="dash"/>
+            <condition type="begin_hyphen" name="hyphen" specified="false" value="dash"/>
           </condition>
           <condition type="prefix" name="prefix" specified="false" value="val"/>
         </condition>
@@ -61,7 +61,7 @@
               </condition>
               <condition type="one_of" prefix="ns" name="oneof" specified="false" value="inc"/>
             </condition>
-            <condition type="begin_hypen" prefix="ns" name="hypen" specified="false" value="dash"/>
+            <condition type="begin_hyphen" prefix="ns" name="hyphen" specified="false" value="dash"/>
           </condition>
           <condition type="prefix" prefix="ns" name="prefix" specified="false" value="val"/>
         </condition>
@@ -83,7 +83,7 @@
               </condition>
               <condition type="one_of" name="oneof" specified="false" value="inc"/>
             </condition>
-            <condition type="begin_hypen" name="hypen" specified="false" value="dash"/>
+            <condition type="begin_hyphen" name="hyphen" specified="false" value="dash"/>
           </condition>
           <condition type="prefix" name="prefix" specified="false" value="val"/>
         </condition>
