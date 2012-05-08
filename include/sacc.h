@@ -907,7 +907,7 @@ struct _SAC_Selector {
        * [local part](http://www.w3.org/TR/REC-xml-names/#NT-LocalPart)
        * [qualified name](http://www.w3.org/TR/REC-xml-names/#ns-qualnames)
        */
-      SAC_STRING localName;
+      SAC_STRING name;
     } element;
 
 
@@ -1007,7 +1007,7 @@ struct _SAC_Condition {
 
       /**
        * SAC_TRUE if the node should have the same node type (for element, same
-       * namespace prefix and same localName).
+       * namespace prefix and same name).
        */
       SAC_Boolean type;
     } position;
@@ -1048,7 +1048,7 @@ struct _SAC_Condition {
        * [local part](http://www.w3.org/TR/REC-xml-names/#NT-LocalPart) of the
        * [qualified name](http://www.w3.org/TR/REC-xml-names/#ns-qualnames) of
        */
-      SAC_STRING localName;
+      SAC_STRING name;
 
       /**
        * SAC_TRUE if the attribute must have an explicit value in the original

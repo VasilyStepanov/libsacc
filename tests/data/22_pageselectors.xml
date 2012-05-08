@@ -2,7 +2,7 @@
 <pageselectors>
   <document/>
   <selector type="conditional">
-    <selector type="element_node" localName="CompanyLetterHead"/>
+    <selector type="element_node" name="CompanyLetterHead"/>
     <condition type="pseudo_class">
       <ident>first</ident>
     </condition>

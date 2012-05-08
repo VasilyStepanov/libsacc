@@ -9,7 +9,7 @@
 
 SAC_Selector* SAC_selector_any_node(SAC_MPool mpool);
 SAC_Selector* SAC_selector_element_node(SAC_MPool mpool,
-  SAC_STRING prefix, SAC_STRING localName);
+  SAC_STRING prefix, SAC_STRING name);
 SAC_Selector* SAC_selector_conditional(SAC_MPool mpool,
   SAC_Selector *simpleSelector, SAC_Condition *condition);
 SAC_Selector* SAC_selector_descendant(SAC_MPool mpool,

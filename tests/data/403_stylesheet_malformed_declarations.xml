@@ -2,30 +2,30 @@
 <document>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>green</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>green</ident>
     </property>
     <error type="SYNTAX" line="2" column="24">colon expected while parsing style declaration</error>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>red</ident>
@@ -35,24 +35,24 @@
       <ident>green</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>green</ident>
     </property>
     <error type="SYNTAX" line="4" column="23">property expression expected</error>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>red</ident>
@@ -62,24 +62,24 @@
       <ident>green</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>green</ident>
     </property>
     <error type="SYNTAX" line="6" column="23">colon expected while parsing style declaration</error>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>red</ident>
@@ -89,24 +89,24 @@
       <ident>green</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>green</ident>
     </property>
     <error type="SYNTAX" line="9" column="24">unexpected token while parsing property expression</error>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>red</ident>
@@ -116,12 +116,12 @@
       <ident>green</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>red</ident>
@@ -131,12 +131,12 @@
     </property>
     <error type="SYNTAX" line="11" column="27">unexpected token after property expression</error>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>red</ident>
@@ -149,7 +149,7 @@
       <ident>green</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
 </document>

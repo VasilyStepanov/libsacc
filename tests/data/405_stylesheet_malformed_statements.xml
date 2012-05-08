@@ -7,13 +7,13 @@
   <error type="SYNTAX" line="4" column="8">unexpected token while parsing selectors group</error>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>green</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
 </document>

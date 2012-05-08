@@ -9,13 +9,13 @@
   <namespace prefix="svg" uri="http://www.w3.org/2000/svg"/>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="element"/>
+      <selector type="element_node" name="element"/>
     </start_selectors>
     <property name="prop">
       <ident>ident</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="element"/>
+      <selector type="element_node" name="element"/>
     </end_selectors>
   </style>
   <media>
@@ -25,13 +25,13 @@
     </start_media_queries>
     <style>
       <start_selectors>
-        <selector type="element_node" localName="body"/>
+        <selector type="element_node" name="body"/>
       </start_selectors>
       <property name="line-height">
         <real>1.2</real>
       </property>
       <end_selectors>
-        <selector type="element_node" localName="body"/>
+        <selector type="element_node" name="body"/>
       </end_selectors>
     </style>
     <end_media_queries>
@@ -42,7 +42,7 @@
   <page>
     <start_page>
       <selector type="conditional">
-        <selector type="element_node" localName="page_name"/>
+        <selector type="element_node" name="page_name"/>
         <condition type="pseudo_class">
           <ident>first</ident>
         </condition>
@@ -53,7 +53,7 @@
     </property>
     <end_page>
       <selector type="conditional">
-        <selector type="element_node" localName="page_name"/>
+        <selector type="element_node" name="page_name"/>
         <condition type="pseudo_class">
           <ident>first</ident>
         </condition>

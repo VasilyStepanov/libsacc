@@ -2,7 +2,7 @@
 <document>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>green</ident>
@@ -12,7 +12,7 @@
       <ident>green</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
 </document>

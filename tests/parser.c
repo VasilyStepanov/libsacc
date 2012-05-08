@@ -483,9 +483,9 @@ static void dump_condition(FILE *out, const SAC_Condition *condition) {
         fprintf(out,
           " prefix=\"%s\"", condition->desc.attribute.prefix);
 
-      if (condition->desc.attribute.localName != NULL)
+      if (condition->desc.attribute.name != NULL)
         fprintf(out,
-          " localName=\"%s\"", condition->desc.attribute.localName);
+          " name=\"%s\"", condition->desc.attribute.name);
 
       fprintf(out, " specified=\"%s\"",
         condition->desc.attribute.specified == SAC_TRUE ? "true" : "false");
@@ -559,9 +559,9 @@ static void dump_selector(FILE *out, const SAC_Selector *selector) {
         fprintf(out,
           " prefix=\"%s\"", selector->desc.element.prefix);
 
-      if (selector->desc.element.localName != NULL)
+      if (selector->desc.element.name != NULL)
         fprintf(out,
-          " localName=\"%s\"", selector->desc.element.localName);
+          " name=\"%s\"", selector->desc.element.name);
 
       fprintf(out, "/>");
       break;

@@ -7,7 +7,7 @@
     <style>
       <start_selectors>
         <selector type="conditional">
-          <selector type="element_node" localName="p"/>
+          <selector type="element_node" name="p"/>
           <condition type="pseudo_element">
             <ident>before</ident>
           </condition>
@@ -20,7 +20,7 @@
       <error type="SYNTAX" line="2" column="23">closing brace not found</error>
       <end_selectors>
         <selector type="conditional">
-          <selector type="element_node" localName="p"/>
+          <selector type="element_node" name="p"/>
           <condition type="pseudo_element">
             <ident>before</ident>
           </condition>

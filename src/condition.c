@@ -25,7 +25,7 @@ SAC_Condition* SAC_condition_class(SAC_MPool mpool, SAC_STRING value) {
   if (condition == NULL) return condition;
 
   condition->desc.attribute.prefix = NULL;
-  condition->desc.attribute.localName = NULL;
+  condition->desc.attribute.name = NULL;
   condition->desc.attribute.specified = SAC_TRUE;
   condition->desc.attribute.value = value;
 
@@ -41,7 +41,7 @@ SAC_Condition* SAC_condition_id(SAC_MPool mpool, SAC_STRING value) {
   if (condition == NULL) return condition;
 
   condition->desc.attribute.prefix = NULL;
-  condition->desc.attribute.localName = NULL;
+  condition->desc.attribute.name = NULL;
   condition->desc.attribute.specified = SAC_TRUE;
   condition->desc.attribute.value = value;
 
@@ -51,7 +51,7 @@ SAC_Condition* SAC_condition_id(SAC_MPool mpool, SAC_STRING value) {
 
 
 SAC_Condition* SAC_condition_prefix_attribute(SAC_MPool mpool,
-  SAC_STRING prefix, SAC_STRING localName, SAC_STRING value)
+  SAC_STRING prefix, SAC_STRING name, SAC_STRING value)
 {
   SAC_Condition *condition;
 
@@ -59,7 +59,7 @@ SAC_Condition* SAC_condition_prefix_attribute(SAC_MPool mpool,
   if (condition == NULL) return condition;
 
   condition->desc.attribute.prefix = prefix;
-  condition->desc.attribute.localName = localName;
+  condition->desc.attribute.name = name;
   condition->desc.attribute.specified = SAC_FALSE;
   condition->desc.attribute.value = value;
 
@@ -69,7 +69,7 @@ SAC_Condition* SAC_condition_prefix_attribute(SAC_MPool mpool,
 
 
 SAC_Condition* SAC_condition_suffix_attribute(SAC_MPool mpool,
-  SAC_STRING prefix, SAC_STRING localName, SAC_STRING value)
+  SAC_STRING prefix, SAC_STRING name, SAC_STRING value)
 {
   SAC_Condition *condition;
 
@@ -77,7 +77,7 @@ SAC_Condition* SAC_condition_suffix_attribute(SAC_MPool mpool,
   if (condition == NULL) return condition;
 
   condition->desc.attribute.prefix = prefix;
-  condition->desc.attribute.localName = localName;
+  condition->desc.attribute.name = name;
   condition->desc.attribute.specified = SAC_FALSE;
   condition->desc.attribute.value = value;
 
@@ -87,7 +87,7 @@ SAC_Condition* SAC_condition_suffix_attribute(SAC_MPool mpool,
 
 
 SAC_Condition* SAC_condition_substring_attribute(SAC_MPool mpool,
-  SAC_STRING prefix, SAC_STRING localName, SAC_STRING value)
+  SAC_STRING prefix, SAC_STRING name, SAC_STRING value)
 {
   SAC_Condition *condition;
 
@@ -95,7 +95,7 @@ SAC_Condition* SAC_condition_substring_attribute(SAC_MPool mpool,
   if (condition == NULL) return condition;
 
   condition->desc.attribute.prefix = prefix;
-  condition->desc.attribute.localName = localName;
+  condition->desc.attribute.name = name;
   condition->desc.attribute.specified = SAC_FALSE;
   condition->desc.attribute.value = value;
 
@@ -105,7 +105,7 @@ SAC_Condition* SAC_condition_substring_attribute(SAC_MPool mpool,
 
 
 SAC_Condition* SAC_condition_attribute(SAC_MPool mpool,
-  SAC_STRING prefix, SAC_STRING localName, SAC_STRING value)
+  SAC_STRING prefix, SAC_STRING name, SAC_STRING value)
 {
   SAC_Condition *condition;
 
@@ -113,7 +113,7 @@ SAC_Condition* SAC_condition_attribute(SAC_MPool mpool,
   if (condition == NULL) return condition;
 
   condition->desc.attribute.prefix = prefix;
-  condition->desc.attribute.localName = localName;
+  condition->desc.attribute.name = name;
   condition->desc.attribute.specified = value != NULL ? SAC_TRUE : SAC_FALSE;
   condition->desc.attribute.value = value;
 
@@ -123,7 +123,7 @@ SAC_Condition* SAC_condition_attribute(SAC_MPool mpool,
 
 
 SAC_Condition* SAC_condition_one_of_attribute(SAC_MPool mpool,
-  SAC_STRING prefix, SAC_STRING localName, SAC_STRING value)
+  SAC_STRING prefix, SAC_STRING name, SAC_STRING value)
 {
   SAC_Condition *condition;
 
@@ -131,7 +131,7 @@ SAC_Condition* SAC_condition_one_of_attribute(SAC_MPool mpool,
   if (condition == NULL) return condition;
 
   condition->desc.attribute.prefix = prefix;
-  condition->desc.attribute.localName = localName;
+  condition->desc.attribute.name = name;
   condition->desc.attribute.specified = SAC_FALSE;
   condition->desc.attribute.value = value;
 
@@ -141,7 +141,7 @@ SAC_Condition* SAC_condition_one_of_attribute(SAC_MPool mpool,
 
 
 SAC_Condition* SAC_condition_begin_hypen_attribute(SAC_MPool mpool,
-  SAC_STRING prefix, SAC_STRING localName, SAC_STRING value)
+  SAC_STRING prefix, SAC_STRING name, SAC_STRING value)
 {
   SAC_Condition *condition;
 
@@ -149,7 +149,7 @@ SAC_Condition* SAC_condition_begin_hypen_attribute(SAC_MPool mpool,
   if (condition == NULL) return condition;
 
   condition->desc.attribute.prefix = prefix;
-  condition->desc.attribute.localName = localName;
+  condition->desc.attribute.name = name;
   condition->desc.attribute.specified = SAC_FALSE;
   condition->desc.attribute.value = value;
 

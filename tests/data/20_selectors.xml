@@ -6,7 +6,7 @@
     <condition type="id" specified="true" value="some-id"/>
   </selector>
   <selector type="conditional">
-    <selector type="element_node" localName="div"/>
+    <selector type="element_node" name="div"/>
     <condition type="class" specified="true" value="some-class"/>
   </selector>
   <selector type="conditional">
@@ -32,20 +32,20 @@
             <condition type="and">
               <condition type="and">
                 <condition type="and">
-                  <condition type="attr" localName="attr" specified="false"/>
-                  <condition type="attr" localName="iattr" specified="true" value="ident"/>
+                  <condition type="attr" name="attr" specified="false"/>
+                  <condition type="attr" name="iattr" specified="true" value="ident"/>
                 </condition>
-                <condition type="attr" localName="sattr" specified="true" value="str"/>
+                <condition type="attr" name="sattr" specified="true" value="str"/>
               </condition>
-              <condition type="one_of" localName="oneof" specified="false" value="inc"/>
+              <condition type="one_of" name="oneof" specified="false" value="inc"/>
             </condition>
-            <condition type="begin_hypen" localName="hypen" specified="false" value="dash"/>
+            <condition type="begin_hypen" name="hypen" specified="false" value="dash"/>
           </condition>
-          <condition type="prefix" localName="prefix" specified="false" value="val"/>
+          <condition type="prefix" name="prefix" specified="false" value="val"/>
         </condition>
-        <condition type="suffix" localName="suffix" specified="false" value="val"/>
+        <condition type="suffix" name="suffix" specified="false" value="val"/>
       </condition>
-      <condition type="substr" localName="substr" specified="false" value="val"/>
+      <condition type="substr" name="substr" specified="false" value="val"/>
     </condition>
   </selector>
   <selector type="conditional">
@@ -56,18 +56,18 @@
           <condition type="and">
             <condition type="and">
               <condition type="and">
-                <condition type="attr" prefix="ns" localName="attr" specified="false"/>
-                <condition type="attr" prefix="ns" localName="attr" specified="true" value="str"/>
+                <condition type="attr" prefix="ns" name="attr" specified="false"/>
+                <condition type="attr" prefix="ns" name="attr" specified="true" value="str"/>
               </condition>
-              <condition type="one_of" prefix="ns" localName="oneof" specified="false" value="inc"/>
+              <condition type="one_of" prefix="ns" name="oneof" specified="false" value="inc"/>
             </condition>
-            <condition type="begin_hypen" prefix="ns" localName="hypen" specified="false" value="dash"/>
+            <condition type="begin_hypen" prefix="ns" name="hypen" specified="false" value="dash"/>
           </condition>
-          <condition type="prefix" prefix="ns" localName="prefix" specified="false" value="val"/>
+          <condition type="prefix" prefix="ns" name="prefix" specified="false" value="val"/>
         </condition>
-        <condition type="suffix" prefix="ns" localName="suffix" specified="false" value="val"/>
+        <condition type="suffix" prefix="ns" name="suffix" specified="false" value="val"/>
       </condition>
-      <condition type="substr" prefix="ns" localName="substr" specified="false" value="val"/>
+      <condition type="substr" prefix="ns" name="substr" specified="false" value="val"/>
     </condition>
   </selector>
   <selector type="conditional">
@@ -78,18 +78,18 @@
           <condition type="and">
             <condition type="and">
               <condition type="and">
-                <condition type="attr" localName="attr" specified="false"/>
-                <condition type="attr" localName="attr" specified="true" value="str"/>
+                <condition type="attr" name="attr" specified="false"/>
+                <condition type="attr" name="attr" specified="true" value="str"/>
               </condition>
-              <condition type="one_of" localName="oneof" specified="false" value="inc"/>
+              <condition type="one_of" name="oneof" specified="false" value="inc"/>
             </condition>
-            <condition type="begin_hypen" localName="hypen" specified="false" value="dash"/>
+            <condition type="begin_hypen" name="hypen" specified="false" value="dash"/>
           </condition>
-          <condition type="prefix" localName="prefix" specified="false" value="val"/>
+          <condition type="prefix" name="prefix" specified="false" value="val"/>
         </condition>
-        <condition type="suffix" localName="suffix" specified="false" value="val"/>
+        <condition type="suffix" name="suffix" specified="false" value="val"/>
       </condition>
-      <condition type="substr" localName="substr" specified="false" value="val"/>
+      <condition type="substr" name="substr" specified="false" value="val"/>
     </condition>
   </selector>
   <selector type="conditional">
@@ -115,41 +115,41 @@
   </selector>
   <selector type="descendant">
     <selector type="descendant">
-      <selector type="element_node" localName="a"/>
-      <selector type="element_node" localName="b"/>
+      <selector type="element_node" name="a"/>
+      <selector type="element_node" name="b"/>
     </selector>
-    <selector type="element_node" localName="c"/>
+    <selector type="element_node" name="c"/>
   </selector>
   <selector type="direct-adjacent">
     <selector type="direct-adjacent">
-      <selector type="element_node" localName="a"/>
-      <selector type="element_node" localName="b"/>
+      <selector type="element_node" name="a"/>
+      <selector type="element_node" name="b"/>
     </selector>
-    <selector type="element_node" localName="c"/>
+    <selector type="element_node" name="c"/>
   </selector>
   <selector type="child">
     <selector type="child">
-      <selector type="element_node" localName="a"/>
-      <selector type="element_node" localName="b"/>
+      <selector type="element_node" name="a"/>
+      <selector type="element_node" name="b"/>
     </selector>
-    <selector type="element_node" localName="c"/>
+    <selector type="element_node" name="c"/>
   </selector>
   <selector type="general-adjacent">
     <selector type="general-adjacent">
-      <selector type="element_node" localName="a"/>
-      <selector type="element_node" localName="b"/>
+      <selector type="element_node" name="a"/>
+      <selector type="element_node" name="b"/>
     </selector>
-    <selector type="element_node" localName="c"/>
+    <selector type="element_node" name="c"/>
   </selector>
   <selector type="descendant">
     <selector type="descendant">
       <selector type="descendant">
         <selector type="any_node"/>
-        <selector type="element_node" localName="a"/>
+        <selector type="element_node" name="a"/>
       </selector>
       <selector type="element_node" prefix="ns"/>
     </selector>
-    <selector type="element_node" prefix="ns" localName="b"/>
+    <selector type="element_node" prefix="ns" name="b"/>
   </selector>
   <selector type="conditional">
     <selector type="any_node"/>
@@ -172,7 +172,7 @@
         <condition type="negative">
           <selector type="conditional">
             <selector type="any_node"/>
-            <condition type="attr" localName="sattr" specified="true" value="str"/>
+            <condition type="attr" name="sattr" specified="true" value="str"/>
           </selector>
         </condition>
       </condition>
@@ -197,7 +197,7 @@
                 <selector type="any_node"/>
               </condition>
               <condition type="negative">
-                <selector type="element_node" localName="a"/>
+                <selector type="element_node" name="a"/>
               </condition>
             </condition>
             <condition type="negative">
@@ -205,7 +205,7 @@
             </condition>
           </condition>
           <condition type="negative">
-            <selector type="element_node" prefix="ns" localName="b"/>
+            <selector type="element_node" prefix="ns" name="b"/>
           </condition>
         </condition>
         <condition type="negative">
@@ -213,7 +213,7 @@
         </condition>
       </condition>
       <condition type="negative">
-        <selector type="element_node" localName="a"/>
+        <selector type="element_node" name="a"/>
       </condition>
     </condition>
   </selector>

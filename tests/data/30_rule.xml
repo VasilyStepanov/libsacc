@@ -2,13 +2,13 @@
 <document>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="element"/>
+      <selector type="element_node" name="element"/>
     </start_selectors>
     <property name="prop">
       <ident>ident</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="element"/>
+      <selector type="element_node" name="element"/>
     </end_selectors>
   </style>
 </document>

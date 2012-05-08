@@ -30,7 +30,7 @@ SAC_Selector* SAC_selector_any_node(SAC_MPool mpool) {
 
 
 SAC_Selector* SAC_selector_element_node(SAC_MPool mpool,
-  SAC_STRING prefix, SAC_STRING localName)
+  SAC_STRING prefix, SAC_STRING name)
 {
   SAC_Selector *selector;
 
@@ -38,7 +38,7 @@ SAC_Selector* SAC_selector_element_node(SAC_MPool mpool,
   if (selector == NULL) return NULL;
 
   selector->desc.element.prefix = prefix;
-  selector->desc.element.localName = localName;
+  selector->desc.element.name = name;
 
   return selector;
 }

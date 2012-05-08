@@ -68,13 +68,13 @@
     </start_media_queries>
     <style>
       <start_selectors>
-        <selector type="element_node" localName="p"/>
+        <selector type="element_node" name="p"/>
       </start_selectors>
       <property name="color">
         <ident>green</ident>
       </property>
       <end_selectors>
-        <selector type="element_node" localName="p"/>
+        <selector type="element_node" name="p"/>
       </end_selectors>
     </style>
     <end_media_queries>
@@ -109,13 +109,13 @@
     </start_media_queries>
     <style>
       <start_selectors>
-        <selector type="element_node" localName="p"/>
+        <selector type="element_node" name="p"/>
       </start_selectors>
       <property name="color">
         <ident>green</ident>
       </property>
       <end_selectors>
-        <selector type="element_node" localName="p"/>
+        <selector type="element_node" name="p"/>
       </end_selectors>
     </style>
     <end_media_queries>
@@ -152,13 +152,13 @@
     </start_media_queries>
     <style>
       <start_selectors>
-        <selector type="element_node" localName="p"/>
+        <selector type="element_node" name="p"/>
       </start_selectors>
       <property name="color">
         <ident>green</ident>
       </property>
       <end_selectors>
-        <selector type="element_node" localName="p"/>
+        <selector type="element_node" name="p"/>
       </end_selectors>
     </style>
     <end_media_queries>

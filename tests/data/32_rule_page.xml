@@ -2,13 +2,13 @@
 <document>
   <page>
     <start_page>
-      <selector type="element_node" localName="LandscapeTable"/>
+      <selector type="element_node" name="LandscapeTable"/>
     </start_page>
     <property name="color">
       <ident>green</ident>
     </property>
     <end_page>
-      <selector type="element_node" localName="LandscapeTable"/>
+      <selector type="element_node" name="LandscapeTable"/>
     </end_page>
   </page>
 </document>

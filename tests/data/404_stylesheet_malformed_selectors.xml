@@ -2,27 +2,27 @@
 <document>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="h1"/>
-      <selector type="element_node" localName="h2"/>
+      <selector type="element_node" name="h1"/>
+      <selector type="element_node" name="h2"/>
     </start_selectors>
     <property name="color">
       <ident>green</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="h1"/>
-      <selector type="element_node" localName="h2"/>
+      <selector type="element_node" name="h1"/>
+      <selector type="element_node" name="h2"/>
     </end_selectors>
   </style>
   <error type="SYNTAX" line="2" column="8">unexpected token while parsing selectors group</error>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="h6"/>
+      <selector type="element_node" name="h6"/>
     </start_selectors>
     <property name="color">
       <ident>black</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="h6"/>
+      <selector type="element_node" name="h6"/>
     </end_selectors>
   </style>
   <style>

@@ -5,26 +5,26 @@
   <error type="SYNTAX" line="3" column="1">unexpected 'import' rule</error>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>red</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
   <error type="SYNTAX" line="5" column="1">unexpected 'import' rule</error>
   <error type="SYNTAX" line="6" column="1">unexpected 'namespace' rule</error>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>green</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
 </document>

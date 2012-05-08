@@ -13,38 +13,38 @@
   <error type="SYNTAX" line="6" column="43">unexpected 'opening brace' token while parsing 'import' rule</error>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>red</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
   <error type="SYNTAX" line="8" column="26">unexpected token while parsing 'import' rule</error>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>red</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
   <error type="SYNTAX" line="10" column="26">unexpected token while parsing media query</error>
   <error type="SYNTAX" line="10" column="1">unexpected 'import' rule</error>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>red</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
   <error type="SYNTAX" line="12" column="21">unexpected 'opening brace' token while parsing 'import' rule</error>
@@ -68,13 +68,13 @@
     </start_media_queries>
     <style>
       <start_selectors>
-        <selector type="element_node" localName="h1"/>
+        <selector type="element_node" name="h1"/>
       </start_selectors>
       <property name="color">
         <ident>green</ident>
       </property>
       <end_selectors>
-        <selector type="element_node" localName="h1"/>
+        <selector type="element_node" name="h1"/>
       </end_selectors>
     </style>
     <end_media_queries>
@@ -84,13 +84,13 @@
   <error type="SYNTAX" line="29" column="19">unexpected token while parsing 'media' rule</error>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>red</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
   <error type="SYNTAX" line="31" column="8">unexpected token while parsing media query</error>
@@ -100,13 +100,13 @@
     </start_media_queries>
     <style>
       <start_selectors>
-        <selector type="element_node" localName="h2"/>
+        <selector type="element_node" name="h2"/>
       </start_selectors>
       <property name="color">
         <ident>green</ident>
       </property>
       <end_selectors>
-        <selector type="element_node" localName="h2"/>
+        <selector type="element_node" name="h2"/>
       </end_selectors>
     </style>
     <end_media_queries>
@@ -120,13 +120,13 @@
     </start_media_queries>
     <style>
       <start_selectors>
-        <selector type="element_node" localName="h3"/>
+        <selector type="element_node" name="h3"/>
       </start_selectors>
       <property name="color">
         <ident>green</ident>
       </property>
       <end_selectors>
-        <selector type="element_node" localName="h3"/>
+        <selector type="element_node" name="h3"/>
       </end_selectors>
     </style>
     <end_media_queries>
@@ -135,13 +135,13 @@
   </media>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </start_selectors>
     <property name="color">
       <ident>green</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="p"/>
+      <selector type="element_node" name="p"/>
     </end_selectors>
   </style>
 </document>

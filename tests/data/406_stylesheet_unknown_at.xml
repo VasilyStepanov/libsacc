@@ -3,13 +3,13 @@
   <ignorable_at_rule name="three-dee"/>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="h1"/>
+      <selector type="element_node" name="h1"/>
     </start_selectors>
     <property name="color">
       <ident>blue</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="h1"/>
+      <selector type="element_node" name="h1"/>
     </end_selectors>
   </style>
 </document>

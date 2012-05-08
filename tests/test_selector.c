@@ -28,7 +28,7 @@ static void test_selector_factory(void) {
   selector = SAC_selector_element_node(mpool, "foo", "bar");
   assert(selector->selectorType == SAC_ELEMENT_NODE_SELECTOR);
   ASSERT_EQUAL_STRINGS("foo", selector->desc.element.prefix);
-  ASSERT_EQUAL_STRINGS("bar", selector->desc.element.localName);
+  ASSERT_EQUAL_STRINGS("bar", selector->desc.element.name);
 
   simpleSelector = SAC_selector_any_node(mpool);
   condition = SAC_condition_class(mpool, "foo");

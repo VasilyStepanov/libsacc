@@ -2,95 +2,95 @@
 <document>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="valid-rule1"/>
+      <selector type="element_node" name="valid-rule1"/>
     </start_selectors>
     <end_selectors>
-      <selector type="element_node" localName="valid-rule1"/>
+      <selector type="element_node" name="valid-rule1"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="valid-rule2"/>
+      <selector type="element_node" name="valid-rule2"/>
     </start_selectors>
     <end_selectors>
-      <selector type="element_node" localName="valid-rule2"/>
+      <selector type="element_node" name="valid-rule2"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="invalid-rule3"/>
+      <selector type="element_node" name="invalid-rule3"/>
     </start_selectors>
     <property name="x">
       <ident>y</ident>
     </property>
     <error type="SYNTAX" line="3" column="24">unexpected token while parsing style declaration</error>
     <end_selectors>
-      <selector type="element_node" localName="invalid-rule3"/>
+      <selector type="element_node" name="invalid-rule3"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="invalid-rule4"/>
+      <selector type="element_node" name="invalid-rule4"/>
     </start_selectors>
     <property name="x">
       <ident>y</ident>
     </property>
     <error type="SYNTAX" line="4" column="24">unexpected token while parsing style declaration</error>
     <end_selectors>
-      <selector type="element_node" localName="invalid-rule4"/>
+      <selector type="element_node" name="invalid-rule4"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="invalid-rule5"/>
+      <selector type="element_node" name="invalid-rule5"/>
     </start_selectors>
     <error type="SYNTAX" line="5" column="17">unexpected token while parsing style declaration</error>
     <property name="x">
       <ident>y</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="invalid-rule5"/>
+      <selector type="element_node" name="invalid-rule5"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="invalid-rule6"/>
+      <selector type="element_node" name="invalid-rule6"/>
     </start_selectors>
     <error type="SYNTAX" line="6" column="17">unexpected token while parsing style declaration</error>
     <property name="x">
       <ident>y</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="invalid-rule6"/>
+      <selector type="element_node" name="invalid-rule6"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="invalid-rule7"/>
+      <selector type="element_node" name="invalid-rule7"/>
     </start_selectors>
     <error type="SYNTAX" line="7" column="17">unexpected token while parsing style declaration</error>
     <end_selectors>
-      <selector type="element_node" localName="invalid-rule7"/>
+      <selector type="element_node" name="invalid-rule7"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="invalid-rule8"/>
+      <selector type="element_node" name="invalid-rule8"/>
     </start_selectors>
     <error type="SYNTAX" line="8" column="17">unexpected token while parsing style declaration</error>
     <end_selectors>
-      <selector type="element_node" localName="invalid-rule8"/>
+      <selector type="element_node" name="invalid-rule8"/>
     </end_selectors>
   </style>
   <style>
     <start_selectors>
-      <selector type="element_node" localName="valid-rule3"/>
+      <selector type="element_node" name="valid-rule3"/>
     </start_selectors>
     <property name="foo">
       <ident>bar</ident>
     </property>
     <end_selectors>
-      <selector type="element_node" localName="valid-rule3"/>
+      <selector type="element_node" name="valid-rule3"/>
     </end_selectors>
   </style>
 </document>
