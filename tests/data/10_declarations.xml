@@ -178,19 +178,19 @@
     <sub>
       <func type="rgb" name="rgb">
         <arg>
-          <int>10</int>
+          <int>170</int>
         </arg>
         <arg>
           <comma/>
         </arg>
         <arg>
-          <int>11</int>
+          <int>187</int>
         </arg>
         <arg>
           <comma/>
         </arg>
         <arg>
-          <int>12</int>
+          <int>204</int>
         </arg>
       </func>
     </sub>
@@ -232,6 +232,25 @@
         </arg>
         <arg>
           <int>3</int>
+        </arg>
+      </func>
+    </sub>
+    <sub>
+      <func type="rgb" name="rgb">
+        <arg>
+          <int>0</int>
+        </arg>
+        <arg>
+          <comma/>
+        </arg>
+        <arg>
+          <int>136</int>
+        </arg>
+        <arg>
+          <comma/>
+        </arg>
+        <arg>
+          <int>255</int>
         </arg>
       </func>
     </sub>

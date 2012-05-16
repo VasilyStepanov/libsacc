@@ -1748,6 +1748,9 @@ hexcolor
         ok = sscanf($1, "%2x%2x%2x", &r, &g, &b) == 3;
       } else if (len == 3) {
         ok = sscanf($1, "%1x%1x%1x", &r, &g, &b) == 3;
+        r *= 17;
+        g *= 17;
+        b *= 17;
       } else {
         ok = 0;
       }
