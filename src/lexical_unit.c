@@ -8,6 +8,7 @@
 #include "checks.h"
 
 #include <stdio.h>
+#include <math.h>
 
 
 
@@ -208,6 +209,9 @@ SAC_LexicalUnit* SAC_lexical_unit_degree(SAC_MPool mpool, double sreal) {
   value = SAC_lexical_unit_alloc(mpool, SAC_DEGREE);
   if (value == NULL) return value;
 
+  while (sreal < 0) sreal += 360;
+  while (sreal >= 360) sreal -= 360;
+
   value->desc.dimension.unit = "deg";
   value->desc.dimension.value.sreal = sreal;
 
@@ -222,6 +226,9 @@ SAC_LexicalUnit* SAC_lexical_unit_radian(SAC_MPool mpool, double sreal) {
   value = SAC_lexical_unit_alloc(mpool, SAC_RADIAN);
   if (value == NULL) return value;
 
+  while (sreal < 0) sreal += 2 * M_PI;
+  while (sreal >= 2 * M_PI) sreal -= 2 * M_PI;
+
   value->desc.dimension.unit = "rad";
   value->desc.dimension.value.sreal = sreal;
 
@@ -235,6 +242,9 @@ SAC_LexicalUnit* SAC_lexical_unit_gradian(SAC_MPool mpool, double sreal) {
 
   value = SAC_lexical_unit_alloc(mpool, SAC_GRADIAN);
   if (value == NULL) return value;
+
+  while (sreal < 0) sreal += 400;
+  while (sreal >= 400) sreal -= 400;
 
   value->desc.dimension.unit = "grad";
   value->desc.dimension.value.sreal = sreal;

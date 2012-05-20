@@ -1063,7 +1063,7 @@ struct _SAC_Condition {
        *
        * NULL if any.
        */
-      SAC_STRING  value;
+      SAC_STRING value;
     } attribute;
 
 

@@ -116,13 +116,13 @@
       <gradian dimension="grad">100</gradian>
     </sub>
     <sub>
-      <degree dimension="deg">-90</degree>
+      <degree dimension="deg">270</degree>
     </sub>
     <sub>
-      <radian dimension="rad">-1.57</radian>
+      <radian dimension="rad">4.71319</radian>
     </sub>
     <sub>
-      <gradian dimension="grad">-100</gradian>
+      <gradian dimension="grad">300</gradian>
     </sub>
   </property>
   <property name="prop-em">
