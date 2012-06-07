@@ -1284,14 +1284,15 @@ pseudo
   : ':' IDENT {
       SAC_LexicalUnit *pseudo;
 
+      locase($2);
       pseudo = SAC_lexical_unit_ident(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ(pseudo, @2);
 
       if (
-        strcasecmp($2, "first-line") == 0 ||
-        strcasecmp($2, "first-letter") == 0 ||
-        strcasecmp($2, "before") == 0 ||
-        strcasecmp($2, "after") == 0)
+        strcmp($2, "first-line") == 0 ||
+        strcmp($2, "first-letter") == 0 ||
+        strcmp($2, "before") == 0 ||
+        strcmp($2, "after") == 0)
       {
         $$ = SAC_condition_pseudo_element(YY_SCANNER_MPOOL(scanner), pseudo);
       } else {
@@ -1302,6 +1303,7 @@ pseudo
   | ':' ':' IDENT {
       SAC_LexicalUnit *pseudo;
 
+      locase($3);
       pseudo = SAC_lexical_unit_ident(YY_SCANNER_MPOOL(scanner), $3);
       TEST_OBJ(pseudo, @3);
 
