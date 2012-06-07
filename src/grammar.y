@@ -928,6 +928,7 @@ pseudo_page
   : ':' IDENT maybe_spaces {
       SAC_LexicalUnit *pseudo;
 
+      locase($2);
       pseudo = SAC_lexical_unit_ident(YY_SCANNER_MPOOL(scanner), $2);
       TEST_OBJ(pseudo, @2);
 
