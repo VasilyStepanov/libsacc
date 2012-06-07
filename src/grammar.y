@@ -193,7 +193,7 @@ SAC_Boolean boolean;
 %type <str> maybe_namespace_prefix;
 
 %type <str> string_or_uri;
-%type <str> ident;
+%type <str> page_ident;
 %type <sel> maybe_page_ident;
 
 %type <list> media_query_list;
@@ -766,7 +766,7 @@ page
       SAC_SYNTAX_ERROR(@5,
         "unexpected token while parsing 'page' rule");
     }
-  | PAGE_SYM maybe_spaces ident page_errors invalid_block {
+  | PAGE_SYM maybe_spaces page_ident page_errors invalid_block {
       SAC_SYNTAX_ERROR(@4,
         "unexpected token while parsing 'page' rule");
     }
@@ -778,7 +778,7 @@ page
       SAC_SYNTAX_ERROR(@6,
         "unexpected 'semicolon' while parsing 'page' rule");
     }
-  | PAGE_SYM maybe_spaces ident page_errors ';' {
+  | PAGE_SYM maybe_spaces page_ident page_errors ';' {
       SAC_SYNTAX_ERROR(@5,
         "unexpected 'semicolon' while parsing 'page' rule");
     }
@@ -901,12 +901,12 @@ maybe_page_ident
       $$ = SAC_selector_any_node(YY_SCANNER_MPOOL(scanner));
       TEST_OBJ($$, @$);
     }
-  | ident {
+  | page_ident {
       $$ = SAC_selector_element_node(YY_SCANNER_MPOOL(scanner), NULL, $1);
       TEST_OBJ($$, @$);
     }
   ;
-ident
+page_ident
   : IDENT maybe_spaces {
       $$ = $1;
     }
