@@ -999,6 +999,7 @@ maybe_unary_operator
   ;
 property
   : IDENT maybe_spaces {
+      locase($1);
       $$ = $1;
     }
   ;
