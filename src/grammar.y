@@ -28,6 +28,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 
 #define YYLEX_PARAM scanner
 #define YYPARSE_PARAM scanner
@@ -64,6 +65,10 @@ extern int yylex();
     data);
   
 int yydebug = 0;
+
+static void locase(char *s) {
+  for (; *s != '\0'; ++s) *s = tolower(*s);
+}
 
 %}
 
@@ -1676,7 +1681,8 @@ term
       TEST_OBJ($$, @$);
     }
   | IDENT maybe_spaces {
-      if (strcasecmp($1, "inherit") != 0) {
+      locase($1);
+      if (strcmp($1, "inherit") != 0) {
         $$ = SAC_lexical_unit_ident(YY_SCANNER_MPOOL(scanner), $1);
         TEST_OBJ($$, @$);
       } else {

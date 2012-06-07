@@ -62,7 +62,7 @@
   </page>
   <font_face>
     <property name="font-family">
-      <ident>Gentium</ident>
+      <ident>gentium</ident>
     </property>
     <property name="src">
       <uri>http://example.com/fonts/Gentium.ttf</uri>
